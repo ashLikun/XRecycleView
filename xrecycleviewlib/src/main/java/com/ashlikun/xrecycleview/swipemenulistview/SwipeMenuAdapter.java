@@ -10,7 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.WrapperListAdapter;
 
-import com.hbung.baseadapter.ISwipeAdapter;
+import com.ashlikun.baseadapter.ISwipeAdapter;
 
 
 /**

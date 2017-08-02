@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.hbung.baseadapter.IHeaderAndFooter;
+import com.ashlikun.baseadapter.IHeaderAndFooter;
 
 import java.util.ArrayList;
 
