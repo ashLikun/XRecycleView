@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="SwipeRefreshLayout_Color1" format="color"></attr>
+    <attr name="SwipeRefreshLayout_Color2" format="color"></attr>
+    <attr name="SwipeRefreshLayout_Color3" format="color"></attr>
+    <attr name="SwipeRefreshLayout_Color4" format="color"></attr>
+</resources>
