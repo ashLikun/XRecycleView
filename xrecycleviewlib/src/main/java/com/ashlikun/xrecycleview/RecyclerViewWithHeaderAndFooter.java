@@ -6,11 +6,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.lang.reflect.Field;
+import com.ashlikun.baseadapter.IHeaderAndFooter;
+
 import java.util.ArrayList;
 
 /**
@@ -102,39 +102,21 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     private void setFooterSize() {
-        Class cls = mAdapter.getClass();
-        try {
-            Field field = cls.getDeclaredField("footerSize");
-            field.setAccessible(true);
-            try {
-                field.set(mAdapter, getFootViewSize());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                Log.w("setFooterSize", "adapter设置footerSize字段失败");
-            }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            Log.w("setFooterSize", "adapter没有footerSize字段");
+        if (mAdapter instanceof IHeaderAndFooter) {
+            ((IHeaderAndFooter) mAdapter).setFooterSize(getFootViewSize());
         }
-
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setFooterSize(getFootViewSize());
+        }
     }
 
     private void setHeaderSize() {
-        Class cls = mAdapter.getClass();
-        try {
-            Field field = cls.getDeclaredField("headerSize");
-            field.setAccessible(true);
-            try {
-                field.set(mAdapter, getHeaderViewSize());
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                Log.w("setHeaderSize", "adapter设置headerSize字段失败");
-            }
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-            Log.w("setHeaderSize", "adapter没有headerSize字段");
+        if (mAdapter instanceof IHeaderAndFooter) {
+            ((IHeaderAndFooter) mAdapter).setHeaderSize(getHeaderViewSize());
         }
-
+        if (mWrapAdapter != null) {
+            mWrapAdapter.setHeaderSize(getHeaderViewSize());
+        }
     }
 
 
@@ -220,9 +202,12 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     };
 
 
-    private class WrapAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private class WrapAdapter extends RecyclerView.Adapter<ViewHolder>
+            implements IHeaderAndFooter {
         private int headerPosition = 0;
         private int footerPosition = 0;
+        private int headerSize;
+        private int footerSize;
 
         public WrapAdapter() {
         }
@@ -383,6 +368,21 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
             }
         }
 
+        public int getFooterSize() {
+            return footerSize;
+        }
+
+        public void setFooterSize(int footerSize) {
+            this.footerSize = footerSize;
+        }
+
+        public int getHeaderSize() {
+            return headerSize;
+        }
+
+        public void setHeaderSize(int headerSize) {
+            this.headerSize = headerSize;
+        }
 
         private class SimpleViewHolder extends ViewHolder {
             View view;

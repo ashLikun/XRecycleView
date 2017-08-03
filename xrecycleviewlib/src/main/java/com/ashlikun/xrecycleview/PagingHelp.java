@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.Collection;
 
 public class PagingHelp {
+
     // 总条数
     private int recordCount = 0;
     // 服务器数据的第几页

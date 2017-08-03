@@ -34,7 +34,7 @@ public class FooterView extends RelativeLayout {
     public FooterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        LayoutInflater.from(context).inflate(R.layout.base_autoloadding_footer, this);
+        LayoutInflater.from(context).inflate( R.layout.base_autoloadding_footer, this);
         textView = (TextView) findViewById(R.id.tvLoadMore);
         progressBar = (MaterialProgressBar) findViewById(R.id.progressbar);
     }
@@ -117,17 +117,5 @@ public class FooterView extends RelativeLayout {
 
     public void setLoadMoreEnabled(boolean loadMoreEnabled) {
         this.loadMoreEnabled = loadMoreEnabled;
-    }
-
-    /**
-     * 作者　　: 李坤
-     * 创建时间: 2017/8/3 17:45
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 方法功能：是否正在加载更多
-     */
-
-    public boolean isLoadMore() {
-        return state == LoadState.Loadding;
     }
 }
