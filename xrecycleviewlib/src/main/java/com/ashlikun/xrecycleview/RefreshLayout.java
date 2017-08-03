@@ -47,6 +47,16 @@ public interface RefreshLayout {
 
     public void setRefreshing(boolean refreshing);
 
+    /**
+     * 作者　　: 李坤
+     * 创建时间: 2017/8/3 17:43
+     * 邮箱　　：496546144@qq.com
+     * <p>
+     * 方法功能：设置是否可以刷新
+     */
+
+    public void setEnabled(boolean refreshing);
+
     public interface OnRefreshListener {
         void onRefresh();
     }
