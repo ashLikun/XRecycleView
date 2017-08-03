@@ -28,7 +28,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         try {
             adapter.registerAdapterDataObserver(mDataObserver);
         } catch (IllegalStateException e) {
-
         }
 
     }
@@ -176,8 +175,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         FooterView f = getLoaddFooterView();
         if (f != null) {
             f.setStatus(state);
+            refreshLayout.setEnabled(!f.isLoadMore());//如果正在加载更多，就禁用下拉刷新
         }
     }
+
 
     public void setDataSize(int count) {
         FooterView f = getLoaddFooterView();
