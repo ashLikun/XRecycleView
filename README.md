@@ -6,7 +6,14 @@
 ### 1.用法
 使用前，对于Android Studio的用户，可以选择添加:
      compile 'com.github.ashLikun:XrecycleView:1.0.2'//XRecycleView
-
+        listSwipeView = (SuperRecyclerView) findViewById(R.id.switchRoot);
+        adapter = getAdapter();
+        listSwipeView.getRecyclerView().addItemDecoration(getItemDecoration());
+        listSwipeView.getRecyclerView().setLayoutManager(getLayoutManager());
+        listSwipeView.setAdapter(adapter);
+        listSwipeView.setOnRefreshListener(this);
+        listSwipeView.setOnLoaddingListener(this);
+        adapter.setOnItemClickListener(this);
 ### 混肴
 ####
     保证CommonAdapter的footerSize和headerSize字段不被混肴
