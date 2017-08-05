@@ -103,7 +103,7 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         setFooterSize();
     }
 
-    private void setFooterSize() {
+    protected void setFooterSize() {
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
         if (cls == null) return;
         try {

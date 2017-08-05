@@ -74,6 +74,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         } else {
             mFootViews.add(view);
         }
+        setFooterSize();
     }
 
     @Override
