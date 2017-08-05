@@ -104,6 +104,7 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     protected void setFooterSize() {
+        if(mAdapter == null) return;
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
         if (cls == null) return;
         try {
@@ -123,6 +124,7 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     private void setHeaderSize() {
+        if(mAdapter == null) return;
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
         if (cls == null) return;
         try {
