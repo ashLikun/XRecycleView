@@ -23,6 +23,8 @@ import java.util.ArrayList;
 
 public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
 
+    private static final String HEADERSIZE = "headerSize";
+    private static final String FOOTERSIZE = "footerSize";
     private static final int TYPE_HEADER = -4;
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_REFRESH_FOOTER = -3;
@@ -102,39 +104,56 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     private void setFooterSize() {
-        Class cls = mAdapter.getClass();
+        Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
+        if (cls == null) return;
         try {
-            Field field = cls.getDeclaredField("footerSize");
+            Field field = cls.getDeclaredField(FOOTERSIZE);
             field.setAccessible(true);
             try {
                 field.set(mAdapter, getFootViewSize());
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-                Log.w("setFooterSize", "adapter设置footerSize字段失败");
+                Log.w("setFooterSize", "adapter设置" + FOOTERSIZE + "字段失败");
             }
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
-            Log.w("setFooterSize", "adapter没有footerSize字段");
+            Log.w("setFooterSize", "adapter没有" + FOOTERSIZE + "字段");
         }
 
     }
 
     private void setHeaderSize() {
-        Class cls = mAdapter.getClass();
+        Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
+        if (cls == null) return;
         try {
-            Field field = cls.getDeclaredField("headerSize");
+            Field field = cls.getDeclaredField(HEADERSIZE);
             field.setAccessible(true);
             try {
                 field.set(mAdapter, getHeaderViewSize());
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
-                Log.w("setHeaderSize", "adapter设置headerSize字段失败");
+                Log.w("setHeaderSize", "adapter设置" + HEADERSIZE + "字段失败");
             }
         } catch (NoSuchFieldException e) {
             e.printStackTrace();
-            Log.w("setHeaderSize", "adapter没有headerSize字段");
+            Log.w("setHeaderSize", "adapter没有" + HEADERSIZE + "字段");
         }
 
+    }
+
+    private Class<? extends Adapter> getCommonAdapterClass(Class cls) {
+        if (cls.isAssignableFrom(Adapter.class) || cls.getSuperclass() == null) {
+            return null;
+        } else {
+            try {
+                cls.getDeclaredField(HEADERSIZE);
+                cls.getDeclaredField(FOOTERSIZE);
+                return cls;
+            } catch (NoSuchFieldException e) {
+                e.printStackTrace();
+                return getCommonAdapterClass(cls.getSuperclass());
+            }
+        }
     }
 
 
