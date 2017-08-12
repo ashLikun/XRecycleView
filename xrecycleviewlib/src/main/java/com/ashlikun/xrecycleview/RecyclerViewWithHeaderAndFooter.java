@@ -104,7 +104,7 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     protected void setFooterSize() {
-        if(mAdapter == null) return;
+        if (mAdapter == null) return;
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
         if (cls == null) return;
         try {
@@ -113,18 +113,16 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
             try {
                 field.set(mAdapter, getFootViewSize());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
                 Log.w("setFooterSize", "adapter设置" + FOOTERSIZE + "字段失败");
             }
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
             Log.w("setFooterSize", "adapter没有" + FOOTERSIZE + "字段");
         }
 
     }
 
     private void setHeaderSize() {
-        if(mAdapter == null) return;
+        if (mAdapter == null) return;
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
         if (cls == null) return;
         try {
@@ -133,11 +131,9 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
             try {
                 field.set(mAdapter, getHeaderViewSize());
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
                 Log.w("setHeaderSize", "adapter设置" + HEADERSIZE + "字段失败");
             }
         } catch (NoSuchFieldException e) {
-            e.printStackTrace();
             Log.w("setHeaderSize", "adapter没有" + HEADERSIZE + "字段");
         }
 
@@ -152,7 +148,6 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
                 cls.getDeclaredField(FOOTERSIZE);
                 return cls;
             } catch (NoSuchFieldException e) {
-                e.printStackTrace();
                 return getCommonAdapterClass(cls.getSuperclass());
             }
         }
