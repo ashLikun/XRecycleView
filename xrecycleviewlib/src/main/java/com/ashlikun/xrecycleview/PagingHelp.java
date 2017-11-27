@@ -28,6 +28,7 @@ public class PagingHelp {
     }
 
     public boolean isNextPaging(int result) {
+
         if (currentCount == result) {
             // 没有跟多数据可以加载
             if (result != 0) {
@@ -43,6 +44,10 @@ public class PagingHelp {
             }
         }
         recordCount = pageCount * (pageindex - 1) + currentCount;
+        if (result < pageCount) {
+            showNoData();
+            return false;
+        }
         return true;
     }
 

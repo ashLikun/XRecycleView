@@ -72,7 +72,6 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         } catch (IllegalStateException e) {
 
         }
-
         mWrapAdapter.notifyDataSetChanged();
         setHeaderSize();
         setFooterSize();
