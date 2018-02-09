@@ -20,7 +20,6 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
     protected VerticalDividerItemDecoration(Builder builder) {
         super(builder);
-        mShowLastDivider = true;
         mMarginProvider = builder.mMarginProvider;
     }
 
