@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 作者　　: 李坤
@@ -313,7 +314,8 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+            super.onBindViewHolder(holder, position, payloads);
             if (isFooterLoad(position)) {
 
                 return;
@@ -327,10 +329,15 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
             int adjPosition = position - getHeadersCount();
             if (mAdapter != null) {
                 if (adjPosition < mAdapter.getItemCount()) {
-                    mAdapter.onBindViewHolder(holder, adjPosition);
+                    mAdapter.onBindViewHolder(holder, adjPosition, payloads);
                     return;
                 }
             }
+        }
+
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+
         }
 
         @Override

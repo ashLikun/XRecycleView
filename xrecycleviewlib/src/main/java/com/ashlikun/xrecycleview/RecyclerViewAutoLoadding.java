@@ -51,6 +51,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
     }
 
 
+    @Override
     public void setOnLoaddingListener(OnLoaddingListener onLoaddingListener) {
         this.onLoaddingListener = onLoaddingListener;
         if (pagingHelp == null) {
@@ -67,6 +68,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
     }
 
 
+    @Override
     public void addFootView(final View view) {
         //放在自动加载的前面
         if (mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof FooterView) {
@@ -96,7 +98,9 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
             if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
                     && lastVisibleItemPosition >= layoutManager.getItemCount() - 1 && layoutManager.getItemCount() >= layoutManager.getChildCount()) {
                 setState(LoadState.Loadding);
-                onLoaddingListener.onLoadding();
+                if(onLoaddingListener != null) {
+                    onLoaddingListener.onLoadding();
+                }
             }
         }
     }
@@ -105,6 +109,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         return layoutManager.getItemCount() - getHeaderViewSize() - getFootViewSize();
     }
 
+    @Override
     public RefreshLayout getRefreshLayout() {
         return refreshLayout;
     }
