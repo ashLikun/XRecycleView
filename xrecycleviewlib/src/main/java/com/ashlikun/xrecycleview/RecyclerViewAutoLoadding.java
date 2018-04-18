@@ -17,7 +17,7 @@ import android.view.View;
 public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter implements BaseSwipeInterface,
         StatusChangListener, ConfigChang {
 
-    public PagingHelp pagingHelp;
+    public PageHelp pageHelp;
     private RefreshLayout refreshLayout;
 
     private OnLoaddingListener onLoaddingListener;
@@ -54,19 +54,18 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
     @Override
     public void setOnLoaddingListener(OnLoaddingListener onLoaddingListener) {
         this.onLoaddingListener = onLoaddingListener;
-        if (pagingHelp == null) {
-            pagingHelp = new PagingHelp(getContext());
+        if (pageHelp == null) {
+            pageHelp = new PageHelp(getContext());
         } else {
-            pagingHelp.clear();
+            pageHelp.clear();
         }
-        pagingHelp.setStatusChangListener(this);
+        pageHelp.setStatusChangListener(this);
     }
 
     @Override
-    public PagingHelp getPagingHelp() {
-        return pagingHelp;
+    public PageHelp getPageHelp() {
+        return pageHelp;
     }
-
 
     @Override
     public void addFootView(final View view) {
@@ -96,9 +95,11 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             }
             if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
-                    && lastVisibleItemPosition >= layoutManager.getItemCount() - 1 && layoutManager.getItemCount() >= layoutManager.getChildCount()) {
+                    && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
+                    && layoutManager.getItemCount() >= layoutManager.getChildCount()
+                    && (pageHelp != null && pageHelp.isNext())) {
                 setState(LoadState.Loadding);
-                if(onLoaddingListener != null) {
+                if (onLoaddingListener != null) {
                     onLoaddingListener.onLoadding();
                 }
             }
@@ -121,6 +122,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
      * 方法功能：设置刷新布局，必须设置要不然无法加载更多
      */
 
+    @Override
     public void setRefreshLayout(RefreshLayout refreshLayout) {
         this.refreshLayout = refreshLayout;
     }
@@ -181,7 +183,8 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         FooterView f = getLoaddFooterView();
         if (f != null) {
             f.setStatus(state);
-            refreshLayout.setEnabled(!f.isLoadMore());//如果正在加载更多，就禁用下拉刷新
+            //如果正在加载更多，就禁用下拉刷新
+            refreshLayout.setEnabled(!f.isLoadMore());
         }
     }
 

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="50dp"
+    android:gravity="center"
+    android:orientation="horizontal">
 
-
-    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+    <com.ashlikun.xrecycleview.progress.CircleProgressView
         android:id="@+id/progressbar"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@+id/tvLoadMore"
-        android:indeterminate="true" />
+        app:cpv_angleAnimationDurationMillis="@integer/circle_default_angleAnimationDuration"
+        app:cpv_borderWidth="@dimen/circle_default_border_width"
+        app:cpv_colorSequence="@array/circle_default_color_sequence"
+        app:cpv_sweepAnimationDurationMillis="@integer/circle_default_sweepAnimationDuration" />
 
     <TextView
         android:id="@+id/tvLoadMore"
@@ -20,5 +25,5 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
         android:gravity="center"
-        android:textColor="#ff000000" />
-</RelativeLayout>
+        android:textColor="#999999" />
+</merge>

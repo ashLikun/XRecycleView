@@ -2,19 +2,21 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+import com.ashlikun.xrecycleview.progress.CircleProgressView;
 
 
 /**
  * Created by Administrator on 2016/3/14.
  */
-public class FooterView extends RelativeLayout {
-    private MaterialProgressBar progressBar;
+public class FooterView extends LinearLayout {
+    private CircleProgressView progressBar;
     private TextView textView;
     private Context context;
     private LoadState state = LoadState.Init;
@@ -34,9 +36,12 @@ public class FooterView extends RelativeLayout {
     public FooterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        LayoutInflater.from(context).inflate( R.layout.base_autoloadding_footer, this);
+        LayoutInflater.from(context).inflate(R.layout.base_autoloadding_footer, this);
+        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, dip2px(50)));
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER);
         textView = (TextView) findViewById(R.id.tvLoadMore);
-        progressBar = (MaterialProgressBar) findViewById(R.id.progressbar);
+        progressBar = (CircleProgressView) findViewById(R.id.progressbar);
     }
 
     @Override
@@ -129,5 +134,10 @@ public class FooterView extends RelativeLayout {
 
     public boolean isLoadMore() {
         return state == LoadState.Loadding;
+    }
+
+    private int dip2px(float dipValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
     }
 }

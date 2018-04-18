@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * Created by Administrator on 2016/3/14.
  */
 public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter implements BaseSwipeInterface, StatusChangListener, ConfigChang {
-    public PagingHelp pagingHelp = null;
+    public PageHelp pageHelp = null;
     private OnLoaddingListener onLoaddingListener;
     private FooterView footerView;
     private ArrayList<AbsListView.OnScrollListener> scrollListeners = new ArrayList<>();
@@ -70,7 +70,12 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
             int lastItemIndex = getLastVisiblePosition(); // 获取当前屏幕最后Item的ID
             if ((refreshLayout == null || !refreshLayout.isRefreshing()) && totalItemCount - getFooterViewsCount() - getHeaderViewsCount() > 0) {
                 if (lastItemIndex + 1 >= totalItemCount) {// 达到数据的最后一条记录
-                    if (footerView.isLoadMoreEnabled() && getItemCount(totalItemCount) > 0 && footerView.getStates() != LoadState.Loadding && footerView.getStates() != LoadState.NoData && onLoaddingListener != null) {//可以加载
+                    if (footerView.isLoadMoreEnabled()
+                            && getItemCount(totalItemCount) > 0
+                            && footerView.getStates() != LoadState.Loadding
+                            && footerView.getStates() != LoadState.NoData
+                            && onLoaddingListener != null
+                            && pageHelp != null && pageHelp.isNext()) {//可以加载
                         setState(LoadState.Loadding);
                         onLoaddingListener.onLoadding();
                     }
@@ -88,6 +93,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
         return totalItemCount - getFooterViewsCount() - getHeaderViewsCount();
     }
 
+    @Override
     public RefreshLayout getRefreshLayout() {
         return refreshLayout;
     }
@@ -99,6 +105,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
      * 方法功能：设置刷新布局，必须设置要不然无法加载更多
      */
 
+    @Override
     public void setRefreshLayout(RefreshLayout refreshLayout) {
         this.refreshLayout = refreshLayout;
     }
@@ -115,14 +122,15 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
         return onLoaddingListener;
     }
 
+    @Override
     public void setOnLoaddingListener(OnLoaddingListener onLoaddingListener) {
         this.onLoaddingListener = onLoaddingListener;
-        if (pagingHelp == null) {
-            pagingHelp = new PagingHelp(getContext());
+        if (pageHelp == null) {
+            pageHelp = new PageHelp(getContext());
         } else {
-            pagingHelp.clear();
+            pageHelp.clear();
         }
-        pagingHelp.setStatusChangListener(this);
+        pageHelp.setStatusChangListener(this);
     }
 
 
@@ -144,7 +152,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
 
     public void setDataSize() {
         if (footerView != null) {
-            footerView.setDataSize(pagingHelp.getRecordCount());
+            footerView.setDataSize(0);
         }
     }
 
@@ -191,8 +199,8 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
     }
 
     @Override
-    public PagingHelp getPagingHelp() {
-        return pagingHelp;
+    public PageHelp getPageHelp() {
+        return pageHelp;
     }
 
     @Override

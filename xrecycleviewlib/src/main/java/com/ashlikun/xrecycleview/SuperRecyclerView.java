@@ -7,8 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import java.util.Collection;
-
 /**
  * 作者　　: 李坤
  * 创建时间: 16:32 Administrator
@@ -86,15 +84,16 @@ public class SuperRecyclerView extends RelativeLayout {
     /**
      * 获取pagingHelp
      */
-    public PagingHelp getPagingHelp() {
-        return recyclerView.getPagingHelp();
+    public PageHelp getPageHelp() {
+        return recyclerView.getPageHelp();
     }
 
     /**
-     * 获取分页的有效数据
+     * 设置分页数据为下一页
+     * 为下次加载做准备
      */
-    public <T> Collection<T> getValidData(Collection<T> c) {
-        return getPagingHelp().getValidData(c);
+    public void nextPage() {
+        recyclerView.getPageHelp().nextPage();
     }
 
 

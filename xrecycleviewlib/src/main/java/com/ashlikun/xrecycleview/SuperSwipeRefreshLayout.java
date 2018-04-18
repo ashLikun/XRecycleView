@@ -98,6 +98,8 @@ public class SuperSwipeRefreshLayout extends SwipeRefreshLayout implements Refre
 
     @Override
     public void onRefresh() {
-        if (mListener != null) mListener.onRefresh();
+        if (mListener != null) {
+            mListener.onRefresh();
+        }
     }
 }
