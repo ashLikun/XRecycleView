@@ -36,7 +36,7 @@ dependencies {
     保证CommonAdapter的footerSize和headerSize字段不被混肴
     #某一变量不混淆
     -keepclasseswithmembers class com.xxx.xxx {
-        private com.ashlikun.adapter.recyclerview.CommonAdapter footerSize;
-        private com.ashlikun.adapter.recyclerview.CommonAdapter headerSize;
+        private com.ashlikun.adapter.recyclerview.BaseAdapter footerSize;
+        private com.ashlikun.adapter.recyclerview.BaseAdapter  headerSize;
     }
 
