@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
-import com.ashlikun.animmenu.AnimMenuItem;
+import com.ashlikun.animmenu.AnimMenu;
 
 /**
  * 作者　　: 李坤
@@ -20,6 +20,7 @@ import com.ashlikun.animmenu.AnimMenuItem;
 public class SuperRecyclerView extends RelativeLayout {
     public RefreshLayout refreshLayout;
     RecyclerViewAutoLoadding recyclerView;
+    AnimMenu animMenu;
 
     public SuperRecyclerView(Context context) {
         this(context, null);
@@ -31,11 +32,44 @@ public class SuperRecyclerView extends RelativeLayout {
 
     public SuperRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        initAtt(context, attrs);
         if (!isInEditMode()) {
             initView();
         }
+
     }
 
+    private void initAtt(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressView);
+        boolean isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
+        a.recycle();
+        if (isGoTop) {
+            addGoTopView();
+        }
+    }
+
+    private void addGoTopView() {
+        animMenu = new AnimMenu(getContext());
+        animMenu.addView(animMenu
+                .getDefaultItem()
+                .normalColor(0x77ffffff)
+                .strokeWidth(3)
+                .strokeColor(0xffeeeeee)
+                .iconId(R.drawable.icon_go_top));
+        LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.bottomMargin = dip2px(20);
+        params.rightMargin = dip2px(20);
+        addView(animMenu, params);
+        animMenu.openMenu();
+        recyclerView.addOnScrollListener(this);
+    }
+
+    public int dip2px(int dip) {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dip * scale + 0.5f * (dip >= 0 ? 1 : -1));
+    }
 
     private void initView() {
         LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_recycle, this, true);
@@ -163,5 +197,14 @@ public class SuperRecyclerView extends RelativeLayout {
 
     }
 
+    RecyclerView.OnScrollListener myScroll = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+            if (animMenu != null) {
+                animMenu.openMenu();
+            }
+        }
+    };
 
 }
