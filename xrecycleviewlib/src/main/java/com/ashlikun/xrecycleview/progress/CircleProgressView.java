@@ -112,7 +112,7 @@ public class CircleProgressView extends View {
         setupAnimations();
     }
 
-    private void innerStart() {
+    public void start() {
         if (isRunning()) {
             return;
         }
@@ -122,7 +122,7 @@ public class CircleProgressView extends View {
         invalidate();
     }
 
-    private void innerStop() {
+    public void stop() {
         if (!isRunning()) {
             return;
         }
@@ -140,21 +140,21 @@ public class CircleProgressView extends View {
     protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         super.onVisibilityChanged(changedView, visibility);
         if (visibility == VISIBLE) {
-            innerStart();
+            start();
         } else {
-            innerStop();
+            stop();
         }
     }
 
     @Override
     protected void onAttachedToWindow() {
-        innerStart();
+        start();
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        innerStop();
+        stop();
         super.onDetachedFromWindow();
     }
 

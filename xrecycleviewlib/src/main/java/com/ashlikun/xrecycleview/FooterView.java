@@ -20,9 +20,8 @@ public class FooterView extends LinearLayout {
     private TextView textView;
     private Context context;
     private LoadState state = LoadState.Init;
-    private int dataSize = 0;
-    private String autoloaddingNoData = getResources().getString(R.string.autoloadding_no_data);
-    private String autoloaddingCompleData = getResources().getString(R.string.autoloadding_comple_data);
+    private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
+    private String loaddingFooterText = getResources().getString(R.string.loadding);
     private boolean loadMoreEnabled = true;
 
     public FooterView(Context context) {
@@ -69,10 +68,10 @@ public class FooterView extends LinearLayout {
         if (status == LoadState.NoData) {
             progressBar.setVisibility(GONE);
             setVisibility(VISIBLE);
-            textView.setText(dataSize > 0 ? String.format(autoloaddingCompleData, dataSize) : autoloaddingNoData);
+            textView.setText(noDataFooterText);
         } else if (status == LoadState.Loadding) {
             progressBar.setVisibility(VISIBLE);
-            textView.setText(context.getString(R.string.loadding));
+            textView.setText(loaddingFooterText);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Init) {
             setVisibility(GONE);
@@ -91,30 +90,26 @@ public class FooterView extends LinearLayout {
         return state;
     }
 
-    public String getAutoloaddingNoData() {
-        return autoloaddingNoData;
+    public String getNoDataFooterText() {
+        return noDataFooterText;
     }
 
-    public String getAutoloaddingCompleData() {
-        return autoloaddingCompleData;
+    /**
+     * 设置底部的没有数据时候的文字
+     * 建议使用String.xml  替换R.string.autoloadding_no_data变量
+     */
+    public void setNoDataFooterText(String noDataFooterText) {
+        this.noDataFooterText = noDataFooterText;
     }
 
-    public void setAutoloaddingCompleData(String autoloaddingCompleData) {
-        this.autoloaddingCompleData = autoloaddingCompleData;
+    /**
+     * 设置底部加载中的文字
+     *建议使用String.xml  替换R.string.loadding变量
+     */
+    public void setLoaddingFooterText(String loaddingFooterText) {
+        this.loaddingFooterText = loaddingFooterText;
     }
 
-    public void setAutoloaddingNoData(String autoloaddingNoData) {
-        this.autoloaddingNoData = autoloaddingNoData;
-    }
-
-    public int getDataSize() {
-        return dataSize;
-    }
-
-    public void setDataSize(int dataSize) {
-        this.dataSize = dataSize;
-        setStatus(state);
-    }
 
     public boolean isLoadMoreEnabled() {
         return loadMoreEnabled;

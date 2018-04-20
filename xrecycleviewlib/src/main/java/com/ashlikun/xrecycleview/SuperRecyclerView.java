@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
+import com.ashlikun.animmenu.AnimMenuItem;
+
 /**
  * 作者　　: 李坤
  * 创建时间: 16:32 Administrator
@@ -110,7 +112,7 @@ public class SuperRecyclerView extends RelativeLayout {
     }
 
     /**
-     * 刷新Swp
+     * 刷新
      *
      * @return
      */
@@ -136,6 +138,18 @@ public class SuperRecyclerView extends RelativeLayout {
         recyclerView.setLayoutManager(layout);
     }
 
+    //设置是否可以下拉刷新
+    public void setLoadMoreEnabled(boolean loadMoreEnabled) {
+        recyclerView.setLoadMoreEnabled(loadMoreEnabled);
+    }
+
+    /**
+     * 设置底部加载中的文字
+     * 建议使用String.xml  替换R.string.loadding变量
+     */
+    public void setLoaddingFooterText(String loaddingFooterText) {
+        recyclerView.setLoaddingFooterText(loaddingFooterText);
+    }
 
     /**
      * 作者　　: 李坤

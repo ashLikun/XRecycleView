@@ -146,23 +146,10 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
      */
     @Override
     public void noData() {
-        setDataSize();
         setState(LoadState.NoData);
     }
 
-    public void setDataSize() {
-        if (footerView != null) {
-            footerView.setDataSize(0);
-        }
-    }
 
-    @Override
-    public void setAutoloaddingCompleData(String autoloaddingCompleData) {
-        if (footerView != null) {
-            footerView.setAutoloaddingCompleData(autoloaddingCompleData);
-        }
-
-    }
 
     @Override
     /**
@@ -180,9 +167,9 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
     }
 
     @Override
-    public void setAutoloaddingNoData(String autoloaddingNoData) {
+    public void setNoDataFooterText(String autoloaddingNoData) {
         if (footerView != null) {
-            footerView.setAutoloaddingNoData(autoloaddingNoData);
+            footerView.setNoDataFooterText(autoloaddingNoData);
         }
     }
 

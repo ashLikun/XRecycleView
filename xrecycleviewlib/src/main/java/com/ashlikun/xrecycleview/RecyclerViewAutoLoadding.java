@@ -22,16 +22,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
 
     private OnLoaddingListener onLoaddingListener;
 
-    @Override
-    public void setAdapter(Adapter adapter) {
-        super.setAdapter(adapter);
-        try {
-            adapter.registerAdapterDataObserver(mDataObserver);
-        } catch (IllegalStateException e) {
-        }
-
-    }
-
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
@@ -189,13 +179,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
     }
 
 
-    public void setDataSize(int count) {
-        FooterView f = getLoaddFooterView();
-        if (f != null) {
-            f.setDataSize(count);
-        }
-    }
-
     public LoadState getState() {
         FooterView f = getLoaddFooterView();
         if (f != null) {
@@ -205,23 +188,29 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         }
     }
 
+    /**
+     * 设置底部的没有数据时候的文字
+     * 建议使用String.xml  替换R.string.autoloadding_no_data变量
+     */
     @Override
-    public void setAutoloaddingNoData(String autoloaddingNoData) {
+    public void setNoDataFooterText(String autoloaddingNoData) {
         FooterView f = getLoaddFooterView();
         if (f != null) {
-            f.setAutoloaddingNoData(autoloaddingNoData);
+            f.setNoDataFooterText(autoloaddingNoData);
         }
-
     }
 
-    @Override
-    public void setAutoloaddingCompleData(String autoloaddingCompleData) {
+    /**
+     * 设置底部加载中的文字
+     * 建议使用String.xml  替换R.string.loadding变量
+     */
+    public void setLoaddingFooterText(String loaddingFooterText) {
         FooterView f = getLoaddFooterView();
         if (f != null) {
-            f.setAutoloaddingCompleData(autoloaddingCompleData);
+            f.setLoaddingFooterText(loaddingFooterText);
         }
-
     }
+
 
     @Override
     public boolean isLoadMoreEnabled() {
@@ -257,40 +246,4 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         return this;
     }
 
-
-    private final AdapterDataObserver mDataObserver = new AdapterDataObserver() {
-        public int getItemCount() {
-            return getAdapter().getItemCount() - getHeaderViewSize() - getFootViewSize();
-        }
-
-        @Override
-        public void onChanged() {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            setDataSize(getItemCount());
-        }
-    };
 }
