@@ -21,7 +21,7 @@ public class FooterView extends LinearLayout {
     private Context context;
     private LoadState state = LoadState.Init;
     private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
-    private String loaddingFooterText = getResources().getString(R.string.loadding);
+    private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
     private boolean loadMoreEnabled = true;
 
     public FooterView(Context context) {

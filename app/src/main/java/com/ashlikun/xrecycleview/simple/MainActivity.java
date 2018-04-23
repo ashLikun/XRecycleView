@@ -7,10 +7,11 @@ import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
 import com.ashlikun.adapter.recyclerview.multiltem.SingAdapter;
 import com.ashlikun.xrecycleview.SuperRecyclerView;
+import com.ashlikun.xrecycleview.listener.RecycleViewSwipeListener;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SuperRecyclerView.ListSwipeViewListener {
+public class MainActivity extends AppCompatActivity implements RecycleViewSwipeListener {
     MultipleAdapter adapter;
     ArrayList<NeibuData> neibuData = new ArrayList<>();
     SuperRecyclerView recycleView;

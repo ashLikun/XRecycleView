@@ -2,12 +2,18 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
 
 import com.ashlikun.animmenu.AnimMenu;
+import com.ashlikun.animmenu.AnimMenuItem;
+import com.ashlikun.animmenu.OnMenuItemClickListener;
+import com.ashlikun.xrecycleview.listener.OnGoTopClickListener;
 
 /**
  * 作者　　: 李坤
@@ -18,9 +24,16 @@ import com.ashlikun.animmenu.AnimMenu;
  */
 
 public class SuperRecyclerView extends RelativeLayout {
+    //返回顶部的animMenu的Tag
+    public static final String TAG_ANIMMENU_GO_TOP = "TAG_ANIMMENU_GO_TOP";
     public RefreshLayout refreshLayout;
     RecyclerViewAutoLoadding recyclerView;
     AnimMenu animMenu;
+    //第几个的时候打开AnimMenu
+    private int openAnimMenuPosition = 5;
+    private boolean isGoTop;
+    OnGoTopClickListener goTopClickListener;
+    OnMenuItemClickListener menuItemClickListener;
 
     public SuperRecyclerView(Context context) {
         this(context, null);
@@ -41,29 +54,47 @@ public class SuperRecyclerView extends RelativeLayout {
 
     private void initAtt(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressView);
-        boolean isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
+        isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
+        openAnimMenuPosition = a.getInteger(R.styleable.SuperRecyclerView_srv_goTopOnPosition, openAnimMenuPosition);
         a.recycle();
-        if (isGoTop) {
-            addGoTopView();
-        }
     }
 
-    private void addGoTopView() {
-        animMenu = new AnimMenu(getContext());
+    public void addGoTopView() {
+        initAnimMenu();
         animMenu.addView(animMenu
                 .getDefaultItem()
-                .normalColor(0x77ffffff)
+                .tag(TAG_ANIMMENU_GO_TOP)
                 .strokeWidth(3)
-                .strokeColor(0xffeeeeee)
+                .strokeColor(0xff313131)
                 .iconId(R.drawable.icon_go_top));
+    }
+
+    private void initAnimMenu() {
+        if (animMenu != null) {
+            return;
+        }
+        animMenu = new AnimMenu(getContext());
+        animMenu.setAutoOpen(false);
+        animMenu.setNormalColor(0xffffffff);
+        animMenu.setPressColor(0xff999999);
+        animMenu.setClickable(true);
+        animMenu.setItemClickListener(new OnMenuItemClickListener() {
+            @Override
+            public void onItemClick(int index, String tag) {
+                if (TAG_ANIMMENU_GO_TOP.equals(tag)) {
+                    recyclerView.scrollToPosition(0);
+                    goTopClickListener.onGoTopListener();
+                }
+                menuItemClickListener.onItemClick(index, tag);
+            }
+        });
+        animMenu.setAlpha(0.8f);
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
         params.bottomMargin = dip2px(20);
         params.rightMargin = dip2px(20);
         addView(animMenu, params);
-        animMenu.openMenu();
-        recyclerView.addOnScrollListener(this);
     }
 
     public int dip2px(int dip) {
@@ -75,11 +106,15 @@ public class SuperRecyclerView extends RelativeLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_recycle, this, true);
         refreshLayout = (RefreshLayout) findViewById(R.id.swipe);
         recyclerView = (RecyclerViewAutoLoadding) findViewById(R.id.list_swipe_target);
+        if (isGoTop) {
+            addGoTopView();
+        }
         /**
          * 设置集合view的刷新view
          */
         recyclerView.setRefreshLayout(refreshLayout);
         setColorSchemeResources(refreshLayout);
+        recyclerView.addOnScrollListener(myScroll);
     }
 
     public void setColorSchemeResources(RefreshLayout refreshLayout) {
@@ -186,24 +221,65 @@ public class SuperRecyclerView extends RelativeLayout {
     }
 
     /**
-     * 作者　　: 李坤
-     * 创建时间: 16:46 Administrator
-     * 邮箱　　：496546144@qq.com
-     * <p>
-     * 功能介绍：下拉和加载更多的集合借口
+     * 设置返回顶部的事件
+     *
+     * @param goTopClickListener
      */
+    public void setGoTopClickListener(OnGoTopClickListener goTopClickListener) {
+        this.goTopClickListener = goTopClickListener;
+    }
 
-    public interface ListSwipeViewListener extends RefreshLayout.OnRefreshListener, OnLoaddingListener {
+    /**
+     * 设置菜单点击事件
+     *
+     * @param menuItemClickListener
+     */
+    public void setMenuItemClickListener(OnMenuItemClickListener menuItemClickListener) {
+        this.menuItemClickListener = menuItemClickListener;
+    }
 
+    /**
+     * 添加Anim菜单
+     *
+     * @param builder
+     */
+    public void addAnimMenu(AnimMenuItem.Builder builder) {
+        initAnimMenu();
+        animMenu.addView(builder);
     }
 
     RecyclerView.OnScrollListener myScroll = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
             super.onScrolled(recyclerView, dx, dy);
+
             if (animMenu != null) {
-                animMenu.openMenu();
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                int firstVisiblePosition = 0;
+                if (layoutManager instanceof LinearLayoutManager) {
+                    firstVisiblePosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                } else if (layoutManager instanceof GridLayoutManager) {
+                    firstVisiblePosition = ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                    int[] into = ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null);
+                    firstVisiblePosition = findMax(into);
+                }
+                if (firstVisiblePosition >= openAnimMenuPosition) {
+                    animMenu.openMenu();
+                } else {
+                    animMenu.closeMenu();
+                }
             }
+        }
+
+        private int findMax(int[] lastPositions) {
+            int max = lastPositions[0];
+            for (int value : lastPositions) {
+                if (value > max) {
+                    max = value;
+                }
+            }
+            return max;
         }
     };
 

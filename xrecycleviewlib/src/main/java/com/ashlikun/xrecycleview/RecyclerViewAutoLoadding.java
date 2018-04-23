@@ -78,8 +78,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
             if (layoutManager instanceof GridLayoutManager) {
                 lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                int[] into = new int[((StaggeredGridLayoutManager) layoutManager).getSpanCount()];
-                ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(into);
+                int[] into = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
                 lastVisibleItemPosition = findMax(into);
             } else {
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
