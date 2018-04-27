@@ -26,11 +26,12 @@ import com.ashlikun.xrecycleview.listener.OnGoTopClickListener;
 public class SuperRecyclerView extends RelativeLayout {
     //返回顶部的animMenu的Tag
     public static final String TAG_ANIMMENU_GO_TOP = "TAG_ANIMMENU_GO_TOP";
+    public static final int DEFAULT_ANIM_MENU_POSITION = 5;
     public RefreshLayout refreshLayout;
     RecyclerViewAutoLoadding recyclerView;
     AnimMenu animMenu;
     //第几个的时候打开AnimMenu
-    private int openAnimMenuPosition = 5;
+    private int openAnimMenuPosition = DEFAULT_ANIM_MENU_POSITION;
     private boolean isGoTop;
     OnGoTopClickListener goTopClickListener;
     OnMenuItemClickListener menuItemClickListener;
