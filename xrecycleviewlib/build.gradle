@@ -31,10 +31,11 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile rootProject.ext.designVersion
+    compileOnly rootProject.ext.designVersion
 //    compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
     compileOnly 'com.android.support:support-annotations:' + rootProject.ext.superVersion
     implementation 'com.github.ashLikun:AnimationMenu:1.0.4'
+    implementation 'com.github.ashLikun:CircleProgressView:1.0.1'
 }
 
 apply from: '../maven.gradle'

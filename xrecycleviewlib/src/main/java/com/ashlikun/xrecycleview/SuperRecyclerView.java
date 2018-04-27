@@ -83,7 +83,9 @@ public class SuperRecyclerView extends RelativeLayout {
             public void onItemClick(int index, String tag) {
                 if (TAG_ANIMMENU_GO_TOP.equals(tag)) {
                     recyclerView.scrollToPosition(0);
-                    goTopClickListener.onGoTopListener();
+                    if (goTopClickListener != null) {
+                        goTopClickListener.onGoTopListener();
+                    }
                 }
                 menuItemClickListener.onItemClick(index, tag);
             }
