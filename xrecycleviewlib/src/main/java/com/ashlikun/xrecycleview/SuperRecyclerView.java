@@ -88,7 +88,9 @@ public class SuperRecyclerView extends RelativeLayout {
                         goTopClickListener.onGoTopListener();
                     }
                 }
-                menuItemClickListener.onItemClick(index, tag);
+                if (menuItemClickListener != null) {
+                    menuItemClickListener.onItemClick(index, tag);
+                }
             }
         });
         animMenu.setAlpha(0.8f);
