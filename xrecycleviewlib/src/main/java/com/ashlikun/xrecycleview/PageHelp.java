@@ -54,12 +54,26 @@ public class PageHelp {
 
     /**
      * 设置页数信息
-     * 会自动向+1
+     * 会自动下一页+1
      */
     public void setPageInfo(int currentPage, int recordPage) {
         this.currentPage = currentPage;
         this.recordPage = recordPage;
         nextPage();
+    }
+
+    /**
+     * 设置页数信息
+     * 不会自动下一页
+     */
+    public void setPageInfoNoNext(int currentPage, int recordPage) {
+        this.currentPage = currentPage;
+        this.recordPage = recordPage;
+        if (!isNext()) {
+            showNoData();
+        } else {
+            showComplete();
+        }
     }
 
     /**

@@ -172,6 +172,22 @@ public class SuperRecyclerView extends RelativeLayout {
         recyclerView.getPageHelp().nextPage();
     }
 
+    /**
+     * 设置页数信息
+     * 会自动下一页+1
+     */
+    public void setPageInfo(int currentPage, int recordPage) {
+        recyclerView.getPageHelp().setPageInfo(currentPage, recordPage);
+    }
+
+    /**
+     * 设置页数信息
+     * 不会自动下一页
+     */
+    public void setPageInfoNoNext(int currentPage, int recordPage) {
+        recyclerView.getPageHelp().setPageInfoNoNext(currentPage, recordPage);
+    }
+
 
     public RefreshLayout getRefreshLayout() {
         return refreshLayout;
