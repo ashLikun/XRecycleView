@@ -104,9 +104,13 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     protected void setFooterSize() {
-        if (mAdapter == null) return;
+        if (mAdapter == null) {
+            return;
+        }
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
-        if (cls == null) return;
+        if (cls == null) {
+            return;
+        }
         try {
             Field field = cls.getDeclaredField(FOOTERSIZE);
             field.setAccessible(true);
@@ -122,9 +126,13 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     private void setHeaderSize() {
-        if (mAdapter == null) return;
+        if (mAdapter == null) {
+            return;
+        }
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
-        if (cls == null) return;
+        if (cls == null) {
+            return;
+        }
         try {
             Field field = cls.getDeclaredField(HEADERSIZE);
             field.setAccessible(true);
@@ -289,36 +297,49 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
 
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
-            mAdapter.onViewAttachedToWindow(holder);
-            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-            if (lp != null
-                    && lp instanceof StaggeredGridLayoutManager.LayoutParams
-                    && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
-                StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-                p.setFullSpan(true);
+            try {
+                mAdapter.onViewAttachedToWindow(holder);
+                ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+                if (lp != null
+                        && lp instanceof StaggeredGridLayoutManager.LayoutParams
+                        && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
+                    StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
+                    p.setFullSpan(true);
+                }
+            } catch (Exception e) {
+
             }
         }
 
         @Override
         public void onViewDetachedFromWindow(ViewHolder holder) {
-            mAdapter.onViewDetachedFromWindow(holder);
+            try {
+                if (isHeader(holder.getLayoutPosition()) && isFooter(holder.getLayoutPosition()) && isFooterLoad(holder.getLayoutPosition())) {
+                    mAdapter.onViewDetachedFromWindow(holder);
+                }
+            } catch (Exception e) {
+
+            }
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == TYPE_REFRESH_FOOTER) {
-                return new SimpleViewHolder(mFootViews.get(mFootViews.size() - 1));
+                return new ViewHolder(mFootViews.get(mFootViews.size() - 1)) {
+                };
             } else if (viewType == TYPE_HEADER) {
                 if (headerPosition >= mHeaderViews.size()) {
                     headerPosition = 0;
                 }
 
-                return new SimpleViewHolder(mHeaderViews.get(headerPosition++));
+                return new ViewHolder(mHeaderViews.get(headerPosition++)) {
+                };
             } else if (viewType == TYPE_FOOTER) {
                 if (footerPosition >= mFootViews.size()) {
                     footerPosition = 0;
                 }
-                return new SimpleViewHolder(mFootViews.get(footerPosition++));
+                return new ViewHolder(mFootViews.get(footerPosition++)) {
+                };
             }
             return mAdapter.onCreateViewHolder(parent, viewType);
         }
@@ -412,16 +433,6 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
                 } catch (IllegalStateException e) {
 
                 }
-            }
-        }
-
-
-        private class SimpleViewHolder extends ViewHolder {
-            View view;
-
-            public SimpleViewHolder(View itemView) {
-                super(itemView);
-                this.view = itemView;
             }
         }
     }

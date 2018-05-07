@@ -34,7 +34,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.designVersion
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    implementation 'com.github.ashLikun.CommonAdapter:adapter:1.3.7'
+    implementation 'com.github.ashLikun.CommonAdapter:adapter:1.4.2'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.ashLikun:CircleProgressView:1.0.1'
     compile ('com.alibaba.android:vlayout:1.2.13@aar') {

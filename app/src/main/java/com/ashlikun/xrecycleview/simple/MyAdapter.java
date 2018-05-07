@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview.simple;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -27,6 +28,26 @@ public class MyAdapter {
         public AdapterItem1(Context context, List<NeibuData> datas) {
             super(context);
             setDatas(datas);
+        }
+
+        @Override
+        public void onViewAttachedToWindow(ViewHolder holder) {
+            super.onViewAttachedToWindow(holder);
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(ViewHolder holder) {
+            super.onViewDetachedFromWindow(holder);
+        }
+
+        @Override
+        public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+            super.onDetachedFromRecyclerView(recyclerView);
+        }
+
+        @Override
+        public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+            super.onAttachedToRecyclerView(recyclerView);
         }
 
         @Override
