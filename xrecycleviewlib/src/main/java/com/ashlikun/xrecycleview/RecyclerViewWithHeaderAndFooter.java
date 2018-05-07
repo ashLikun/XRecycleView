@@ -283,6 +283,11 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         }
 
         @Override
+        public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+            mAdapter.onDetachedFromRecyclerView(recyclerView);
+        }
+
+        @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
             mAdapter.onViewAttachedToWindow(holder);
             ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
@@ -292,6 +297,11 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
                 StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
                 p.setFullSpan(true);
             }
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(ViewHolder holder) {
+            mAdapter.onViewDetachedFromWindow(holder);
         }
 
         @Override
