@@ -298,13 +298,15 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
             try {
-                mAdapter.onViewAttachedToWindow(holder);
-                ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-                if (lp != null
-                        && lp instanceof StaggeredGridLayoutManager.LayoutParams
-                        && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
-                    StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-                    p.setFullSpan(true);
+                if (!isHeader(holder.getLayoutPosition()) && !isFooter(holder.getLayoutPosition()) && !isFooterLoad(holder.getLayoutPosition())) {
+                    mAdapter.onViewAttachedToWindow(holder);
+                    ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+                    if (lp != null
+                            && lp instanceof StaggeredGridLayoutManager.LayoutParams
+                            && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
+                        StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
+                        p.setFullSpan(true);
+                    }
                 }
             } catch (Exception e) {
 
@@ -314,7 +316,7 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         @Override
         public void onViewDetachedFromWindow(ViewHolder holder) {
             try {
-                if (isHeader(holder.getLayoutPosition()) && isFooter(holder.getLayoutPosition()) && isFooterLoad(holder.getLayoutPosition())) {
+                if (!isHeader(holder.getLayoutPosition()) && !isFooter(holder.getLayoutPosition()) && !isFooterLoad(holder.getLayoutPosition())) {
                     mAdapter.onViewDetachedFromWindow(holder);
                 }
             } catch (Exception e) {
