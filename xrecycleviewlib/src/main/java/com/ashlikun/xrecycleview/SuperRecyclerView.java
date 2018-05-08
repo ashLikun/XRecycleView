@@ -62,13 +62,45 @@ public class SuperRecyclerView extends RelativeLayout {
 
     public void addGoTopView() {
         initAnimMenu();
+        for (int i = 0; i < animMenu.getChildCount(); i++) {
+            try {
+                AnimMenuItem item = (AnimMenuItem) animMenu.getChildAt(i);
+                //已经有了
+                if (item != null && TAG_ANIMMENU_GO_TOP.equals(item.getItemTag())) {
+                    return;
+                }
+            } catch (Exception e) {
+
+            }
+        }
         animMenu.addView(animMenu
                 .getDefaultItem()
                 .tag(TAG_ANIMMENU_GO_TOP)
                 .strokeWidth(3)
                 .strokeColor(0xff313131)
                 .iconId(R.drawable.icon_go_top));
+
     }
+
+    /**
+     * 清空返回顶部的view
+     */
+    public void cleanGoTopView() {
+        if (animMenu != null) {
+            for (int i = 0; i < animMenu.getChildCount(); i++) {
+                try {
+                    AnimMenuItem item = (AnimMenuItem) animMenu.getChildAt(i);
+                    if (item != null && TAG_ANIMMENU_GO_TOP.equals(item.getItemTag())) {
+                        animMenu.removeView(item);
+                        return;
+                    }
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
+
 
     private void initAnimMenu() {
         if (animMenu != null) {
@@ -248,6 +280,19 @@ public class SuperRecyclerView extends RelativeLayout {
      */
     public void setGoTopClickListener(OnGoTopClickListener goTopClickListener) {
         this.goTopClickListener = goTopClickListener;
+    }
+
+    public void setOpenAnimMenuPosition(int openAnimMenuPosition) {
+        this.openAnimMenuPosition = openAnimMenuPosition;
+    }
+
+    public void setGoTop(boolean goTop) {
+        isGoTop = goTop;
+        if (isGoTop) {
+            addGoTopView();
+        } else {
+            cleanGoTopView();
+        }
     }
 
     /**
