@@ -140,6 +140,7 @@ public class SuperRecyclerView extends FrameLayout {
         params.bottomMargin = dip2px(20);
         params.rightMargin = dip2px(20);
         addView(animMenu, params);
+        animMenu.setVisibility(GONE);
     }
 
     public int dip2px(int dip) {
