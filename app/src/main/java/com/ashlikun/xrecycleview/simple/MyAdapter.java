@@ -2,6 +2,9 @@ package com.ashlikun.xrecycleview.simple;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -72,6 +75,12 @@ public class MyAdapter {
         public AdapterItem2(Context context, List<Neibu2Data> datas) {
             super(context);
             setDatas(datas);
+        }
+
+        @Override
+        public void onItemClick(ViewGroup parent, View view, Neibu2Data data, int position) {
+            super.onItemClick(parent, view, data, position);
+            Log.e("aaa", "p");
         }
 
         @Override

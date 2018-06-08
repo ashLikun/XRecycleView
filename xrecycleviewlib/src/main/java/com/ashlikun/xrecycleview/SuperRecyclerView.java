@@ -7,8 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 
 import com.ashlikun.animmenu.AnimMenu;
 import com.ashlikun.animmenu.AnimMenuItem;
@@ -23,7 +24,7 @@ import com.ashlikun.xrecycleview.listener.OnGoTopClickListener;
  * 功能介绍：带有下拉刷新和自动分页的RecyclerView
  */
 
-public class SuperRecyclerView extends RelativeLayout {
+public class SuperRecyclerView extends FrameLayout {
     //返回顶部的animMenu的Tag
     public static final String TAG_ANIMMENU_GO_TOP = "TAG_ANIMMENU_GO_TOP";
     public static final int DEFAULT_ANIM_MENU_POSITION = 5;
@@ -125,10 +126,17 @@ public class SuperRecyclerView extends RelativeLayout {
                 }
             }
         });
+        animMenu.setItemAnimListener(new OnMenuItemClickListener.OnMenuItemAnimListener() {
+            @Override
+            public void onAnimationEnd(boolean isOpen) {
+                if (!isOpen) {
+                    animMenu.setVisibility(GONE);
+                }
+            }
+        });
         animMenu.setAlpha(0.8f);
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         params.bottomMargin = dip2px(20);
         params.rightMargin = dip2px(20);
         addView(animMenu, params);
