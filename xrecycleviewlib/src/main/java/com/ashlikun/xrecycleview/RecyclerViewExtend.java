@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +20,10 @@ import java.util.List;
  * 创建时间: 10:12 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：带头部与底部的RecycleView
+ * 功能介绍：带头部与底部的RecycleView，和可以设置最大高度
  */
 
-public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
+public class RecyclerViewExtend extends RecyclerView {
 
     private static final String HEADERSIZE = "headerSize";
     private static final String FOOTERSIZE = "footerSize";
@@ -35,6 +36,14 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     protected ArrayList<View> mFootViews = new ArrayList<>();
     private Adapter mAdapter;
     private WrapAdapter mWrapAdapter;
+    /**
+     * 最大高度
+     */
+    private float maxHeight = 0;
+    /**
+     * 最大比例,相对于宽度
+     */
+    private float maxRatio = 0;
 
     public boolean isHeader(ViewHolder viewHolder) {
         return viewHolder.getItemViewType() == TYPE_HEADER;
@@ -44,23 +53,67 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         return viewHolder.getItemViewType() == TYPE_REFRESH_FOOTER || viewHolder.getItemViewType() == TYPE_FOOTER;
     }
 
-
-    public RecyclerViewWithHeaderAndFooter(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public RecyclerViewWithHeaderAndFooter(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-
-    public RecyclerViewWithHeaderAndFooter(Context context) {
+    public RecyclerViewExtend(Context context) {
         this(context, null);
     }
 
+    public RecyclerViewExtend(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public RecyclerViewExtend(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initView(context, attrs);
+    }
+
+
+    private void initView(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.RecyclerViewExtend);
+        maxRatio = a.getFloat(R.styleable.RecyclerViewExtend_rv_heightRatio, 0);
+        maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_heightDimen, 0);
+        a.recycle();
+    }
 
     public int getDataSize() {
         return mAdapter.getItemCount();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (maxHeight <= 0 && maxRatio <= 0) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            return;
+        }
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        if (maxHeight <= 0) {
+            maxHeight = maxRatio * widthSize;
+        } else {
+            maxHeight = Math.min(maxHeight, maxRatio * widthSize);
+        }
+        if (maxHeight <= 0) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            return;
+        }
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            heightSize = heightSize <= maxHeight ? heightSize
+                    : (int) maxHeight;
+        }
+
+        if (heightMode == MeasureSpec.UNSPECIFIED) {
+            heightSize = heightSize <= maxHeight ? heightSize
+                    : (int) maxHeight;
+        }
+        if (heightMode == MeasureSpec.AT_MOST) {
+            heightSize = heightSize <= maxHeight ? heightSize
+                    : (int) maxHeight;
+        }
+        int maxHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize,
+                heightMode);
+        super.onMeasure(widthMeasureSpec, maxHeightMeasureSpec);
     }
 
     @Override
@@ -437,5 +490,15 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
                 }
             }
         }
+    }
+
+    public void setMaxHeight(float maxHeight) {
+        this.maxHeight = maxHeight;
+        requestLayout();
+    }
+
+    public void setMaxRatio(float maxRatio) {
+        this.maxRatio = maxRatio;
+        requestLayout();
     }
 }

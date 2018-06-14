@@ -14,7 +14,7 @@ import android.view.View;
  * 方法功能：自动加载更多的RecyclerView ,setRefreshLayout必须设置要不然无法加载更多
  */
 
-public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter implements BaseSwipeInterface,
+public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements BaseSwipeInterface,
         StatusChangListener, ConfigChang {
 
     public PageHelp pageHelp;
