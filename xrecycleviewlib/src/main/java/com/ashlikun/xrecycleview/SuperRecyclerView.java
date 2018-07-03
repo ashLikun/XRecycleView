@@ -55,7 +55,7 @@ public class SuperRecyclerView extends FrameLayout {
     }
 
     private void initAtt(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleProgressView);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView);
         isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
         openAnimMenuPosition = a.getInteger(R.styleable.SuperRecyclerView_srv_goTopOnPosition, openAnimMenuPosition);
         a.recycle();

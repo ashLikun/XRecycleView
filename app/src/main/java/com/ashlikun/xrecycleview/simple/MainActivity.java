@@ -1,7 +1,9 @@
 package com.ashlikun.xrecycleview.simple;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.ashlikun.adapter.recyclerview.multiltem.MultipleAdapter;
@@ -84,5 +86,11 @@ public class MainActivity extends AppCompatActivity implements RecycleViewSwipeL
             a.addDatas(neibu3Data);
             a.notifyDataSetChanged();
         }
+    }
+
+
+    public void onClick(View view) {
+        Intent intent = new Intent(this, Main2Activity.class);
+        startActivity(intent);
     }
 }

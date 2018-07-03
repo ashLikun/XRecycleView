@@ -222,8 +222,9 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         FooterView footerView = getLoaddFooterView();
         if (footerView != null) {
             footerView.setLoadMoreEnabled(loadMoreEnabled);
-            if (!loadMoreEnabled && mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof FooterView) {
-                mFootViews.remove(mFootViews.size() - 1);
+            if (!loadMoreEnabled) {
+                mFootViews.remove(footerView);
+                setFooterSize();
             }
         } else if (loadMoreEnabled) {
             addFooterView();

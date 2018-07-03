@@ -123,6 +123,11 @@ public class MyAdapter {
         public void convert(ViewHolder holder, Neibu3Data neibuData) {
             holder.setText(R.id.textView, neibuData.name);
         }
+
+        @Override
+        public void onItemClick(ViewGroup parent, View view, Neibu3Data data, int position) {
+            super.onItemClick(parent, view, data, position);
+        }
     }
 
     public static class AdapterItemSing extends SimpleSingAdapter<String> {

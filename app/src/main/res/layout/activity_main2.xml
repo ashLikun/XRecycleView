@@ -9,13 +9,14 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="跳转"
         android:onClick="onClick"
-        />
+        android:text="测试" />
 
-    <com.ashlikun.xrecycleview.SuperRecyclerView
+    <com.ashlikun.xrecycleview.RecyclerViewExtend
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></com.ashlikun.xrecycleview.SuperRecyclerView>
+        android:layout_height="wrap_content"
+        android:background="#ff0000"
+        app:rv_heightRatio="1"></com.ashlikun.xrecycleview.RecyclerViewExtend>
 
 </LinearLayout>
