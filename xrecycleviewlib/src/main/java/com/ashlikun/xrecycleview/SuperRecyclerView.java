@@ -51,7 +51,6 @@ public class SuperRecyclerView extends FrameLayout {
         if (!isInEditMode()) {
             initView();
         }
-
     }
 
     private void initAtt(Context context, AttributeSet attrs) {
