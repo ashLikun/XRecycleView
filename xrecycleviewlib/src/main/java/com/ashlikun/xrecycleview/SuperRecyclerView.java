@@ -137,7 +137,7 @@ public class SuperRecyclerView extends FrameLayout {
         LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
         params.gravity = Gravity.RIGHT | Gravity.BOTTOM;
         params.bottomMargin = dip2px(20);
-        params.rightMargin = dip2px(20);
+        params.rightMargin = dip2px(3);
         addView(animMenu, params);
         animMenu.setVisibility(GONE);
     }
