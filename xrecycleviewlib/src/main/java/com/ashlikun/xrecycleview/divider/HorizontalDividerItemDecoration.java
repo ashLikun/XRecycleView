@@ -28,7 +28,7 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
         int transitionY = (int) child.getTranslationY();
 
         int dividerSize = 0;
-        if (position == -1 && mFirstTopDividerSize != 0) {
+        if (isTop && mFirstTopDividerSize != 0) {
             dividerSize = mFirstTopDividerSize;
         } else {
             dividerSize = getDividerSize(position, parent);
@@ -87,7 +87,7 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
         }
         //第一行看看是否要显示顶部
         else if (mShowFirstDivider && mShowFirstTopDivider && getGroupIndex(position, parent) == 0) {
-            outRect.set(0, getDividerSize(-1, parent), 0, getDividerSize(position, parent));
+            outRect.set(0, mFirstTopDividerSize > 0 ? mFirstTopDividerSize : getDividerSize(position, parent), 0, getDividerSize(position, parent));
         } else {
             outRect.set(0, 0, 0, getDividerSize(position, parent));
         }
