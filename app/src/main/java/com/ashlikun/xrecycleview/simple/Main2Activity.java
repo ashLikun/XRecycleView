@@ -41,7 +41,7 @@ public class Main2Activity extends AppCompatActivity implements RecycleViewSwipe
         recycleView = findViewById(R.id.recycleView);
         recycleView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
                 .size(30)
-                .showFirstTopDivider(60)
+                .showFirstTopDivider()
                 .color(0xffff0000)
                 .build());
         recycleView.addItemDecoration(new VerticalDividerItemDecoration.Builder(this)
