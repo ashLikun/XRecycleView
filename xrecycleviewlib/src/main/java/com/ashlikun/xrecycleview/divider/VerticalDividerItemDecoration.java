@@ -2,7 +2,6 @@ package com.ashlikun.xrecycleview.divider;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.DimenRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,7 +23,7 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
     }
 
     @Override
-    protected Rect getDividerBound(int position, RecyclerView parent, View child) {
+    protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop) {
 
         Rect bounds = new Rect(0, 0, 0, 0);
         int transitionX = (int) ViewCompat.getTranslationX(child);
@@ -81,19 +80,24 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
             outRect.set(0, 0, getDividerSize(position, parent), 0);
             return;
         }
-        int spanIndex = getIndexColum(parent, position, spanCount, childCount);//当前第几列
+        //当前第几列
+        int spanIndex = getIndexColum(parent, position, spanCount, childCount);
         int dividerAllSize = 0;//总共大小
         for (int i = 0; i < spanCount - 1; i++) {
-            int startPoi = position - spanIndex + 1;//当前列开始的第一个
+            //当前列开始的第一个
+            int startPoi = position - spanIndex + 1;
             dividerAllSize += getDividerSize(startPoi + i, parent);
         }
-        int itemDivSize = Math.round(dividerAllSize / (spanCount * 1f));//每个item应该大小
-        if (spanIndex == spanCount)// 如果是最后一列，则不需要绘制右边
-        {
-            outRect.set(itemDivSize, 0, 0, 0);
+        //每个item应该大小
+        int itemDivSize = Math.round(dividerAllSize / ((spanCount - 1) * 1f));
+        // 如果是最后一列，则不需要绘制右边
+        if (spanIndex == spanCount) {
+            outRect.set(itemDivSize / 2, 0, 0, 0);
             return;
-        } else if (spanIndex == 1) {//第一列不绘制左边
-            outRect.set(0, 0, itemDivSize, 0);
+        }
+        //第一列不绘制左边
+        else if (spanIndex == 1) {
+            outRect.set(0, 0, itemDivSize / 2, 0);
         } else {//中间的左右都绘制
             outRect.set(Math.round(itemDivSize / 2f), 0, Math.round(itemDivSize / 2f), 0);
         }
@@ -101,18 +105,6 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
     }
 
-
-    private int getDividerSize(int position, RecyclerView parent) {
-        if (mPaintProvider != null) {
-            return (int) mPaintProvider.dividerPaint(position, parent).getStrokeWidth();
-        } else if (mSizeProvider != null) {
-            return mSizeProvider.dividerSize(position, parent);
-        } else if (mDrawableProvider != null) {
-            Drawable drawable = mDrawableProvider.drawableProvider(position, parent);
-            return drawable.getIntrinsicWidth();
-        }
-        throw new RuntimeException("failed to get size");
-    }
 
     /**
      * Interface for controlling divider margin

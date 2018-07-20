@@ -2,9 +2,7 @@ package com.ashlikun.xrecycleview.divider;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.DimenRes;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -24,20 +22,26 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
     }
 
     @Override
-    protected Rect getDividerBound(int position, RecyclerView parent, View child) {
+    protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop) {
         Rect bounds = new Rect(0, 0, 0, 0);
-        int transitionX = (int) ViewCompat.getTranslationX(child);
-        int transitionY = (int) ViewCompat.getTranslationY(child);
-        int dividerSize = getDividerSize(position, parent);
+        int transitionX = (int) child.getTranslationX();
+        int transitionY = (int) child.getTranslationY();
+
+        int dividerSize = 0;
+        if (position == -1 && mFirstTopDividerSize != 0) {
+            dividerSize = mFirstTopDividerSize;
+        } else {
+            dividerSize = getDividerSize(position, parent);
+        }
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-        bounds.left = child.getLeft() - params.leftMargin + mMarginProvider.dividerLeftMargin(position, parent);
-        bounds.right = child.getRight() + params.rightMargin + dividerSize - mMarginProvider.dividerRightMargin(position, parent);
+        bounds.left = child.getLeft() - params.leftMargin + (isTop ? 0 : mMarginProvider.dividerLeftMargin(position, parent));
+        bounds.right = child.getRight() + params.rightMargin + dividerSize - (isTop ? 0 : mMarginProvider.dividerRightMargin(position, parent));
 
 
         boolean isReverseLayout = isReverseLayout(parent);
         if (mDividerType == DividerType.DRAWABLE) {
             // set top and bottom position of divider
-            if (isReverseLayout) {
+            if (isReverseLayout || isTop) {
                 bounds.bottom = child.getTop() - params.topMargin + transitionY;
                 bounds.top = bounds.bottom - dividerSize;
             } else {
@@ -47,7 +51,7 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
         } else {
             // set center point of divider
             int halfSize = dividerSize / 2;
-            if (isReverseLayout) {
+            if (isReverseLayout || isTop) {
                 bounds.top = child.getTop() - params.topMargin - halfSize + transitionY;
             } else {
                 bounds.top = child.getBottom() + params.bottomMargin + halfSize + transitionY;
@@ -75,27 +79,20 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
             outRect.set(0, 0, 0, 0);
             return;
         }
-        if (isLastRaw(parent, position, getSpanCount(parent), childCount))// 如果是最后一行，则不需要绘制底部
-        {
+        // 如果是最后一行，则不需要绘制底部
+        if (isLastRaw(parent, position, getSpanCount(parent), childCount)) {
             outRect.set(0, 0, 0, 0);
         } else if (isReverseLayout(parent)) {
             outRect.set(0, 0, getDividerSize(position, parent), 0);
+        }
+        //第一行看看是否要显示顶部
+        else if (mShowFirstDivider && mShowFirstTopDivider && getGroupIndex(position, parent) == 0) {
+            outRect.set(0, getDividerSize(-1, parent), 0, getDividerSize(position, parent));
         } else {
             outRect.set(0, 0, 0, getDividerSize(position, parent));
         }
     }
 
-    private int getDividerSize(int position, RecyclerView parent) {
-        if (mPaintProvider != null) {
-            return (int) mPaintProvider.dividerPaint(position, parent).getStrokeWidth();
-        } else if (mSizeProvider != null) {
-            return mSizeProvider.dividerSize(position, parent);
-        } else if (mDrawableProvider != null) {
-            Drawable drawable = mDrawableProvider.drawableProvider(position, parent);
-            return drawable.getIntrinsicHeight();
-        }
-        throw new RuntimeException("failed to get size");
-    }
 
     /**
      * Interface for controlling divider margin
