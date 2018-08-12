@@ -21,8 +21,10 @@ allprojects {
 dependencies {
     implementation 'com.github.ashLikun:XrecycleView:{latest version}'//XRecycleView
 }
+```
 ### 1.用法
 
+```java
         listSwipeView = (SuperRecyclerView) findViewById(R.id.switchRoot);
         adapter = getAdapter();
         listSwipeView.getRecyclerView().addItemDecoration(getItemDecoration());
@@ -31,8 +33,9 @@ dependencies {
         listSwipeView.setOnRefreshListener(this);
         listSwipeView.setOnLoaddingListener(this);
         adapter.setOnItemClickListener(this);
+```
+
 ### 混肴
-####
     保证CommonAdapter的footerSize和headerSize字段不被混肴
     #某一变量不混淆
     -keepclasseswithmembers class com.xxx.xxx {
