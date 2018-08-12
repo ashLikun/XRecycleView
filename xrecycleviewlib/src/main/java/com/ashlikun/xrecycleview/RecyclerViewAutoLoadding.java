@@ -14,23 +14,13 @@ import android.view.View;
  * 方法功能：自动加载更多的RecyclerView ,setRefreshLayout必须设置要不然无法加载更多
  */
 
-public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter implements BaseSwipeInterface,
+public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements BaseSwipeInterface,
         StatusChangListener, ConfigChang {
 
-    public PagingHelp pagingHelp;
+    public PageHelp pageHelp;
     private RefreshLayout refreshLayout;
 
     private OnLoaddingListener onLoaddingListener;
-
-    @Override
-    public void setAdapter(Adapter adapter) {
-        super.setAdapter(adapter);
-        try {
-            adapter.registerAdapterDataObserver(mDataObserver);
-        } catch (IllegalStateException e) {
-        }
-
-    }
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -54,19 +44,18 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
     @Override
     public void setOnLoaddingListener(OnLoaddingListener onLoaddingListener) {
         this.onLoaddingListener = onLoaddingListener;
-        if (pagingHelp == null) {
-            pagingHelp = new PagingHelp(getContext());
+        if (pageHelp == null) {
+            pageHelp = new PageHelp(getContext());
         } else {
-            pagingHelp.clear();
+            pageHelp.clear();
         }
-        pagingHelp.setStatusChangListener(this);
+        pageHelp.setStatusChangListener(this);
     }
 
     @Override
-    public PagingHelp getPagingHelp() {
-        return pagingHelp;
+    public PageHelp getPageHelp() {
+        return pageHelp;
     }
-
 
     @Override
     public void addFootView(final View view) {
@@ -89,16 +78,17 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
             if (layoutManager instanceof GridLayoutManager) {
                 lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
             } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                int[] into = new int[((StaggeredGridLayoutManager) layoutManager).getSpanCount()];
-                ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(into);
+                int[] into = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
                 lastVisibleItemPosition = findMax(into);
             } else {
                 lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
             }
             if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
-                    && lastVisibleItemPosition >= layoutManager.getItemCount() - 1 && layoutManager.getItemCount() >= layoutManager.getChildCount()) {
+                    && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
+                    && layoutManager.getItemCount() >= layoutManager.getChildCount()
+                    && (pageHelp != null && pageHelp.isNext())) {
                 setState(LoadState.Loadding);
-                if(onLoaddingListener != null) {
+                if (onLoaddingListener != null) {
                     onLoaddingListener.onLoadding();
                 }
             }
@@ -121,6 +111,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
      * 方法功能：设置刷新布局，必须设置要不然无法加载更多
      */
 
+    @Override
     public void setRefreshLayout(RefreshLayout refreshLayout) {
         this.refreshLayout = refreshLayout;
     }
@@ -181,17 +172,11 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         FooterView f = getLoaddFooterView();
         if (f != null) {
             f.setStatus(state);
-            refreshLayout.setEnabled(!f.isLoadMore());//如果正在加载更多，就禁用下拉刷新
+            //如果正在加载更多，就禁用下拉刷新
+            refreshLayout.setEnabled(!f.isLoadMore());
         }
     }
 
-
-    public void setDataSize(int count) {
-        FooterView f = getLoaddFooterView();
-        if (f != null) {
-            f.setDataSize(count);
-        }
-    }
 
     public LoadState getState() {
         FooterView f = getLoaddFooterView();
@@ -202,23 +187,29 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         }
     }
 
+    /**
+     * 设置底部的没有数据时候的文字
+     * 建议使用String.xml  替换R.string.autoloadding_no_data变量
+     */
     @Override
-    public void setAutoloaddingNoData(String autoloaddingNoData) {
+    public void setNoDataFooterText(String autoloaddingNoData) {
         FooterView f = getLoaddFooterView();
         if (f != null) {
-            f.setAutoloaddingNoData(autoloaddingNoData);
+            f.setNoDataFooterText(autoloaddingNoData);
         }
-
     }
 
-    @Override
-    public void setAutoloaddingCompleData(String autoloaddingCompleData) {
+    /**
+     * 设置底部加载中的文字
+     * 建议使用String.xml  替换R.string.loadding变量
+     */
+    public void setLoaddingFooterText(String loaddingFooterText) {
         FooterView f = getLoaddFooterView();
         if (f != null) {
-            f.setAutoloaddingCompleData(autoloaddingCompleData);
+            f.setLoaddingFooterText(loaddingFooterText);
         }
-
     }
+
 
     @Override
     public boolean isLoadMoreEnabled() {
@@ -231,8 +222,9 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         FooterView footerView = getLoaddFooterView();
         if (footerView != null) {
             footerView.setLoadMoreEnabled(loadMoreEnabled);
-            if (!loadMoreEnabled && mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof FooterView) {
-                mFootViews.remove(mFootViews.size() - 1);
+            if (!loadMoreEnabled) {
+                mFootViews.remove(footerView);
+                setFooterSize();
             }
         } else if (loadMoreEnabled) {
             addFooterView();
@@ -254,40 +246,4 @@ public class RecyclerViewAutoLoadding extends RecyclerViewWithHeaderAndFooter im
         return this;
     }
 
-
-    private final AdapterDataObserver mDataObserver = new AdapterDataObserver() {
-        public int getItemCount() {
-            return getAdapter().getItemCount() - getHeaderViewSize() - getFootViewSize();
-        }
-
-        @Override
-        public void onChanged() {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeInserted(int positionStart, int itemCount) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeRemoved(int positionStart, int itemCount) {
-            setDataSize(getItemCount());
-        }
-
-        @Override
-        public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            setDataSize(getItemCount());
-        }
-    };
 }

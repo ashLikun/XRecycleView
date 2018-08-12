@@ -2,25 +2,26 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+import com.ashlikun.circleprogress.CircleProgressView;
 
 
 /**
  * Created by Administrator on 2016/3/14.
  */
-public class FooterView extends RelativeLayout {
-    private MaterialProgressBar progressBar;
+public class FooterView extends LinearLayout {
+    private CircleProgressView progressBar;
     private TextView textView;
     private Context context;
     private LoadState state = LoadState.Init;
-    private int dataSize = 0;
-    private String autoloaddingNoData = getResources().getString(R.string.autoloadding_no_data);
-    private String autoloaddingCompleData = getResources().getString(R.string.autoloadding_comple_data);
+    private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
+    private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
     private boolean loadMoreEnabled = true;
 
     public FooterView(Context context) {
@@ -34,9 +35,12 @@ public class FooterView extends RelativeLayout {
     public FooterView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        LayoutInflater.from(context).inflate( R.layout.base_autoloadding_footer, this);
+        LayoutInflater.from(context).inflate(R.layout.base_autoloadding_footer, this);
+        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, dip2px(50)));
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER);
         textView = (TextView) findViewById(R.id.tvLoadMore);
-        progressBar = (MaterialProgressBar) findViewById(R.id.progressbar);
+        progressBar = (CircleProgressView) findViewById(R.id.progressbar);
     }
 
     @Override
@@ -64,10 +68,10 @@ public class FooterView extends RelativeLayout {
         if (status == LoadState.NoData) {
             progressBar.setVisibility(GONE);
             setVisibility(VISIBLE);
-            textView.setText(dataSize > 0 ? String.format(autoloaddingCompleData, dataSize) : autoloaddingNoData);
+            textView.setText(noDataFooterText);
         } else if (status == LoadState.Loadding) {
             progressBar.setVisibility(VISIBLE);
-            textView.setText(context.getString(R.string.loadding));
+            textView.setText(loaddingFooterText);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Init) {
             setVisibility(GONE);
@@ -86,30 +90,26 @@ public class FooterView extends RelativeLayout {
         return state;
     }
 
-    public String getAutoloaddingNoData() {
-        return autoloaddingNoData;
+    public String getNoDataFooterText() {
+        return noDataFooterText;
     }
 
-    public String getAutoloaddingCompleData() {
-        return autoloaddingCompleData;
+    /**
+     * 设置底部的没有数据时候的文字
+     * 建议使用String.xml  替换R.string.autoloadding_no_data变量
+     */
+    public void setNoDataFooterText(String noDataFooterText) {
+        this.noDataFooterText = noDataFooterText;
     }
 
-    public void setAutoloaddingCompleData(String autoloaddingCompleData) {
-        this.autoloaddingCompleData = autoloaddingCompleData;
+    /**
+     * 设置底部加载中的文字
+     *建议使用String.xml  替换R.string.loadding变量
+     */
+    public void setLoaddingFooterText(String loaddingFooterText) {
+        this.loaddingFooterText = loaddingFooterText;
     }
 
-    public void setAutoloaddingNoData(String autoloaddingNoData) {
-        this.autoloaddingNoData = autoloaddingNoData;
-    }
-
-    public int getDataSize() {
-        return dataSize;
-    }
-
-    public void setDataSize(int dataSize) {
-        this.dataSize = dataSize;
-        setStatus(state);
-    }
 
     public boolean isLoadMoreEnabled() {
         return loadMoreEnabled;
@@ -129,5 +129,10 @@ public class FooterView extends RelativeLayout {
 
     public boolean isLoadMore() {
         return state == LoadState.Loadding;
+    }
+
+    private int dip2px(float dipValue) {
+        final float scale = getResources().getDisplayMetrics().density;
+        return (int) (dipValue * scale + 0.5f);
     }
 }

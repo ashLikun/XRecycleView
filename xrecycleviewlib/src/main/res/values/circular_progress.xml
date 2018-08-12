@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CircleProgressView">
+        <attr name="cpv_borderWidth" format="dimension" />
+        <attr name="cpv_colorSequence" format="reference" />
+        <attr name="cpv_color" format="reference" />
+        <attr name="cpv_sweepAnimationDurationMillis" format="integer" />
+        <attr name="cpv_angleAnimationDurationMillis" format="integer" />
+        <attr name="cpv_minSweepAngle" format="integer" />
+    </declare-styleable>
+
+
+    <dimen name="circle_default_border_width">1.5dp</dimen>
+
+    <array name="circle_default_color_sequence">
+        <item>@color/circle_progress_color</item>
+    </array>
+
+    <integer name="circle_default_sweepAnimationDuration">900</integer>
+    <integer name="circle_default_angleAnimationDuration">2000</integer>
+    <integer name="circle_default_miniSweepAngle">30</integer>
+
+    <color name="circle_progress_color">#999999</color>
+
+</resources>

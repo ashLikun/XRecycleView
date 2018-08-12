@@ -40,6 +40,8 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     protected boolean mShowLastDivider;
     protected boolean mShowFirstDivider;
     protected boolean mPositionInsideItem;
+    protected boolean mShowFirstTopDivider;
+    protected int mFirstTopDividerSize = 0;
     private Paint mPaint;
 
     protected FlexibleDividerDecoration(Builder builder) {
@@ -72,6 +74,9 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         mVisibilityProvider = builder.mVisibilityProvider;
         mShowLastDivider = builder.mShowLastDivider;
         mShowFirstDivider = builder.mShowFirstDivider;
+        mPositionInsideItem = builder.mPositionInsideItem;
+        mShowFirstTopDivider = builder.mShowFirstTopDivider;
+        mFirstTopDividerSize = builder.mFirstTopDividerSize;
     }
 
     private void setSizeProvider(Builder builder) {
@@ -112,24 +117,41 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             if (!mShowFirstDivider && childPosition == 0) {
                 continue;
             }
-            Rect bounds = getDividerBound(childPosition, parent, child);
-
-            switch (mDividerType) {
-                case DRAWABLE:
-                    Drawable drawable = mDrawableProvider.drawableProvider(childPosition, parent);
-                    drawable.setBounds(bounds);
-                    drawable.draw(c);
-                    break;
-                case PAINT:
-                    mPaint = mPaintProvider.dividerPaint(childPosition, parent);
-                    c.drawLine(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
-                    break;
-                case COLOR:
-                    mPaint.setColor(mColorProvider.dividerColor(childPosition, parent));
-                    mPaint.setStrokeWidth(mSizeProvider.dividerSize(childPosition, parent));
-                    c.drawLine(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
-                    break;
+            //绘制第一个的顶部
+            if (mShowFirstTopDivider) {
+                int groupIndex = getGroupIndex(childPosition, parent);
+                if (groupIndex == 0) {
+                    Rect bounds = getDividerBound(childPosition, parent, child, true);
+                    onDraw(c, bounds, childPosition, parent, true);
+                }
             }
+            Rect bounds = getDividerBound(childPosition, parent, child, false);
+            onDraw(c, bounds, childPosition, parent, false);
+        }
+    }
+
+    public void onDraw(Canvas c, Rect bounds, int childPosition, RecyclerView parent, boolean isTop) {
+        switch (mDividerType) {
+            case DRAWABLE:
+                Drawable drawable = mDrawableProvider.drawableProvider(childPosition, parent);
+                drawable.setBounds(bounds);
+                drawable.draw(c);
+                break;
+            case PAINT:
+                mPaint = mPaintProvider.dividerPaint(childPosition, parent);
+                c.drawLine(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
+                break;
+            case COLOR:
+                int dividerSize = 0;
+                mPaint.setColor(mColorProvider.dividerColor(childPosition, parent));
+                if (isTop && mFirstTopDividerSize != 0) {
+                    dividerSize = mFirstTopDividerSize;
+                } else {
+                    dividerSize = mSizeProvider.dividerSize(childPosition, parent);
+                }
+                mPaint.setStrokeWidth(dividerSize);
+                c.drawLine(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
+                break;
         }
     }
 
@@ -220,7 +242,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
      * @param parent   RecyclerView
      * @return group index of items
      */
-    private int getGroupIndex(int position, RecyclerView parent) {
+    public int getGroupIndex(int position, RecyclerView parent) {
         if (parent.getLayoutManager() instanceof GridLayoutManager) {
             GridLayoutManager layoutManager = (GridLayoutManager) parent.getLayoutManager();
             GridLayoutManager.SpanSizeLookup spanSizeLookup = layoutManager.getSpanSizeLookup();
@@ -234,10 +256,9 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     //一共多少列
     protected int getSpanCount(RecyclerView parent) {
         // 列数
-        int spanCount = -1;
+        int spanCount = 1;
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
-
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             spanCount = ((StaggeredGridLayoutManager) layoutManager)
@@ -247,10 +268,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     }
 
 
-
-
-
-    protected abstract Rect getDividerBound(int position, RecyclerView parent, View child);
+    protected abstract Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop);
 
 
     protected abstract void setItemOffsets(Rect outRect, int position, int childCount, RecyclerView parent);
@@ -331,6 +349,18 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         int dividerSize(int position, RecyclerView parent);
     }
 
+    protected int getDividerSize(int position, RecyclerView parent) {
+        if (mPaintProvider != null) {
+            return (int) mPaintProvider.dividerPaint(position, parent).getStrokeWidth();
+        } else if (mSizeProvider != null) {
+            return mSizeProvider.dividerSize(position, parent);
+        } else if (mDrawableProvider != null) {
+            Drawable drawable = mDrawableProvider.drawableProvider(position, parent);
+            return drawable.getIntrinsicWidth();
+        }
+        throw new RuntimeException("failed to get size");
+    }
+
     public static class Builder<T extends Builder> {
 
         private Context mContext;
@@ -348,6 +378,8 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         private boolean mShowLastDivider = false;
         private boolean mShowFirstDivider = true;
         private boolean mPositionInsideItem = false;
+        private boolean mShowFirstTopDivider = false;
+        private int mFirstTopDividerSize = 0;
 
         public Builder(Context context) {
             mContext = context;
@@ -442,6 +474,27 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             return (T) this;
         }
 
+        /**
+         * 是否显示第一个view顶部分割线
+         *
+         * @return
+         */
+        public T showFirstTopDivider() {
+            mShowFirstTopDivider = true;
+            return (T) this;
+        }
+
+        /**
+         * 是否显示第一个view顶部分割线
+         *
+         * @return
+         */
+        public T showFirstTopDivider(int size) {
+            mShowFirstTopDivider = true;
+            mFirstTopDividerSize = size;
+            return (T) this;
+        }
+
         protected void checkBuilderParams() {
             if (mPaintProvider != null) {
                 if (mColorProvider != null) {
@@ -455,9 +508,6 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             }
         }
     }
-
-
-
 
 
 }

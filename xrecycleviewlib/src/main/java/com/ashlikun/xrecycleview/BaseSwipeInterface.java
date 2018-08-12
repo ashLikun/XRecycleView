@@ -11,7 +11,7 @@ public interface BaseSwipeInterface {
 
     void setOnLoaddingListener(OnLoaddingListener swipeRefreshLayout);
 
-    PagingHelp getPagingHelp();
+    PageHelp getPageHelp();
 
     StatusChangListener getStatusChangListener();
 }

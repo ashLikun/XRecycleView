@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,10 +20,10 @@ import java.util.List;
  * 创建时间: 10:12 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：带头部与底部的RecycleView
+ * 功能介绍：带头部与底部的RecycleView，和可以设置最大高度
  */
 
-public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
+public class RecyclerViewExtend extends RecyclerView {
 
     private static final String HEADERSIZE = "headerSize";
     private static final String FOOTERSIZE = "footerSize";
@@ -35,6 +36,14 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     protected ArrayList<View> mFootViews = new ArrayList<>();
     private Adapter mAdapter;
     private WrapAdapter mWrapAdapter;
+    /**
+     * 最大高度
+     */
+    private float maxHeight = 0;
+    /**
+     * 最大比例,相对于宽度
+     */
+    private float maxRatio = 0;
 
     public boolean isHeader(ViewHolder viewHolder) {
         return viewHolder.getItemViewType() == TYPE_HEADER;
@@ -44,23 +53,67 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         return viewHolder.getItemViewType() == TYPE_REFRESH_FOOTER || viewHolder.getItemViewType() == TYPE_FOOTER;
     }
 
-
-    public RecyclerViewWithHeaderAndFooter(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public RecyclerViewWithHeaderAndFooter(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-    }
-
-
-    public RecyclerViewWithHeaderAndFooter(Context context) {
+    public RecyclerViewExtend(Context context) {
         this(context, null);
     }
 
+    public RecyclerViewExtend(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public RecyclerViewExtend(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initView(context, attrs);
+    }
+
+
+    private void initView(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.RecyclerViewExtend);
+        maxRatio = a.getFloat(R.styleable.RecyclerViewExtend_rv_heightRatio, 0);
+        maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_heightDimen, 0);
+        a.recycle();
+    }
 
     public int getDataSize() {
         return mAdapter.getItemCount();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (maxHeight <= 0 && maxRatio <= 0) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            return;
+        }
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+        if (maxHeight <= 0) {
+            maxHeight = maxRatio * widthSize;
+        } else {
+            maxHeight = Math.min(maxHeight, maxRatio * widthSize);
+        }
+        if (maxHeight <= 0) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+            return;
+        }
+        int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (heightMode == MeasureSpec.EXACTLY) {
+            heightSize = heightSize <= maxHeight ? heightSize
+                    : (int) maxHeight;
+        }
+
+        if (heightMode == MeasureSpec.UNSPECIFIED) {
+            heightSize = heightSize <= maxHeight ? heightSize
+                    : (int) maxHeight;
+        }
+        if (heightMode == MeasureSpec.AT_MOST) {
+            heightSize = heightSize <= maxHeight ? heightSize
+                    : (int) maxHeight;
+        }
+        int maxHeightMeasureSpec = MeasureSpec.makeMeasureSpec(heightSize,
+                heightMode);
+        super.onMeasure(widthMeasureSpec, maxHeightMeasureSpec);
     }
 
     @Override
@@ -104,9 +157,13 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     protected void setFooterSize() {
-        if (mAdapter == null) return;
+        if (mAdapter == null) {
+            return;
+        }
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
-        if (cls == null) return;
+        if (cls == null) {
+            return;
+        }
         try {
             Field field = cls.getDeclaredField(FOOTERSIZE);
             field.setAccessible(true);
@@ -122,9 +179,13 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
     }
 
     private void setHeaderSize() {
-        if (mAdapter == null) return;
+        if (mAdapter == null) {
+            return;
+        }
         Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
-        if (cls == null) return;
+        if (cls == null) {
+            return;
+        }
         try {
             Field field = cls.getDeclaredField(HEADERSIZE);
             field.setAccessible(true);
@@ -283,32 +344,57 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
         }
 
         @Override
+        public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+            mAdapter.onDetachedFromRecyclerView(recyclerView);
+        }
+
+        @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
-            mAdapter.onViewAttachedToWindow(holder);
-            ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
-            if (lp != null
-                    && lp instanceof StaggeredGridLayoutManager.LayoutParams
-                    && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
-                StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
-                p.setFullSpan(true);
+            try {
+                if (!isHeader(holder.getLayoutPosition()) && !isFooter(holder.getLayoutPosition()) && !isFooterLoad(holder.getLayoutPosition())) {
+                    mAdapter.onViewAttachedToWindow(holder);
+                    ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+                    if (lp != null
+                            && lp instanceof StaggeredGridLayoutManager.LayoutParams
+                            && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
+                        StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
+                        p.setFullSpan(true);
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(ViewHolder holder) {
+            try {
+                if (!isHeader(holder.getLayoutPosition()) && !isFooter(holder.getLayoutPosition()) && !isFooterLoad(holder.getLayoutPosition())) {
+                    mAdapter.onViewDetachedFromWindow(holder);
+                }
+            } catch (Exception e) {
+
             }
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == TYPE_REFRESH_FOOTER) {
-                return new SimpleViewHolder(mFootViews.get(mFootViews.size() - 1));
+                return new ViewHolder(mFootViews.get(mFootViews.size() - 1)) {
+                };
             } else if (viewType == TYPE_HEADER) {
                 if (headerPosition >= mHeaderViews.size()) {
                     headerPosition = 0;
                 }
 
-                return new SimpleViewHolder(mHeaderViews.get(headerPosition++));
+                return new ViewHolder(mHeaderViews.get(headerPosition++)) {
+                };
             } else if (viewType == TYPE_FOOTER) {
                 if (footerPosition >= mFootViews.size()) {
                     footerPosition = 0;
                 }
-                return new SimpleViewHolder(mFootViews.get(footerPosition++));
+                return new ViewHolder(mFootViews.get(footerPosition++)) {
+                };
             }
             return mAdapter.onCreateViewHolder(parent, viewType);
         }
@@ -404,15 +490,15 @@ public class RecyclerViewWithHeaderAndFooter extends RecyclerView {
                 }
             }
         }
+    }
 
+    public void setMaxHeight(float maxHeight) {
+        this.maxHeight = maxHeight;
+        requestLayout();
+    }
 
-        private class SimpleViewHolder extends ViewHolder {
-            View view;
-
-            public SimpleViewHolder(View itemView) {
-                super(itemView);
-                this.view = itemView;
-            }
-        }
+    public void setMaxRatio(float maxRatio) {
+        this.maxRatio = maxRatio;
+        requestLayout();
     }
 }

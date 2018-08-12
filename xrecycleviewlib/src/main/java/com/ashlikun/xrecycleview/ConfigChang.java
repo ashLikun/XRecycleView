@@ -11,9 +11,7 @@ public interface ConfigChang {
      *
      * @param autoloaddingNoData
      */
-    void setAutoloaddingNoData(String autoloaddingNoData);
-
-    void setAutoloaddingCompleData(String autoloaddingCompleData);
+    void setNoDataFooterText(String autoloaddingNoData);
 
     /**
      * 设置加载更多使能

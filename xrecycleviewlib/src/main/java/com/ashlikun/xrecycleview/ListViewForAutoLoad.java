@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface, StatusChangListener, ConfigChang {
 
-    public PagingHelp pagingHelp = null;
+    public PageHelp pageHelp = null;
     private OnLoaddingListener onLoaddingListener;
     private FooterView footerView;
     private ArrayList<OnScrollListener> scrollListeners = new ArrayList<>();
@@ -77,7 +77,12 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
             if ((refreshLayout == null || !refreshLayout.isRefreshing()) &&
                     totalItemCount - getFooterViewsCount() - getHeaderViewsCount() > 0) {
                 if (lastItemIndex + 1 >= totalItemCount) {// 达到数据的最后一条记录
-                    if (footerView.isLoadMoreEnabled() && getItemCount(totalItemCount) > 0 && footerView.getStates() != LoadState.Loadding && footerView.getStates() != LoadState.NoData && onLoaddingListener != null) {//可以加载
+                    if (footerView.isLoadMoreEnabled()
+                            && getItemCount(totalItemCount) > 0
+                            && footerView.getStates() != LoadState.Loadding
+                            && footerView.getStates() != LoadState.NoData
+                            && onLoaddingListener != null
+                            && pageHelp != null && pageHelp.isNext()) {//可以加载
                         setState(LoadState.Loadding);
                         onLoaddingListener.onLoadding();
                     }
@@ -95,6 +100,7 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
         return totalItemCount - getFooterViewsCount() - getHeaderViewsCount();
     }
 
+    @Override
     public RefreshLayout getRefreshLayout() {
         return refreshLayout;
     }
@@ -106,23 +112,11 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
      * 方法功能：设置刷新布局，必须设置要不然无法加载更多
      */
 
+    @Override
     public void setRefreshLayout(RefreshLayout refreshLayout) {
         this.refreshLayout = refreshLayout;
     }
 
-    public void setDataSize() {
-        if (footerView != null) {
-            footerView.setDataSize(pagingHelp.getRecordCount());
-        }
-    }
-
-    @Override
-    public void setAutoloaddingCompleData(String autoloaddingCompleData) {
-        if (footerView != null) {
-            footerView.setAutoloaddingCompleData(autoloaddingCompleData);
-        }
-
-    }
 
     public LoadState getState() {
         return footerView.getStates();
@@ -136,14 +130,15 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
         return onLoaddingListener;
     }
 
+    @Override
     public void setOnLoaddingListener(OnLoaddingListener onLoaddingListener) {
         this.onLoaddingListener = onLoaddingListener;
-        if (pagingHelp == null) {
-            pagingHelp = new PagingHelp(getContext());
+        if (pageHelp == null) {
+            pageHelp = new PageHelp(getContext());
         } else {
-            pagingHelp.clear();
+            pageHelp.clear();
         }
-        pagingHelp.setStatusChangListener(this);
+        pageHelp.setStatusChangListener(this);
     }
 
 
@@ -159,7 +154,6 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
      */
     @Override
     public void noData() {
-        setDataSize();
         setState(LoadState.NoData);
     }
 
@@ -179,9 +173,9 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
     }
 
     @Override
-    public void setAutoloaddingNoData(String autoloaddingNoData) {
+    public void setNoDataFooterText(String autoloaddingNoData) {
         if (footerView != null) {
-            footerView.setAutoloaddingNoData(autoloaddingNoData);
+            footerView.setNoDataFooterText(autoloaddingNoData);
         }
     }
 
@@ -198,8 +192,8 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
     }
 
     @Override
-    public PagingHelp getPagingHelp() {
-        return pagingHelp;
+    public PageHelp getPageHelp() {
+        return pageHelp;
     }
 
     @Override
