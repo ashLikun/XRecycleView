@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ScaleImageView"><attr format="integer" name="sci_ratio"/><attr name="sci_orientation">
+            <enum name="width" value="0"/>
+            <enum name="height" value="1"/>
+        </attr></declare-styleable>
+</resources>

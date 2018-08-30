@@ -3,7 +3,6 @@ package com.ashlikun.xrecycleview.divider;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.DimenRes;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -11,8 +10,13 @@ import android.view.View;
 
 
 /**
- * Created by yqritc on 2015/01/15.
+ * @author　　: 李坤
+ * 创建时间: 2018/8/30 16:51
+ * 邮箱　　：496546144@qq.com
+ * <p>
+ * 功能介绍：垂直的分割线
  */
+
 public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
     private MarginProvider mMarginProvider;
@@ -26,8 +30,7 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
     protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop) {
 
         Rect bounds = new Rect(0, 0, 0, 0);
-        int transitionX = (int) ViewCompat.getTranslationX(child);
-        int transitionY = (int) ViewCompat.getTranslationY(child);
+        int transitionX = (int) child.getTranslationX();
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
         bounds.top = child.getTop() - params.topMargin + mMarginProvider.dividerTopMargin(position, parent);
         bounds.bottom = child.getBottom() + params.bottomMargin - mMarginProvider.dividerBottomMargin(position, parent);
@@ -70,19 +73,21 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
 
     @Override
-    protected void setItemOffsets(Rect outRect, int position, int childCount, RecyclerView parent) {
+    protected void setItemOffsets(Rect outRect, View v, int position, int childCount, RecyclerView parent) {
         if (mPositionInsideItem) {
             outRect.set(0, 0, 0, 0);
             return;
         }
-        int spanCount = getSpanCount(parent);//多少列
-        if (spanCount <= 0) {
-            outRect.set(0, 0, getDividerSize(position, parent), 0);
+        //多少列
+        int spanCount = getSpanCount(parent, position);
+        if (spanCount <= 1) {
+            outRect.set(0, 0, 0, 0);
             return;
         }
         //当前第几列
-        int spanIndex = getIndexColum(parent, position, spanCount, childCount);
-        int dividerAllSize = 0;//总共大小
+        int spanIndex = getIndexColum(parent, v, position, spanCount);
+        //总共大小
+        int dividerAllSize = 0;
         for (int i = 0; i < spanCount - 1; i++) {
             //当前列开始的第一个
             int startPoi = position - spanIndex + 1;
@@ -90,21 +95,18 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
         }
         //每个item应该大小
         int itemDivSize = Math.round(dividerAllSize / ((spanCount - 1) * 1f));
-        // 如果是最后一列，则不需要绘制右边
-        if (spanIndex == spanCount) {
+
+        if (spanIndex == spanCount - 1) {
+            // 如果是最后一列，则不需要绘制右边
             outRect.set(itemDivSize / 2, 0, 0, 0);
-            return;
-        }
-        //第一列不绘制左边
-        else if (spanIndex == 1) {
+        } else if (spanIndex == 0) {
+            //第一列不绘制左边
             outRect.set(0, 0, itemDivSize / 2, 0);
-        } else {//中间的左右都绘制
+        } else {
+            //中间的左右都绘制
             outRect.set(Math.round(itemDivSize / 2f), 0, Math.round(itemDivSize / 2f), 0);
         }
-
-
     }
-
 
     /**
      * Interface for controlling divider margin
@@ -186,24 +188,24 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
         }
     }
 
-    //当前是第几列
-    protected int getIndexColum(RecyclerView parent, int pos, int spanCount,
-                                int childCount) {
+    /**
+     * 当前是第几列
+     *
+     * @param parent
+     * @param view
+     * @param pos
+     * @param spanCount
+     * @return
+     */
+    protected int getIndexColum(RecyclerView parent, View view, int pos, int spanCount) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        int posSpan = (pos + 1) % spanCount;
+        int posSpan = pos % spanCount;
         if (layoutManager instanceof GridLayoutManager) {
-
-            return posSpan == 0 ? spanCount : posSpan;
+            return posSpan;
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-            int orientation = ((StaggeredGridLayoutManager) layoutManager)
-                    .getOrientation();
-            if (orientation == StaggeredGridLayoutManager.VERTICAL) {
-                return posSpan == 0 ? spanCount : posSpan;
-            } else {
-                childCount = childCount - childCount % spanCount;
-                if (pos >= childCount)// 如果是最后一列，则不需要绘制右边
-                    return spanCount;
-            }
+            //瀑布流专属
+            StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
+            return params.getSpanIndex();
         }
         return spanCount;
     }

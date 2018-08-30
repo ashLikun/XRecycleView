@@ -170,7 +170,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         if (mVisibilityProvider.shouldHideDivider(groupIndex, parent)) {
             return;
         }
-        setItemOffsets(rect, position, itemCount, parent);
+        setItemOffsets(rect, v, position, itemCount, parent);
 
     }
 
@@ -253,13 +253,19 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         return position;
     }
 
-    //一共多少列
-    protected int getSpanCount(RecyclerView parent) {
+    /**
+     * 一共多少列
+     * @param parent
+     * @param position
+     * @return
+     */
+    protected int getSpanCount(RecyclerView parent, int position) {
         // 列数
         int spanCount = 1;
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
         if (layoutManager instanceof GridLayoutManager) {
-            spanCount = ((GridLayoutManager) layoutManager).getSpanCount();
+            spanCount = ((GridLayoutManager) layoutManager).getSpanCount() + 1;
+            spanCount = Math.abs(spanCount - ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanSize(position));
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             spanCount = ((StaggeredGridLayoutManager) layoutManager)
                     .getSpanCount();
@@ -271,7 +277,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     protected abstract Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop);
 
 
-    protected abstract void setItemOffsets(Rect outRect, int position, int childCount, RecyclerView parent);
+    protected abstract void setItemOffsets(Rect outRect, View v, int position, int childCount, RecyclerView parent);
 
     /**
      * Interface for controlling divider visibility
@@ -375,10 +381,25 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
                 return false;
             }
         };
+        /**
+         * 是否显示最后一个分割线
+         */
         private boolean mShowLastDivider = false;
+        /**
+         * 是否显示第一个分割线
+         */
         private boolean mShowFirstDivider = true;
+        /**
+         * 分割线是否插入View里面
+         */
         private boolean mPositionInsideItem = false;
+        /**
+         * 是否显示第一个顶部分割线
+         */
         private boolean mShowFirstTopDivider = false;
+        /**
+         * 如果显示第一个顶部，那么第一个顶部大小
+         */
         private int mFirstTopDividerSize = 0;
 
         public Builder(Context context) {

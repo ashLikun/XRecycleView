@@ -3,15 +3,18 @@ package com.ashlikun.xrecycleview.divider;
 import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.DimenRes;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 
 /**
- * Created by yqritc on 2015/01/15.
+ * @author　　: 李坤
+ * 创建时间: 2018/8/30 16:52
+ * 邮箱　　：496546144@qq.com
+ * <p>
+ * 功能介绍：水平分割线
  */
+
 public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
 
     private MarginProvider mMarginProvider;
@@ -24,7 +27,6 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
     @Override
     protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop) {
         Rect bounds = new Rect(0, 0, 0, 0);
-        int transitionX = (int) child.getTranslationX();
         int transitionY = (int) child.getTranslationY();
 
         int dividerSize = 0;
@@ -74,15 +76,12 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
 
 
     @Override
-    protected void setItemOffsets(Rect outRect, int position, int childCount, RecyclerView parent) {
+    protected void setItemOffsets(Rect outRect, View v, int position, int childCount, RecyclerView parent) {
         if (mPositionInsideItem) {
             outRect.set(0, 0, 0, 0);
             return;
         }
-        // 如果是最后一行，则不需要绘制底部
-        if (isLastRaw(parent, position, getSpanCount(parent), childCount)) {
-            outRect.set(0, 0, 0, 0);
-        } else if (isReverseLayout(parent)) {
+        if (isReverseLayout(parent)) {
             outRect.set(0, 0, getDividerSize(position, parent), 0);
         }
         //第一行看看是否要显示顶部
@@ -172,33 +171,5 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
             checkBuilderParams();
             return new HorizontalDividerItemDecoration(this);
         }
-    }
-
-    protected boolean isLastRaw(RecyclerView parent, int pos, int spanCount,
-                                int childCount) {
-        RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        if (layoutManager instanceof GridLayoutManager) {
-            childCount = childCount - childCount % spanCount;
-            if (pos >= childCount)// 如果是最后一行，则不需要绘制底部
-                return true;
-        } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-            int orientation = ((StaggeredGridLayoutManager) layoutManager)
-                    .getOrientation();
-            // StaggeredGridLayoutManager 且纵向滚动
-            if (orientation == StaggeredGridLayoutManager.VERTICAL) {
-                childCount = childCount - childCount % spanCount;
-                // 如果是最后一行，则不需要绘制底部
-                if (pos >= childCount)
-                    return true;
-            } else
-            // StaggeredGridLayoutManager 且横向滚动
-            {
-                // 如果是最后一行，则不需要绘制底部
-                if ((pos + 1) % spanCount == 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 }
