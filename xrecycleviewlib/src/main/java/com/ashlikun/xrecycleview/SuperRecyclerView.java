@@ -25,6 +25,14 @@ import com.ashlikun.xrecycleview.listener.OnGoTopClickListener;
  */
 
 public class SuperRecyclerView extends FrameLayout {
+
+    /**
+     * 下拉刷新是否用自定义的，
+     * true:使用自定义的base_swipe_custom_recycle.xml
+     * false:使用自定义的base_swipe_recycle.xml    google自己的
+     */
+    public static boolean REFRESH_IS_CUSTOM = false;
+
     //返回顶部的animMenu的Tag
     public static final String TAG_ANIMMENU_GO_TOP = "TAG_ANIMMENU_GO_TOP";
     public static final int DEFAULT_ANIM_MENU_POSITION = 5;
@@ -148,9 +156,13 @@ public class SuperRecyclerView extends FrameLayout {
     }
 
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_recycle, this, true);
-        refreshLayout = (RefreshLayout) findViewById(R.id.swipe);
-        recyclerView = (RecyclerViewAutoLoadding) findViewById(R.id.list_swipe_target);
+        if (!REFRESH_IS_CUSTOM) {
+            LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_recycle, this, true);
+        } else {
+            LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_custom_recycle, this, true);
+        }
+        refreshLayout = findViewById(R.id.swipe);
+        recyclerView = findViewById(R.id.list_swipe_target);
         if (isGoTop) {
             addGoTopView();
         }
@@ -164,7 +176,7 @@ public class SuperRecyclerView extends FrameLayout {
 
     public void setColorSchemeResources(RefreshLayout refreshLayout) {
         TypedArray array = getContext().getTheme().obtainStyledAttributes(new int[]{R.attr.SwipeRefreshLayout_Color1, R.attr.SwipeRefreshLayout_Color2, R.attr.SwipeRefreshLayout_Color3, R.attr.SwipeRefreshLayout_Color4});
-        refreshLayout.setColorSchemeColors(array.getColor(0, 0xff0000), array.getColor(1, 0xff0000), array.getColor(2, 0xff0000), array.getColor(3, 0xff0000));
+        refreshLayout.setColorSchemeColors(array.getColor(0, 0xffff0000), array.getColor(1, 0xffff0000), array.getColor(2, 0xffff0000), array.getColor(3, 0xffff0000));
         array.recycle();
     }
 

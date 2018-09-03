@@ -25,6 +25,13 @@ dependencies {
 ### 1.用法
 
 ```java
+         /**
+             * 下拉刷新是否用自定义的，
+             * true:使用自定义的base_swipe_custom_recycle.xml
+             * false:使用自定义的base_swipe_recycle.xml    google自己的
+             */
+        public static boolean REFRESH_IS_CUSTOM = false;
+
         listSwipeView = (SuperRecyclerView) findViewById(R.id.switchRoot);
         adapter = getAdapter();
         listSwipeView.getRecyclerView().addItemDecoration(getItemDecoration());
