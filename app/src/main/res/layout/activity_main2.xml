@@ -11,10 +11,10 @@
         android:onClick="onClick"
         android:text="测试" />
 
-    <com.ashlikun.xrecycleview.SuperRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:rv_heightRatio="1"></com.ashlikun.xrecycleview.SuperRecyclerView>
+        app:rv_heightRatio="1"></android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

@@ -255,6 +255,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
 
     /**
      * 一共多少列
+     *
      * @param parent
      * @param position
      * @return
@@ -266,6 +267,11 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         if (layoutManager instanceof GridLayoutManager) {
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount() + 1;
             spanCount = Math.abs(spanCount - ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanSize(position));
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            //水平布局
+            if (((LinearLayoutManager) layoutManager).getOrientation() == RecyclerView.HORIZONTAL) {
+                return parent.getAdapter().getItemCount();
+            }
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             spanCount = ((StaggeredGridLayoutManager) layoutManager)
                     .getSpanCount();

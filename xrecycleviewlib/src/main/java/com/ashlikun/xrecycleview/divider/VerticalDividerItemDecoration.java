@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.support.annotation.DimenRes;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -23,6 +24,7 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
     protected VerticalDividerItemDecoration(Builder builder) {
         super(builder);
+
         mMarginProvider = builder.mMarginProvider;
     }
 
@@ -148,6 +150,7 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
         public Builder(Context context) {
             super(context);
+            showLastDivider();
         }
 
         public Builder margin(final int topMargin, final int bottomMargin) {
@@ -202,6 +205,11 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
         int posSpan = pos % spanCount;
         if (layoutManager instanceof GridLayoutManager) {
             return posSpan;
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            //水平布局
+            if (((LinearLayoutManager) layoutManager).getOrientation() == RecyclerView.HORIZONTAL) {
+                return posSpan;
+            }
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             //瀑布流专属
             StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
