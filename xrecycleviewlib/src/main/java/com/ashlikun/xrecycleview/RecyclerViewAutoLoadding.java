@@ -11,7 +11,7 @@ import android.view.View;
  * 作者　　: 李坤
  * 创建时间: 2017/4/12 0012 16:15
  * <p>
- * 方法功能：自动加载更多的RecyclerView ,setRefreshLayout必须设置要不然无法加载更多
+ * 方法功能：自动加载更多的RecyclerView ,setRefreshLayout必须设置要不然无法下拉加载
  */
 
 public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements BaseSwipeInterface,
@@ -108,7 +108,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      * 作者　　: 李坤
      * 创建时间: 2017/4/12 0012 16:14
      * <p>
-     * 方法功能：设置刷新布局，必须设置要不然无法加载更多
+     * 方法功能：设置刷新布局，必须设置要不然无法下拉加载
      */
 
     @Override
@@ -173,7 +173,9 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         if (f != null) {
             f.setStatus(state);
             //如果正在加载更多，就禁用下拉刷新
-            refreshLayout.setEnabled(!f.isLoadMore());
+            if(refreshLayout != null) {
+                refreshLayout.setEnabled(!f.isLoadMore());
+            }
         }
     }
 
