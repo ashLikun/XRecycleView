@@ -58,6 +58,11 @@ public interface RefreshLayout {
 
     public void setEnabled(boolean refreshing);
 
+    /**
+     * 是否禁用下拉刷新
+     */
+    public boolean isEnabled();
+
     public interface OnRefreshListener {
         void onRefresh();
     }

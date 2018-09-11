@@ -21,6 +21,14 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     private RefreshLayout refreshLayout;
 
     private OnLoaddingListener onLoaddingListener;
+    /**
+     * 初始是否刷新开启
+     */
+    private boolean isInitEnableRefresh = false;
+    /**
+     *
+     */
+    private boolean isOneEnableRefresh = true;
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -173,8 +181,22 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         if (f != null) {
             f.setStatus(state);
             //如果正在加载更多，就禁用下拉刷新
-            if(refreshLayout != null) {
-                refreshLayout.setEnabled(!f.isLoadMore());
+            if (refreshLayout != null) {
+                //这里要注意如果默认时候就不可以刷新那不能把他设置成可以刷新
+                if (f.isLoadMore()) {
+                    if (isOneEnableRefresh) {
+                        isOneEnableRefresh = false;
+                        //记录初始是否刷新
+                        isInitEnableRefresh = refreshLayout.isEnabled();
+                    }
+                    refreshLayout.setEnabled(false);
+                } else {
+                    //其他状态下 还原成初始
+                    if (isInitEnableRefresh) {
+                        refreshLayout.setEnabled(isInitEnableRefresh);
+                    }
+                    isOneEnableRefresh = true;
+                }
             }
         }
     }
