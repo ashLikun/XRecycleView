@@ -330,12 +330,23 @@ public class RecyclerViewExtend extends RecyclerView {
             mAdapter.onAttachedToRecyclerView(recyclerView);
             LayoutManager manager = recyclerView.getLayoutManager();
             if (manager instanceof GridLayoutManager) {
+                //可能之前已经有自定义的了,这里不能直接替换
                 final GridLayoutManager gridManager = ((GridLayoutManager) manager);
+                final GridLayoutManager.SpanSizeLookup old = gridManager.getSpanSizeLookup();
                 gridManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
                     @Override
                     public int getSpanSize(int position) {
-                        return (isHeader(position) || isFooter(position))
-                                ? gridManager.getSpanCount() : 1;
+                        if (isHeader(position) || isFooter(position)) {
+                            //占满全行
+                            return gridManager.getSpanCount();
+                        } else {
+                            if (old != null) {
+                                //使用之前设置过的 并且positions是去除头部后的位置
+                                return old.getSpanSize(position - getHeadersCount());
+                            } else {
+                                return 1;
+                            }
+                        }
                     }
                 });
                 gridManager.setSpanCount(gridManager.getSpanCount());
