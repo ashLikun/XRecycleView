@@ -183,9 +183,6 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
             return marginResId(verticalMarginId, verticalMarginId);
         }
 
-        public Builder isLeftRightDraw() {
-            return this;
-        }
 
         public Builder marginProvider(MarginProvider provider) {
             mMarginProvider = provider;

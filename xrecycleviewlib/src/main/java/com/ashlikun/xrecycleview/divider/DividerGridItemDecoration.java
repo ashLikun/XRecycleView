@@ -148,20 +148,26 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
         //当前第几列
         if (spanCount > 1) {
             int spanIndex = getIndexColum(parent, view, position, spanCount);
+            int dividerSize = mDivider.getIntrinsicHeight();
+            //每列大小
+            int eachWidth = (spanCount - 1) * dividerSize / spanCount;
+            int left = position % spanCount * (dividerSize - eachWidth);
+            int right = eachWidth - left;
             if (spanIndex == spanCount - 1) {
                 // 如果是最后一列，则不需要绘制右边
                 outRect.right = 0;
-                outRect.left = mDivider.getIntrinsicWidth() / 2;
+                outRect.left = left;
             } else if (spanIndex == 0) {
                 //第一列不绘制左边
-                outRect.right = mDivider.getIntrinsicWidth() / 2;
+                outRect.right = right;
                 outRect.left = 0;
             } else {//中间的左右都绘制
-                outRect.left = mDivider.getIntrinsicWidth() / 2;
-                outRect.right = mDivider.getIntrinsicWidth() / 2;
+                outRect.left = left;
+                outRect.right = right;
             }
         }
     }
+
 
     /**
      * 当前是第几列
