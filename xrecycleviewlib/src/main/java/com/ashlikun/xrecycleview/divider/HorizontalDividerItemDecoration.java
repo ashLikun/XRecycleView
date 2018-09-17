@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview.divider;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.DimenRes;
 import android.support.v7.widget.RecyclerView;
@@ -16,21 +17,43 @@ import android.view.View;
  */
 
 public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
-
+    /**
+     * 是否显示第一个顶部分割线
+     */
+    private boolean mShowFirstTopDivider = false;
+    /**
+     * 如果显示第一个顶部，那么第一个顶部大小
+     */
+    private int mFirstTopDividerSize = 0;
     private MarginProvider mMarginProvider;
 
     protected HorizontalDividerItemDecoration(Builder builder) {
         super(builder);
         mMarginProvider = builder.mMarginProvider;
+        mShowFirstTopDivider = builder.mShowFirstTopDivider;
+        mFirstTopDividerSize = builder.mFirstTopDividerSize;
     }
 
     @Override
+    protected void onDrawDivider(Canvas c, RecyclerView parent, View child, int position, RecyclerView.State state) {
+        int groupIndex = getGroupIndex(position, parent);
+        boolean showFirstTopDivider = groupIndex == 0 && mShowFirstTopDivider && mFirstTopDividerSize != 0;
+        //绘制第一个的顶部
+        if (showFirstTopDivider) {
+            Rect bounds = getDividerBound(position, parent, child, true);
+            onDraw(c, bounds, position, parent, mFirstTopDividerSize);
+        }
+        Rect bounds = getDividerBound(position, parent, child, false);
+        onDraw(c, bounds, position, parent, getDividerSize(position, parent));
+    }
+
     protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop) {
         Rect bounds = new Rect(0, 0, 0, 0);
         int transitionY = (int) child.getTranslationY();
 
-        int dividerSize = 0;
-        if (isTop && mFirstTopDividerSize != 0) {
+
+        int dividerSize;
+        if (isTop) {
             dividerSize = mFirstTopDividerSize;
         } else {
             dividerSize = getDividerSize(position, parent);
@@ -42,7 +65,6 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
 
         boolean isReverseLayout = isReverseLayout(parent);
         if (mDividerType == DividerType.DRAWABLE) {
-            // set top and bottom position of divider
             if (isReverseLayout || isTop) {
                 bounds.bottom = child.getTop() - params.topMargin + transitionY;
                 bounds.top = bounds.bottom - dividerSize;
@@ -51,7 +73,6 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
                 bounds.bottom = bounds.top + dividerSize;
             }
         } else {
-            // set center point of divider
             int halfSize = dividerSize / 2;
             if (isReverseLayout || isTop) {
                 bounds.top = child.getTop() - params.topMargin - halfSize + transitionY;
@@ -118,7 +139,14 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
     }
 
     public static class Builder extends FlexibleDividerDecoration.Builder<Builder> {
-
+        /**
+         * 是否显示第一个顶部分割线
+         */
+        private boolean mShowFirstTopDivider = false;
+        /**
+         * 如果显示第一个顶部，那么第一个顶部大小
+         */
+        private int mFirstTopDividerSize = 0;
         private MarginProvider mMarginProvider = new MarginProvider() {
             @Override
             public int dividerLeftMargin(int position, RecyclerView parent) {
@@ -164,6 +192,27 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
 
         public Builder marginProvider(MarginProvider provider) {
             mMarginProvider = provider;
+            return this;
+        }
+
+        /**
+         * 是否显示第一个view顶部分割线
+         *
+         * @return
+         */
+        public Builder showFirstTopDivider() {
+            mShowFirstTopDivider = true;
+            return this;
+        }
+
+        /**
+         * 是否显示第一个view顶部分割线
+         *
+         * @return
+         */
+        public Builder showFirstTopDivider(int size) {
+            mShowFirstTopDivider = true;
+            mFirstTopDividerSize = size;
             return this;
         }
 

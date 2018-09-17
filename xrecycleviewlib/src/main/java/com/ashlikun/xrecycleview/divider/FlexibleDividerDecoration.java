@@ -27,6 +27,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             android.R.attr.listDivider
     };
 
+
     protected enum DividerType {
         DRAWABLE, PAINT, COLOR
     }
@@ -40,8 +41,6 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     protected boolean mShowLastDivider;
     protected boolean mShowFirstDivider;
     protected boolean mPositionInsideItem;
-    protected boolean mShowFirstTopDivider;
-    protected int mFirstTopDividerSize = 0;
     private Paint mPaint;
 
     protected FlexibleDividerDecoration(Builder builder) {
@@ -75,8 +74,6 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         mShowLastDivider = builder.mShowLastDivider;
         mShowFirstDivider = builder.mShowFirstDivider;
         mPositionInsideItem = builder.mPositionInsideItem;
-        mShowFirstTopDivider = builder.mShowFirstTopDivider;
-        mFirstTopDividerSize = builder.mFirstTopDividerSize;
     }
 
     private void setSizeProvider(Builder builder) {
@@ -117,20 +114,22 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             if (!mShowFirstDivider && childPosition == 0) {
                 continue;
             }
-            //绘制第一个的顶部
-            if (mShowFirstTopDivider) {
-                int groupIndex = getGroupIndex(childPosition, parent);
-                if (groupIndex == 0) {
-                    Rect bounds = getDividerBound(childPosition, parent, child, true);
-                    onDraw(c, bounds, childPosition, parent, true);
-                }
-            }
-            Rect bounds = getDividerBound(childPosition, parent, child, false);
-            onDraw(c, bounds, childPosition, parent, false);
+            onDrawDivider(c, parent, child, childPosition, state);
         }
     }
 
-    public void onDraw(Canvas c, Rect bounds, int childPosition, RecyclerView parent, boolean isTop) {
+    protected abstract void onDrawDivider(Canvas c, RecyclerView parent, View child, int childPosition, RecyclerView.State state);
+
+    /**
+     * 提供绘制分割线方法
+     *
+     * @param c
+     * @param bounds
+     * @param childPosition
+     * @param parent
+     * @param dividerSize
+     */
+    public void onDraw(Canvas c, Rect bounds, int childPosition, RecyclerView parent, int dividerSize) {
         switch (mDividerType) {
             case DRAWABLE:
                 Drawable drawable = mDrawableProvider.drawableProvider(childPosition, parent);
@@ -142,13 +141,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
                 c.drawLine(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
                 break;
             case COLOR:
-                int dividerSize = 0;
                 mPaint.setColor(mColorProvider.dividerColor(childPosition, parent));
-                if (isTop && mFirstTopDividerSize != 0) {
-                    dividerSize = mFirstTopDividerSize;
-                } else {
-                    dividerSize = mSizeProvider.dividerSize(childPosition, parent);
-                }
                 mPaint.setStrokeWidth(dividerSize);
                 c.drawLine(bounds.left, bounds.top, bounds.right, bounds.bottom, mPaint);
                 break;
@@ -166,8 +159,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         if (!mShowFirstDivider && position == 0) {
             return;
         }
-        int groupIndex = getGroupIndex(position, parent);
-        if (mVisibilityProvider.shouldHideDivider(groupIndex, parent)) {
+        if (mVisibilityProvider.shouldHideDivider(position, parent)) {
             return;
         }
         setItemOffsets(rect, v, position, itemCount, parent);
@@ -216,31 +208,8 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     }
 
     /**
-     * Determines whether divider was already drawn for the row the item is in,
-     * effectively only makes sense for a grid
-     *
-     * @param position current view position to draw divider
-     * @param parent   RecyclerView
-     * @return true if the divider can be skipped as it is in the same row as the previous one.
-     */
-    private boolean wasDividerAlreadyDrawn(int position, RecyclerView parent) {
-        if (parent.getLayoutManager() instanceof GridLayoutManager) {
-            GridLayoutManager layoutManager = (GridLayoutManager) parent.getLayoutManager();
-            GridLayoutManager.SpanSizeLookup spanSizeLookup = layoutManager.getSpanSizeLookup();
-            int spanCount = layoutManager.getSpanCount();
-            return spanSizeLookup.getSpanIndex(position, spanCount) > 0;
-        }
-
-        return false;
-    }
-
-    /**
-     * Returns a group index for GridLayoutManager.
-     * for LinearLayoutManager, always returns position.
-     *
-     * @param position current view position to draw divider
-     * @param parent   RecyclerView
-     * @return group index of items
+     * 返回GridLayoutManager的组索引。
+     * 对于线性layoutmanager，总是返回位置。
      */
     public int getGroupIndex(int position, RecyclerView parent) {
         if (parent.getLayoutManager() instanceof GridLayoutManager) {
@@ -280,23 +249,10 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     }
 
 
-    protected abstract Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop);
-
-
     protected abstract void setItemOffsets(Rect outRect, View v, int position, int childCount, RecyclerView parent);
 
-    /**
-     * Interface for controlling divider visibility
-     */
     public interface VisibilityProvider {
 
-        /**
-         * Returns true if divider should be hidden.
-         *
-         * @param position Divider position (or group index for GridLayoutManager)
-         * @param parent   RecyclerView
-         * @return True if the divider at position should be hidden
-         */
         boolean shouldHideDivider(int position, RecyclerView parent);
     }
 
@@ -399,14 +355,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
          * 分割线是否插入View里面
          */
         private boolean mPositionInsideItem = false;
-        /**
-         * 是否显示第一个顶部分割线
-         */
-        private boolean mShowFirstTopDivider = false;
-        /**
-         * 如果显示第一个顶部，那么第一个顶部大小
-         */
-        private int mFirstTopDividerSize = 0;
+
 
         public Builder(Context context) {
             mContext = context;
@@ -501,26 +450,6 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
             return (T) this;
         }
 
-        /**
-         * 是否显示第一个view顶部分割线
-         *
-         * @return
-         */
-        public T showFirstTopDivider() {
-            mShowFirstTopDivider = true;
-            return (T) this;
-        }
-
-        /**
-         * 是否显示第一个view顶部分割线
-         *
-         * @return
-         */
-        public T showFirstTopDivider(int size) {
-            mShowFirstTopDivider = true;
-            mFirstTopDividerSize = size;
-            return (T) this;
-        }
 
         protected void checkBuilderParams() {
             if (mPaintProvider != null) {

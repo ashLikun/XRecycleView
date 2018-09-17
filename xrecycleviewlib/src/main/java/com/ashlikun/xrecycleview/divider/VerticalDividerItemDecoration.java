@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview.divider;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.support.annotation.DimenRes;
 import android.support.v7.widget.GridLayoutManager;
@@ -29,20 +30,28 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
     }
 
     @Override
-    protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isTop) {
+    protected void onDrawDivider(Canvas c, RecyclerView parent, View child, int position, RecyclerView.State state) {
+        int divSize = getDividerSize(position, parent);
+        Rect bounds = getDividerBound(position, parent, child, false);
+        onDraw(c, bounds, position, parent, divSize);
+    }
+
+    protected Rect getDividerBound(int position, RecyclerView parent, View child, boolean isLeft) {
 
         Rect bounds = new Rect(0, 0, 0, 0);
         int transitionX = (int) child.getTranslationX();
         RecyclerView.LayoutParams params = (RecyclerView.LayoutParams) child.getLayoutParams();
-        bounds.top = child.getTop() - params.topMargin + mMarginProvider.dividerTopMargin(position, parent);
-        bounds.bottom = child.getBottom() + params.bottomMargin - mMarginProvider.dividerBottomMargin(position, parent);
+        bounds.top = child.getTop() - params.topMargin + (isLeft ? 0 : mMarginProvider.dividerTopMargin(position, parent));
+        bounds.bottom = child.getBottom() + params.bottomMargin - (isLeft ? 0 : mMarginProvider.dividerBottomMargin(position, parent));
 
 
         int dividerSize = getDividerSize(position, parent);
+        if (isLeft) {
+            dividerSize = dividerSize / 2;
+        }
         boolean isReverseLayout = isReverseLayout(parent);
         if (mDividerType == DividerType.DRAWABLE) {
-            // set left and right position of divider
-            if (isReverseLayout) {
+            if (isReverseLayout | isLeft) {
                 bounds.right = child.getLeft() - params.leftMargin + transitionX;
                 bounds.left = bounds.right - dividerSize;
             } else {
@@ -50,9 +59,8 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
                 bounds.right = bounds.left + dividerSize;
             }
         } else {
-            // set center point of divider
             int halfSize = dividerSize / 2;
-            if (isReverseLayout) {
+            if (isReverseLayout | isLeft) {
                 bounds.left = child.getLeft() - params.leftMargin - halfSize + transitionX;
             } else {
                 bounds.left = child.getRight() + params.rightMargin + halfSize + transitionX;
@@ -88,25 +96,20 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
         }
         //当前第几列
         int spanIndex = getIndexColum(parent, v, position, spanCount);
-        //总共大小
-        int dividerAllSize = 0;
-        for (int i = 0; i < spanCount - 1; i++) {
-            //当前列开始的第一个
-            int startPoi = position - spanIndex + 1;
-            dividerAllSize += getDividerSize(startPoi + i, parent);
-        }
-        //每个item应该大小
-        int itemDivSize = Math.round(dividerAllSize / ((spanCount - 1) * 1f));
-
+        int dividerSize = getDividerSize(position, parent);
+        //每列大小
+        int eachWidth = (spanCount - 1) * dividerSize / spanCount;
+        int left = position % spanCount * (dividerSize - eachWidth);
+        int right = eachWidth - left;
         if (spanIndex == spanCount - 1) {
             // 如果是最后一列，则不需要绘制右边
-            outRect.set(itemDivSize / 2, 0, 0, 0);
+            outRect.set(left, 0, 0, 0);
         } else if (spanIndex == 0) {
             //第一列不绘制左边
-            outRect.set(0, 0, itemDivSize / 2, 0);
+            outRect.set(0, 0, right, 0);
         } else {
             //中间的左右都绘制
-            outRect.set(Math.round(itemDivSize / 2f), 0, Math.round(itemDivSize / 2f), 0);
+            outRect.set(left, 0, right, 0);
         }
     }
 
@@ -178,6 +181,10 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
 
         public Builder marginResId(@DimenRes int verticalMarginId) {
             return marginResId(verticalMarginId, verticalMarginId);
+        }
+
+        public Builder isLeftRightDraw() {
+            return this;
         }
 
         public Builder marginProvider(MarginProvider provider) {

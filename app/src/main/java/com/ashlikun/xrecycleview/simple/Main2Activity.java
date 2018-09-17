@@ -48,20 +48,18 @@ public class Main2Activity extends AppCompatActivity implements RecycleViewSwipe
         setContentView(R.layout.activity_main2);
         recycleView = findViewById(R.id.recycleView);
         recycleView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .size(30)
+                .size(50)
                 .showFirstTopDivider()
+                .showFirstTopDivider(100)
                 .color(0xffff0000)
                 .build());
         recycleView.addItemDecoration(new VerticalDividerItemDecoration.Builder(this)
-                .size(30)
+                .size(50)
                 .color(0xffff0000)
+                .isLeftRightDraw()
                 .build());
-//        recycleView.addItemDecoration(new DividerGridItemDecoration.Builder(this)
-//                .size(30)
-//                .color(0xffff0000)
-//                .build());
 //        recycleView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        recycleView.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleView.setLayoutManager(new GridLayoutManager(this, 3));
 //        recycleView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recycleView.setAdapter(adapter);
     }
