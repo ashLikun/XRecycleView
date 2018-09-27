@@ -206,13 +206,12 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
      */
     protected int getIndexColum(RecyclerView parent, View view, int pos, int spanCount) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        int posSpan = pos % spanCount;
         if (layoutManager instanceof GridLayoutManager) {
-            return posSpan;
+            return ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanIndex(pos, spanCount);
         } else if (layoutManager instanceof LinearLayoutManager) {
             //水平布局
             if (((LinearLayoutManager) layoutManager).getOrientation() == RecyclerView.HORIZONTAL) {
-                return posSpan;
+                return pos % spanCount;
             }
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             //瀑布流专属

@@ -10,6 +10,7 @@ import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
@@ -179,9 +180,13 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
      */
     protected int getIndexColum(RecyclerView parent, View view, int pos, int spanCount) {
         RecyclerView.LayoutManager layoutManager = parent.getLayoutManager();
-        int posSpan = pos % spanCount;
         if (layoutManager instanceof GridLayoutManager) {
-            return posSpan;
+            return ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanIndex(pos, spanCount);
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            //水平布局
+            if (((LinearLayoutManager) layoutManager).getOrientation() == RecyclerView.HORIZONTAL) {
+                return pos % spanCount;
+            }
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             //瀑布流专属
             StaggeredGridLayoutManager.LayoutParams params = (StaggeredGridLayoutManager.LayoutParams) view.getLayoutParams();
@@ -204,6 +209,11 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
         if (layoutManager instanceof GridLayoutManager) {
             spanCount = ((GridLayoutManager) layoutManager).getSpanCount() + 1;
             spanCount = Math.abs(spanCount - ((GridLayoutManager) layoutManager).getSpanSizeLookup().getSpanSize(position));
+        } else if (layoutManager instanceof LinearLayoutManager) {
+            //水平布局
+            if (((LinearLayoutManager) layoutManager).getOrientation() == RecyclerView.HORIZONTAL) {
+                return parent.getAdapter().getItemCount();
+            }
         } else if (layoutManager instanceof StaggeredGridLayoutManager) {
             spanCount = ((StaggeredGridLayoutManager) layoutManager)
                     .getSpanCount();
