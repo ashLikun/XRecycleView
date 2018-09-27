@@ -94,12 +94,20 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
             outRect.set(0, 0, 0, 0);
             return;
         }
-        //当前第几列
+        //当前第几列 0开始
         int spanIndex = getIndexColum(parent, v, position, spanCount);
         int dividerSize = getDividerSize(position, parent);
+        int dividerSizeAll = 0;
+        //总大小
+        for (int i = 0; i < spanCount - 1; i++) {
+            int cp = position + i - spanIndex;
+            if (cp >= 0) {
+                dividerSizeAll += getDividerSize(cp, parent);
+            }
+        }
         //每列大小
-        int eachWidth = (spanCount - 1) * dividerSize / spanCount;
-        int left = position % spanCount * (dividerSize - eachWidth);
+        int eachWidth = dividerSizeAll / spanCount;
+        int left = spanIndex * (dividerSize - eachWidth);
         int right = eachWidth - left;
         if (spanIndex == spanCount - 1) {
             // 如果是最后一列，则不需要绘制右边
