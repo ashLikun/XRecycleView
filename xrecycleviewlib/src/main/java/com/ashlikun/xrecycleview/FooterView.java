@@ -24,14 +24,6 @@ public class FooterView extends LinearLayout {
     private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
     private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
     private boolean loadMoreEnabled = true;
-    /**
-     * 动画之前的状态
-     */
-    private int animBeforeVisibility = -100;
-    /**
-     * 当前recycleview正在动画,就隐藏当前view
-     */
-    private boolean isRecycleAniming = false;
 
     public FooterView(Context context) {
         this(context, null);
@@ -111,17 +103,6 @@ public class FooterView extends LinearLayout {
         }, 100);
     }
 
-    @Override
-    public void setVisibility(int visibility) {
-        if (isRecycleAniming) {
-            //记录之前的
-            animBeforeVisibility = visibility;
-            super.setVisibility(GONE);
-        } else {
-            super.setVisibility(visibility);
-        }
-    }
-
     public LoadState getStates() {
         return state;
     }
@@ -170,19 +151,5 @@ public class FooterView extends LinearLayout {
     private int dip2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
-    }
-
-    /**
-     * 当前recycleview正在动画,就隐藏当前view
-     */
-    @SuppressLint("WrongConstant")
-    public void setRecycleAniming(boolean isIng) {
-        if (isRecycleAniming != isIng) {
-            isRecycleAniming = isIng;
-            if (!isIng && animBeforeVisibility != -100) {
-                setVisibility(animBeforeVisibility);
-                animBeforeVisibility = -100;
-            }
-        }
     }
 }

@@ -280,17 +280,5 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         return this;
     }
 
-    /**
-     * 监听动画结束,为了底部状态切换的友好过度
-     */
-    public ItemAnimator.ItemAnimatorFinishedListener itemAnimatorFinishedListener = new ItemAnimator.ItemAnimatorFinishedListener() {
-        @Override
-        public void onAnimationsFinished() {
-            FooterView f = getLoaddFooterView();
-            if (f != null) {
-                f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning());
-            }
 
-        }
-    };
 }
