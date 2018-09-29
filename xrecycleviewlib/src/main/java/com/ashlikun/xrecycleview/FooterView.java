@@ -161,10 +161,12 @@ public class FooterView extends LinearLayout {
      */
     @SuppressLint("WrongConstant")
     public void setRecycleAniming(boolean isIng) {
-        isRecycleAniming = isIng;
-        if (!isIng && animBeforeVisibility != -100) {
-            setVisibility(animBeforeVisibility);
-            animBeforeVisibility = -100;
+        if (isRecycleAniming != isIng) {
+            isRecycleAniming = isIng;
+            if (!isIng && animBeforeVisibility != -100) {
+                setVisibility(animBeforeVisibility);
+                animBeforeVisibility = -100;
+            }
         }
     }
 }
