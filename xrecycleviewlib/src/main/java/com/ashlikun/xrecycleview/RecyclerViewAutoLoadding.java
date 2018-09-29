@@ -26,9 +26,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     private boolean isInitEnableRefresh = false;
     /**
-     *
+     * 记录初始是否刷新
      */
     private boolean isOneEnableRefresh = true;
+
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -46,6 +47,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     private void initView() {
         addFooterView();
+
     }
 
 
@@ -147,7 +149,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     @Override
     public void complete() {
-
         if (getState() != null && getState() != LoadState.NoData) {
             setState(LoadState.Complete);
         }
@@ -179,6 +180,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     public void setState(LoadState state) {
         FooterView f = getLoaddFooterView();
         if (f != null) {
+            f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning(itemAnimatorFinishedListener));
             f.setStatus(state);
             //如果正在加载更多，就禁用下拉刷新
             if (refreshLayout != null) {
@@ -270,4 +272,17 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         return this;
     }
 
+    /**
+     * 监听动画结束,为了底部状态切换的友好过度
+     */
+    public ItemAnimator.ItemAnimatorFinishedListener itemAnimatorFinishedListener = new ItemAnimator.ItemAnimatorFinishedListener() {
+        @Override
+        public void onAnimationsFinished() {
+            FooterView f = getLoaddFooterView();
+            if (f != null) {
+                f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning());
+            }
+
+        }
+    };
 }

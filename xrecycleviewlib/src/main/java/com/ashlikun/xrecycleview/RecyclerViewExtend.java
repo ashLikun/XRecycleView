@@ -32,7 +32,9 @@ public class RecyclerViewExtend extends RecyclerView {
     private static final int TYPE_REFRESH_FOOTER = -900003;
     private static final int TYPE_FOOTER = -900002;
     protected ArrayList<View> mHeaderViews = new ArrayList<>();
-    //最后一个为加载的布局
+    /**
+     * 最后一个为加载的布局
+     */
     protected ArrayList<View> mFootViews = new ArrayList<>();
     private Adapter mAdapter;
     private WrapAdapter mWrapAdapter;

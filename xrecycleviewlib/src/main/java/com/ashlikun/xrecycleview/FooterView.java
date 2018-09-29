@@ -1,5 +1,6 @@
 package com.ashlikun.xrecycleview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -23,6 +24,14 @@ public class FooterView extends LinearLayout {
     private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
     private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
     private boolean loadMoreEnabled = true;
+    /**
+     * 动画之前的状态
+     */
+    private int animBeforeVisibility = -100;
+    /**
+     * 当前recycleview正在动画,就隐藏当前view
+     */
+    private boolean isRecycleAniming = false;
 
     public FooterView(Context context) {
         this(context, null);
@@ -67,8 +76,8 @@ public class FooterView extends LinearLayout {
         this.state = status;
         if (status == LoadState.NoData) {
             progressBar.setVisibility(GONE);
-            setVisibility(VISIBLE);
             textView.setText(noDataFooterText);
+            setVisibility(VISIBLE);
         } else if (status == LoadState.Loadding) {
             progressBar.setVisibility(VISIBLE);
             textView.setText(loaddingFooterText);
@@ -83,6 +92,17 @@ public class FooterView extends LinearLayout {
             setVisibility(VISIBLE);
         } else if (status == LoadState.Complete) {
             setVisibility(GONE);
+        }
+    }
+
+    @Override
+    public void setVisibility(int visibility) {
+        if (isRecycleAniming) {
+            //记录之前的
+            animBeforeVisibility = visibility;
+            super.setVisibility(GONE);
+        } else {
+            super.setVisibility(visibility);
         }
     }
 
@@ -104,7 +124,7 @@ public class FooterView extends LinearLayout {
 
     /**
      * 设置底部加载中的文字
-     *建议使用String.xml  替换R.string.loadding变量
+     * 建议使用String.xml  替换R.string.loadding变量
      */
     public void setLoaddingFooterText(String loaddingFooterText) {
         this.loaddingFooterText = loaddingFooterText;
@@ -134,5 +154,17 @@ public class FooterView extends LinearLayout {
     private int dip2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    /**
+     * 当前recycleview正在动画,就隐藏当前view
+     */
+    @SuppressLint("WrongConstant")
+    public void setRecycleAniming(boolean isIng) {
+        isRecycleAniming = isIng;
+        if (!isIng && animBeforeVisibility != -100) {
+            setVisibility(animBeforeVisibility);
+            animBeforeVisibility = -100;
+        }
     }
 }
