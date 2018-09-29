@@ -100,6 +100,7 @@ public class FooterView extends LinearLayout {
             textView.setText(text);
             return;
         }
+        textView.setText("");
         postDelayed(new Runnable() {
             @Override
             public void run() {
