@@ -215,10 +215,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     @Override
     protected void onAdapterItemAnimChang() {
         super.onAdapterItemAnimChang();
-        FooterView f = getLoaddFooterView();
-        if (f != null) {
-            f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning(itemAnimatorFinishedListener));
-        }
+//        FooterView f = getLoaddFooterView();
+//        if (f != null) {
+//            f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning(itemAnimatorFinishedListener));
+//        }
     }
 
     /**
