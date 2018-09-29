@@ -264,6 +264,13 @@ public class RecyclerViewExtend extends RecyclerView {
         return max;
     }
 
+    /**
+     * 当adapter不是调用全部刷新，并且有动画的时候
+     */
+    protected void onAdapterItemAnimChang() {
+
+    }
+
     private final AdapterDataObserver mDataObserver = new AdapterDataObserver() {
         @Override
         public void onChanged() {
@@ -275,6 +282,9 @@ public class RecyclerViewExtend extends RecyclerView {
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
             mWrapAdapter.notifyItemRangeInserted(positionStart, itemCount);
+            if (getItemAnimator() != null) {
+                onAdapterItemAnimChang();
+            }
         }
 
         @Override
@@ -290,11 +300,17 @@ public class RecyclerViewExtend extends RecyclerView {
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
             mWrapAdapter.notifyItemRangeRemoved(positionStart, itemCount);
+            if (getItemAnimator() != null) {
+                onAdapterItemAnimChang();
+            }
         }
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
             mWrapAdapter.notifyItemMoved(fromPosition, toPosition);
+            if (getItemAnimator() != null) {
+                onAdapterItemAnimChang();
+            }
         }
     };
 

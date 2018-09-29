@@ -180,8 +180,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     public void setState(LoadState state) {
         FooterView f = getLoaddFooterView();
         if (f != null) {
-            f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning(itemAnimatorFinishedListener));
-            f.setStatus(state);
+            f.setStatus(state, getItemAnimator() != null);
             //如果正在加载更多，就禁用下拉刷新
             if (refreshLayout != null) {
                 //这里要注意如果默认时候就不可以刷新那不能把他设置成可以刷新
@@ -210,6 +209,15 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
             return f.getStates();
         } else {
             return null;
+        }
+    }
+
+    @Override
+    protected void onAdapterItemAnimChang() {
+        super.onAdapterItemAnimChang();
+        FooterView f = getLoaddFooterView();
+        if (f != null) {
+            f.setRecycleAniming(getItemAnimator() != null && getItemAnimator().isRunning(itemAnimatorFinishedListener));
         }
     }
 
@@ -262,7 +270,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         if (footerView.isLoadMoreEnabled()) {
             addFootView(footerView);
             footerView.setVisibility(GONE);
-            footerView.setStatus(LoadState.Init);
+            footerView.setStatus(LoadState.Init, getItemAnimator() != null);
         }
     }
 

@@ -72,27 +72,42 @@ public class FooterView extends LinearLayout {
      *
      * @param status
      */
-    public void setStatus(LoadState status) {
+    public void setStatus(LoadState status, boolean isTextNeedDelayed) {
         this.state = status;
         if (status == LoadState.NoData) {
             progressBar.setVisibility(GONE);
-            textView.setText(noDataFooterText);
+            setTextViewText(noDataFooterText, isTextNeedDelayed);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Loadding) {
             progressBar.setVisibility(VISIBLE);
-            textView.setText(loaddingFooterText);
+            setTextViewText(loaddingFooterText, isTextNeedDelayed);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Init) {
             setVisibility(GONE);
         } else if (status == LoadState.Hint) {
             setVisibility(GONE);
         } else if (status == LoadState.Failure) {
-            textView.setText(context.getString(R.string.autoloadding_failure));
+            setTextViewText(context.getString(R.string.autoloadding_failure), isTextNeedDelayed);
             progressBar.setVisibility(GONE);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Complete) {
             setVisibility(GONE);
         }
+    }
+
+    public void setTextViewText(final String text, boolean isTextNeedDelayed) {
+        if (!isTextNeedDelayed) {
+            textView.setText(text);
+            return;
+        }
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (textView != null) {
+                    textView.setText(text);
+                }
+            }
+        }, 100);
     }
 
     @Override
