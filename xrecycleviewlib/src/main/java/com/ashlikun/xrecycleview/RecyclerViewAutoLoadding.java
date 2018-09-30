@@ -29,10 +29,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      * 记录初始是否刷新
      */
     private boolean isOneEnableRefresh = true;
-    /**
-     * 滑动ArrBarLayout 与 RecycleView fling的问题
-     */
-    private boolean isHaveAppBarLayout = false;
 
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
@@ -102,11 +98,9 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
                     && layoutManager.getItemCount() >= layoutManager.getChildCount()
                     && (pageHelp != null && pageHelp.isNext())) {
                 setState(LoadState.Loadding);
+                //停止滚动
+                stopScroll();
                 if (onLoaddingListener != null) {
-                    //停止AppBarLayou HeaderBehavior
-                    if (isHaveAppBarLayout) {
-                        XRecycleUtils.cleanVelocityTracker(XRecycleUtils.findAppBarLayouBehavior(this));
-                    }
                     onLoaddingListener.onLoadding();
                 }
             }
@@ -280,13 +274,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
             footerView.setVisibility(GONE);
             footerView.setStatus(LoadState.Init);
         }
-    }
-
-    /**
-     * 滑动ArrBarLayout 与 RecycleView fling的问题
-     */
-    public void setHaveAppBarLayout(boolean isHaveAppBarLayout) {
-        this.isHaveAppBarLayout = isHaveAppBarLayout;
     }
 
     @Override
