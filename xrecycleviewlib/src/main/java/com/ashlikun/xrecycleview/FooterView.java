@@ -1,7 +1,8 @@
 package com.ashlikun.xrecycleview;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.ashlikun.circleprogress.CircleProgressView;
+
+import java.lang.ref.WeakReference;
 
 
 /**
@@ -24,6 +27,7 @@ public class FooterView extends LinearLayout {
     private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
     private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
     private boolean loadMoreEnabled = true;
+    MyHandler textViewHandler;
 
     public FooterView(Context context) {
         this(context, null);
@@ -41,6 +45,7 @@ public class FooterView extends LinearLayout {
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
         textView = (TextView) findViewById(R.id.tvLoadMore);
+        textViewHandler = new MyHandler(textView);
         progressBar = (CircleProgressView) findViewById(R.id.progressbar);
     }
 
@@ -64,22 +69,22 @@ public class FooterView extends LinearLayout {
      *
      * @param status
      */
-    public void setStatus(LoadState status, boolean isTextNeedDelayed) {
+    public void setStatus(LoadState status) {
         this.state = status;
         if (status == LoadState.NoData) {
             progressBar.setVisibility(GONE);
-            setTextViewText(noDataFooterText, isTextNeedDelayed);
+            setTextViewText(noDataFooterText, false);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Loadding) {
             progressBar.setVisibility(VISIBLE);
-            setTextViewText(loaddingFooterText, isTextNeedDelayed);
+            setTextViewText(loaddingFooterText, false);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Init) {
             setVisibility(GONE);
         } else if (status == LoadState.Hint) {
             setVisibility(GONE);
         } else if (status == LoadState.Failure) {
-            setTextViewText(context.getString(R.string.autoloadding_failure), isTextNeedDelayed);
+            setTextViewText(context.getString(R.string.autoloadding_failure), false);
             progressBar.setVisibility(GONE);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Complete) {
@@ -93,14 +98,9 @@ public class FooterView extends LinearLayout {
             return;
         }
         textView.setText("");
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (textView != null) {
-                    textView.setText(text);
-                }
-            }
-        }, 100);
+        Message msg = textViewHandler.obtainMessage(1);
+        msg.obj = text;
+        textViewHandler.sendMessageDelayed(msg, 100);
     }
 
     public LoadState getStates() {
@@ -151,5 +151,26 @@ public class FooterView extends LinearLayout {
     private int dip2px(float dipValue) {
         final float scale = getResources().getDisplayMetrics().density;
         return (int) (dipValue * scale + 0.5f);
+    }
+
+    public void setRecycleAniming() {
+        setTextViewText(textView.getText().toString(), true);
+    }
+
+    public class MyHandler extends Handler {
+        WeakReference<TextView> mWeakReference;
+
+        public MyHandler(TextView textView) {
+            this.mWeakReference = new WeakReference<>(textView);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mWeakReference.get() != null) {
+                String text = (String) msg.obj;
+                mWeakReference.get().setText(text);
+            }
+        }
     }
 }

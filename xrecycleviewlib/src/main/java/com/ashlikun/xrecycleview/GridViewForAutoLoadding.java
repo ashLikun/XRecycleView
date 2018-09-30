@@ -26,7 +26,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
     public GridViewForAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
         addFooterView(footerView = new FooterView(context));
-        footerView.setStatus(LoadState.Init, false);
+        footerView.setStatus(LoadState.Init);
         super.setOnScrollListener(new ScrollListener());
         super.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -115,7 +115,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
     }
 
     public void setState(LoadState state) {
-        footerView.setStatus(state, false);
+        footerView.setStatus(state);
     }
 
     public OnLoaddingListener getOnLoaddingListener() {

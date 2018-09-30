@@ -123,7 +123,7 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
     }
 
     public void setState(LoadState state) {
-        footerView.setStatus(state, false);
+        footerView.setStatus(state);
     }
 
     public OnLoaddingListener getOnLoaddingListener() {
