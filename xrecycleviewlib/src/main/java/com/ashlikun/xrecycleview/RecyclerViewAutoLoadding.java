@@ -98,8 +98,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
                     && layoutManager.getItemCount() >= layoutManager.getChildCount()
                     && (pageHelp != null && pageHelp.isNext())) {
                 setState(LoadState.Loadding);
-                //停止滚动
-                stopScroll();
                 if (onLoaddingListener != null) {
                     onLoaddingListener.onLoadding();
                 }
@@ -153,6 +151,8 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     public void complete() {
         if (getState() != null && getState() != LoadState.NoData) {
             setState(LoadState.Complete);
+            //停止滚动
+            stopScroll();
         }
     }
 
