@@ -162,6 +162,8 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     @Override
     public void noData() {
         setState(LoadState.NoData);
+        //停止滚动
+        stopScroll();
     }
 
     @Override
