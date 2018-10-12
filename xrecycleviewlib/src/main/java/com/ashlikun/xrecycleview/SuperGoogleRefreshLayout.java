@@ -3,7 +3,6 @@ package com.ashlikun.xrecycleview;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.NestedScrollingChild2;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -22,7 +21,6 @@ import android.view.View;
 public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
 
     RefreshLayout.OnRefreshListener mListener;
-    View view = null;
     boolean isMOVE = false;
 
     public SuperGoogleRefreshLayout(Context context) {
@@ -47,31 +45,44 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
     }
 
     /**
-     * 设置如果内部某个view滑动的时候当前view不可下拉
+     * 与一些其他的滑动控件滑动的时候，屏蔽下拉
      *
      * @param view
      */
-    public void setNestedPager(View view) {
-        this.view = view;
+    public void addNestedView(View view) {
         if (view instanceof NestedScrollingChild) {
             ((NestedScrollingChild) view).setNestedScrollingEnabled(false);
         }
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        isMOVE = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        isMOVE = false;
-                        break;
-                }
-                return false;
-            }
-        });
+        view.setOnTouchListener(onTouchListener);
     }
+
+    /**
+     * 还原
+     *
+     * @param view
+     */
+    public void removeNestedView(View view) {
+        if (view instanceof NestedScrollingChild) {
+            ((NestedScrollingChild) view).setNestedScrollingEnabled(true);
+        }
+        view.setOnTouchListener(null);
+    }
+
+    OnTouchListener onTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    isMOVE = true;
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isMOVE = false;
+                    break;
+            }
+            return false;
+        }
+    };
 
 
     @Override

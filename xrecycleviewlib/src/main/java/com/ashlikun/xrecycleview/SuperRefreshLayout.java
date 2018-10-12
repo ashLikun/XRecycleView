@@ -22,7 +22,6 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
         implements RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
 
     RefreshLayout.OnRefreshListener mListener;
-    View view = null;
     boolean isMOVE = false;
 
     public SuperRefreshLayout(Context context) {
@@ -37,11 +36,8 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
         array.recycle();
         setRefreshStyle(com.ashlikun.swiperefreshlayout.SwipeRefreshLayout.FLOAT);
     }
-
-
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-
         if (isMOVE) {
             return false;
         }
@@ -53,27 +49,40 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
      *
      * @param view
      */
-    public void setNestedPager(View view) {
-        this.view = view;
+    public void addNestedView(View view) {
         if (view instanceof NestedScrollingChild) {
             ((NestedScrollingChild) view).setNestedScrollingEnabled(false);
         }
-        view.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                switch (motionEvent.getAction()) {
-                    case MotionEvent.ACTION_MOVE:
-                        isMOVE = true;
-                        break;
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_CANCEL:
-                        isMOVE = false;
-                        break;
-                }
-                return false;
-            }
-        });
+        view.setOnTouchListener(onTouchListener);
     }
+
+    /**
+     * 还原
+     *
+     * @param view
+     */
+    public void removeNestedView(View view) {
+        if (view instanceof NestedScrollingChild) {
+            ((NestedScrollingChild) view).setNestedScrollingEnabled(true);
+        }
+        view.setOnTouchListener(null);
+    }
+
+    OnTouchListener onTouchListener = new View.OnTouchListener() {
+        @Override
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            switch (motionEvent.getAction()) {
+                case MotionEvent.ACTION_MOVE:
+                    isMOVE = true;
+                    break;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    isMOVE = false;
+                    break;
+            }
+            return false;
+        }
+    };
 
     @Override
     public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
