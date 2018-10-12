@@ -42,5 +42,5 @@ dependencies {
     }
     compile project(':xrecycleviewlib')
     //自己写的刷新控件
-    implementation 'com.github.ashLikun:RefreshLayout:1.2.1'
+    implementation 'com.github.ashLikun:RefreshLayout:1.2.4'
 }

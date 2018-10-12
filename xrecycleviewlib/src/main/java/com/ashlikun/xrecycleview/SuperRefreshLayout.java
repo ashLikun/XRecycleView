@@ -2,10 +2,11 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.ashlikun.swiperefreshlayout.SwipeRefreshLayout;
 
 
 /**
@@ -13,25 +14,27 @@ import android.view.View;
  * 创建时间: 12:49 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：
+ * 功能介绍：自定义的刷新控件
  */
 
-
-public class SuperSwipeRefreshLayout extends SwipeRefreshLayout implements RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
+public class SuperRefreshLayout extends SwipeRefreshLayout
+        implements RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
 
     RefreshLayout.OnRefreshListener mListener;
     View view = null;
     boolean isMOVE = false;
 
-    public SuperSwipeRefreshLayout(Context context) {
+    public SuperRefreshLayout(Context context) {
         this(context, null);
     }
 
-    public SuperSwipeRefreshLayout(Context context, AttributeSet attrs) {
+    public SuperRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+
         TypedArray array = context.getTheme().obtainStyledAttributes(new int[]{R.attr.SwipeRefreshLayout_Color1, R.attr.SwipeRefreshLayout_Color2, R.attr.SwipeRefreshLayout_Color3, R.attr.SwipeRefreshLayout_Color4});
         setColorSchemeColors(array.getColor(0, 0xff0000), array.getColor(1, 0xff0000), array.getColor(2, 0xff0000), array.getColor(3, 0xff0000));
         array.recycle();
+        setRefreshStyle(com.ashlikun.swiperefreshlayout.SwipeRefreshLayout.FLOAT);
     }
 
 
@@ -62,22 +65,6 @@ public class SuperSwipeRefreshLayout extends SwipeRefreshLayout implements Refre
             }
         });
     }
-
-
-    @Override
-    public void setRefreshing(final boolean refreshing) {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SuperSwipeRefreshLayout.super.setRefreshing(refreshing);
-                if (refreshing) {
-                    mListener.onRefresh();
-                }
-            }
-        }, 400);
-
-    }
-
     @Override
     public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
         this.mListener = listener;

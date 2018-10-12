@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview;
 
 import android.support.annotation.ColorInt;
+import android.view.View;
 
 /**
  * 作者　　: 李坤
@@ -62,6 +63,13 @@ public interface RefreshLayout {
      * 是否禁用下拉刷新
      */
     public boolean isEnabled();
+
+    /**
+     * 获取下拉刷新控件
+     *
+     * @return
+     */
+    public View getRefreshView();
 
     public interface OnRefreshListener {
         void onRefresh();

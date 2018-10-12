@@ -2,11 +2,10 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
-import com.ashlikun.swiperefreshlayout.SwipeRefreshLayout;
 
 
 /**
@@ -14,27 +13,25 @@ import com.ashlikun.swiperefreshlayout.SwipeRefreshLayout;
  * 创建时间: 12:49 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：自定义的刷新控件
+ * 功能介绍：Google官方的下拉
  */
 
-public class SuperSwipeCustomRefreshLayout extends SwipeRefreshLayout
-        implements RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
+
+public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
 
     RefreshLayout.OnRefreshListener mListener;
     View view = null;
     boolean isMOVE = false;
 
-    public SuperSwipeCustomRefreshLayout(Context context) {
+    public SuperGoogleRefreshLayout(Context context) {
         this(context, null);
     }
 
-    public SuperSwipeCustomRefreshLayout(Context context, AttributeSet attrs) {
+    public SuperGoogleRefreshLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
-
         TypedArray array = context.getTheme().obtainStyledAttributes(new int[]{R.attr.SwipeRefreshLayout_Color1, R.attr.SwipeRefreshLayout_Color2, R.attr.SwipeRefreshLayout_Color3, R.attr.SwipeRefreshLayout_Color4});
         setColorSchemeColors(array.getColor(0, 0xff0000), array.getColor(1, 0xff0000), array.getColor(2, 0xff0000), array.getColor(3, 0xff0000));
         array.recycle();
-        setRefreshStyle(com.ashlikun.swiperefreshlayout.SwipeRefreshLayout.FLOAT);
     }
 
 
@@ -47,7 +44,12 @@ public class SuperSwipeCustomRefreshLayout extends SwipeRefreshLayout
         return super.onInterceptTouchEvent(ev);
     }
 
-    public void setViewPager(View view) {
+    /**
+     * 设置如果内部某个view滑动的时候当前view不可下拉
+     *
+     * @param view
+     */
+    public void setNestView(View view) {
         this.view = view;
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -65,6 +67,34 @@ public class SuperSwipeCustomRefreshLayout extends SwipeRefreshLayout
             }
         });
     }
+
+
+    @Override
+    public void setRefreshing(final boolean refreshing) {
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                SuperGoogleRefreshLayout.super.setRefreshing(refreshing);
+                if (refreshing) {
+                    mListener.onRefresh();
+                }
+            }
+        }, 400);
+
+    }
+
+    @Override
+    public View getRefreshView() {
+        for (int i = 0; i < getChildCount(); i++) {
+            View view = getChildAt(i);
+            if (view.getClass().getSimpleName().contains("CircleImageView")) {
+                return view;
+            }
+        }
+        return null;
+    }
+
+
     @Override
     public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
         this.mListener = listener;
