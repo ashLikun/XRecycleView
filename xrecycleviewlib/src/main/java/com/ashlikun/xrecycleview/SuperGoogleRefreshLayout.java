@@ -2,6 +2,8 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.view.NestedScrollingChild;
+import android.support.v4.view.NestedScrollingChild2;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -49,8 +51,11 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
      *
      * @param view
      */
-    public void setNestView(View view) {
+    public void setNestedPager(View view) {
         this.view = view;
+        if (view instanceof NestedScrollingChild) {
+            ((NestedScrollingChild) view).setNestedScrollingEnabled(false);
+        }
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {

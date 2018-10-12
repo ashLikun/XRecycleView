@@ -2,6 +2,7 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.v4.view.NestedScrollingChild;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +55,9 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
      */
     public void setNestedPager(View view) {
         this.view = view;
+        if (view instanceof NestedScrollingChild) {
+            ((NestedScrollingChild) view).setNestedScrollingEnabled(false);
+        }
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
