@@ -47,7 +47,12 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
         return super.onInterceptTouchEvent(ev);
     }
 
-    public void setViewPager(View view) {
+    /**
+     * 与一些其他的滑动控件滑动的时候，屏蔽下拉
+     *
+     * @param view
+     */
+    public void setNestedPager(View view) {
         this.view = view;
         view.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -65,6 +70,7 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
             }
         });
     }
+
     @Override
     public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
         this.mListener = listener;
