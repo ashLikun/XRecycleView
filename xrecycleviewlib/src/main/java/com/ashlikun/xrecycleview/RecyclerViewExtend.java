@@ -281,7 +281,7 @@ public class RecyclerViewExtend extends RecyclerView {
 
         @Override
         public void onItemRangeInserted(int positionStart, int itemCount) {
-            mWrapAdapter.notifyItemRangeInserted(positionStart, itemCount);
+            mWrapAdapter.notifyItemRangeInserted(getHeaderViewSize() + positionStart, itemCount);
             if (getItemAnimator() != null) {
                 onAdapterItemAnimChang();
             }
@@ -289,17 +289,17 @@ public class RecyclerViewExtend extends RecyclerView {
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount) {
-            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount);
+            mWrapAdapter.notifyItemRangeChanged(getHeaderViewSize() + positionStart, itemCount);
         }
 
         @Override
         public void onItemRangeChanged(int positionStart, int itemCount, Object payload) {
-            mWrapAdapter.notifyItemRangeChanged(positionStart, itemCount, payload);
+            mWrapAdapter.notifyItemRangeChanged(getHeaderViewSize() + positionStart, itemCount, payload);
         }
 
         @Override
         public void onItemRangeRemoved(int positionStart, int itemCount) {
-            mWrapAdapter.notifyItemRangeRemoved(positionStart, itemCount);
+            mWrapAdapter.notifyItemRangeRemoved(getHeaderViewSize() + positionStart, itemCount);
             if (getItemAnimator() != null) {
                 onAdapterItemAnimChang();
             }
@@ -307,7 +307,7 @@ public class RecyclerViewExtend extends RecyclerView {
 
         @Override
         public void onItemRangeMoved(int fromPosition, int toPosition, int itemCount) {
-            mWrapAdapter.notifyItemMoved(fromPosition, toPosition);
+            mWrapAdapter.notifyItemMoved(getHeaderViewSize() + fromPosition, getHeaderViewSize() + toPosition);
             if (getItemAnimator() != null) {
                 onAdapterItemAnimChang();
             }
