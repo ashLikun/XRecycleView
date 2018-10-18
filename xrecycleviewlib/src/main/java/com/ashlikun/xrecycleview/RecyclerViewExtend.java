@@ -379,25 +379,28 @@ public class RecyclerViewExtend extends RecyclerView {
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
             try {
-                if (!isHeader(holder.getLayoutPosition()) && !isFooter(holder.getLayoutPosition()) && !isFooterLoad(holder.getLayoutPosition())) {
-                    mAdapter.onViewAttachedToWindow(holder);
+                if (RecyclerViewExtend.this.isHeader(holder) || RecyclerViewExtend.this.isFooter(holder)) {
                     ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
                     if (lp != null
                             && lp instanceof StaggeredGridLayoutManager.LayoutParams
                             && (isHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {
                         StaggeredGridLayoutManager.LayoutParams p = (StaggeredGridLayoutManager.LayoutParams) lp;
+                        //StaggeredGridLayoutManager 只能这样设置一整行
                         p.setFullSpan(true);
                     }
+                } else {
+                    mAdapter.onViewAttachedToWindow(holder);
                 }
             } catch (Exception e) {
-
             }
         }
 
         @Override
         public void onViewDetachedFromWindow(ViewHolder holder) {
             try {
-                if (!isHeader(holder.getLayoutPosition()) && !isFooter(holder.getLayoutPosition()) && !isFooterLoad(holder.getLayoutPosition())) {
+                if (RecyclerViewExtend.this.isHeader(holder) || RecyclerViewExtend.this.isFooter(holder)) {
+
+                } else {
                     mAdapter.onViewDetachedFromWindow(holder);
                 }
             } catch (Exception e) {
@@ -414,7 +417,6 @@ public class RecyclerViewExtend extends RecyclerView {
                 if (headerPosition >= mHeaderViews.size()) {
                     headerPosition = 0;
                 }
-
                 return new ViewHolder(mHeaderViews.get(headerPosition++)) {
                 };
             } else if (viewType == TYPE_FOOTER) {
@@ -431,7 +433,6 @@ public class RecyclerViewExtend extends RecyclerView {
         public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
             super.onBindViewHolder(holder, position, payloads);
             if (isFooterLoad(position)) {
-
                 return;
             }
             if (isHeader(position)) {
