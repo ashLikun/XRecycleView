@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter implements BaseSwipeInterface, StatusChangListener, ConfigChang {
     public PageHelp pageHelp = null;
     private OnLoaddingListener onLoaddingListener;
-    private FooterView footerView;
+    private LoadView footerView;
     private ArrayList<AbsListView.OnScrollListener> scrollListeners = new ArrayList<>();
     private RefreshLayout refreshLayout;
     private AdapterView.OnItemClickListener itemClickListener;
@@ -25,7 +25,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
 
     public GridViewForAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
-        addFooterView(footerView = new FooterView(context));
+        addFooterView(footerView = new LoadView(context));
         footerView.setStatus(LoadState.Init);
         super.setOnScrollListener(new ScrollListener());
         super.setOnItemClickListener(new AdapterView.OnItemClickListener() {

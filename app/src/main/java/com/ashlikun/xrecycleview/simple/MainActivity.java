@@ -93,4 +93,9 @@ public class MainActivity extends AppCompatActivity implements RecycleViewSwipeL
         Intent intent = new Intent(this, Main2Activity.class);
         startActivity(intent);
     }
+
+    public void onClick2(View view) {
+        Intent intent = new Intent(this, Main3Activity.class);
+        startActivity(intent);
+    }
 }

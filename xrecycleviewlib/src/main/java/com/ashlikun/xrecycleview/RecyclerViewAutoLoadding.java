@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -11,7 +12,8 @@ import android.view.View;
  * 作者　　: 李坤
  * 创建时间: 2017/4/12 0012 16:15
  * <p>
- * 方法功能：自动加载更多的RecyclerView ,setRefreshLayout必须设置要不然无法下拉加载
+ * 方法功能：自动加载更多的RecyclerView
+ * setRefreshLayout必须设置要不然无法下拉加载
  */
 
 public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements BaseSwipeInterface,
@@ -30,6 +32,13 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     private boolean isOneEnableRefresh = true;
 
+    /**
+     * 加载的位置
+     * 上面还是下面
+     * 1:上    2：下
+     */
+    private int loadLocation = 2;
+
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -37,7 +46,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        initView();
+        initView(context, attrs);
     }
 
 
@@ -45,9 +54,26 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         this(context, null);
     }
 
-    private void initView() {
-        addFooterView();
+    private void initView(Context context, AttributeSet attrs) {
+        TypedArray a = context.obtainStyledAttributes(attrs,
+                R.styleable.RecyclerViewAutoLoadding);
+        loadLocation = a.getInt(R.styleable.RecyclerViewAutoLoadding_rv_load_location, 2);
+        addLoadView();
 
+    }
+
+    private void addLoadView() {
+        LoadView loadView = new LoadView(getContext());
+        if (loadView.isLoadMoreEnabled()) {
+            if (loadLocation == 1) {
+                //加载第0个位置
+                addHeaderView(0, loadView);
+            } else {
+                addFootView(loadView);
+            }
+            loadView.setVisibility(GONE);
+            loadView.setStatus(LoadState.Init);
+        }
     }
 
 
@@ -67,10 +93,11 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         return pageHelp;
     }
 
+
     @Override
     public void addFootView(final View view) {
         //放在自动加载的前面
-        if (mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof FooterView) {
+        if (mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof LoadView) {
             mFootViews.add(mFootViews.size() - 1, view);
         } else {
             mFootViews.add(view);
@@ -81,25 +108,49 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-
-        if ((refreshLayout == null || !refreshLayout.isRefreshing()) && getState() != null && isLoadMoreEnabled() && getState() != LoadState.Loadding && getState() != LoadState.NoData) {
+        boolean isCan = (refreshLayout == null || !refreshLayout.isRefreshing()) &&
+                getState() != null && isLoadMoreEnabled() && getState() != LoadState.Loadding && getState() != LoadState.NoData;
+        if (isCan) {
             LayoutManager layoutManager = getLayoutManager();
-            int lastVisibleItemPosition;
-            if (layoutManager instanceof GridLayoutManager) {
-                lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
-            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                int[] into = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
-                lastVisibleItemPosition = findMax(into);
+            if (loadLocation == 1) {
+                //顶部加载
+                int firstVisibleItemPosition;
+                if (layoutManager instanceof GridLayoutManager) {
+                    firstVisibleItemPosition = ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                    int[] into = ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null);
+                    firstVisibleItemPosition = findMin(into);
+                } else {
+                    firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
+                }
+                if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
+                        && firstVisibleItemPosition <= 0
+                        && layoutManager.getItemCount() >= layoutManager.getChildCount()
+                        && (pageHelp != null && pageHelp.isNext())) {
+                    setState(LoadState.Loadding);
+                    if (onLoaddingListener != null) {
+                        onLoaddingListener.onLoadding();
+                    }
+                }
             } else {
-                lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-            }
-            if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
-                    && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
-                    && layoutManager.getItemCount() >= layoutManager.getChildCount()
-                    && (pageHelp != null && pageHelp.isNext())) {
-                setState(LoadState.Loadding);
-                if (onLoaddingListener != null) {
-                    onLoaddingListener.onLoadding();
+                //底部加载
+                int lastVisibleItemPosition;
+                if (layoutManager instanceof GridLayoutManager) {
+                    lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                    int[] into = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
+                    lastVisibleItemPosition = findMax(into);
+                } else {
+                    lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+                }
+                if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
+                        && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
+                        && layoutManager.getItemCount() >= layoutManager.getChildCount()
+                        && (pageHelp != null && pageHelp.isNext())) {
+                    setState(LoadState.Loadding);
+                    if (onLoaddingListener != null) {
+                        onLoaddingListener.onLoadding();
+                    }
                 }
             }
         }
@@ -136,16 +187,33 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         return max;
     }
 
+    private int findMin(int[] lastPositions) {
+        int min = lastPositions[0];
+        for (int value : lastPositions) {
+            if (value < min) {
+                min = value;
+            }
+        }
+        return min;
+    }
+
 
     /**
      * 获取自动加载VIew
      */
-    public FooterView getLoaddFooterView() {
-        if (mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof FooterView) {
-            return ((FooterView) mFootViews.get(mFootViews.size() - 1));
+    public LoadView getLoadView() {
+        View view = null;
+        if (loadLocation == 1) {
+            view = getHeaderView(0);
+        } else {
+            view = getHeaderView(mFootViews.size() - 1);
+        }
+        if (view != null && view instanceof LoadView) {
+            return (LoadView) view;
         }
         return null;
     }
+
 
     @Override
     public void complete() {
@@ -182,7 +250,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     }
 
     public void setState(LoadState state) {
-        FooterView f = getLoaddFooterView();
+        LoadView f = getLoadView();
         if (f != null) {
             f.setStatus(state);
             //如果正在加载更多，就禁用下拉刷新
@@ -208,7 +276,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
 
     public LoadState getState() {
-        FooterView f = getLoaddFooterView();
+        LoadView f = getLoadView();
         if (f != null) {
             return f.getStates();
         } else {
@@ -219,7 +287,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     @Override
     protected void onAdapterItemAnimChang() {
         super.onAdapterItemAnimChang();
-        FooterView f = getLoaddFooterView();
+        LoadView f = getLoadView();
         if (f != null) {
             f.setRecycleAniming();
         }
@@ -231,7 +299,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     @Override
     public void setNoDataFooterText(String autoloaddingNoData) {
-        FooterView f = getLoaddFooterView();
+        LoadView f = getLoadView();
         if (f != null) {
             f.setNoDataFooterText(autoloaddingNoData);
         }
@@ -242,7 +310,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      * 建议使用String.xml  替换R.string.loadding变量
      */
     public void setLoaddingFooterText(String loaddingFooterText) {
-        FooterView f = getLoaddFooterView();
+        LoadView f = getLoadView();
         if (f != null) {
             f.setLoaddingFooterText(loaddingFooterText);
         }
@@ -251,32 +319,27 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     @Override
     public boolean isLoadMoreEnabled() {
-        FooterView footerView = getLoaddFooterView();
+        LoadView footerView = getLoadView();
         return footerView == null ? false : footerView.isLoadMoreEnabled();
     }
 
     @Override
     public void setLoadMoreEnabled(boolean loadMoreEnabled) {
-        FooterView footerView = getLoaddFooterView();
-        if (footerView != null) {
-            footerView.setLoadMoreEnabled(loadMoreEnabled);
+        LoadView loadView = getLoadView();
+        if (loadView != null) {
+            loadView.setLoadMoreEnabled(loadMoreEnabled);
             if (!loadMoreEnabled) {
-                mFootViews.remove(footerView);
-                setFooterSize();
+                if (loadLocation == 1) {
+                    removeHeaderView(loadView);
+                } else {
+                    removeFootView(loadView);
+                }
             }
         } else if (loadMoreEnabled) {
-            addFooterView();
+            addLoadView();
         }
     }
 
-    private void addFooterView() {
-        FooterView footerView = new FooterView(getContext());
-        if (footerView.isLoadMoreEnabled()) {
-            addFootView(footerView);
-            footerView.setVisibility(GONE);
-            footerView.setStatus(LoadState.Init);
-        }
-    }
 
     @Override
     public StatusChangListener getStatusChangListener() {

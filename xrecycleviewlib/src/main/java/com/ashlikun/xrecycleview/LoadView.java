@@ -17,9 +17,14 @@ import java.lang.ref.WeakReference;
 
 
 /**
- * Created by Administrator on 2016/3/14.
+ * @author　　: 李坤
+ * 创建时间: 2018/12/14 16:56
+ * 邮箱　　：496546144@qq.com
+ * <p>
+ * 功能介绍：加载更多的view
  */
-public class FooterView extends LinearLayout {
+
+public class LoadView extends LinearLayout {
     private CircleProgressView progressBar;
     private TextView textView;
     private Context context;
@@ -29,15 +34,15 @@ public class FooterView extends LinearLayout {
     private boolean loadMoreEnabled = true;
     MyHandler textViewHandler;
 
-    public FooterView(Context context) {
+    public LoadView(Context context) {
         this(context, null);
     }
 
-    public FooterView(Context context, AttributeSet attrs) {
+    public LoadView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public FooterView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public LoadView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
         LayoutInflater.from(context).inflate(R.layout.base_autoloadding_footer, this);

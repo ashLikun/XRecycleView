@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:orientation="vertical"
     android:background="#ffff00">
 
     <com.ashlikun.xrecycleview.simple.ScaleImageView
@@ -12,4 +13,11 @@
         android:layout_margin="20dp"
         android:background="@color/colorPrimary"
         app:sci_ratio="1" />
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/textView"
+        android:textColor="#ffffff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+</FrameLayout>

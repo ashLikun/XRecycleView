@@ -15,4 +15,11 @@
         <attr name="rv_heightRatio" format="reference|float" />
         <attr name="rv_heightDimen" format="reference|dimension" />
     </declare-styleable>
+    <declare-styleable name="RecyclerViewAutoLoadding">
+        <!--加载更多的位置-->
+        <attr name="rv_load_location">
+            <enum name="top" value="1" />
+            <enum name="bottom" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>

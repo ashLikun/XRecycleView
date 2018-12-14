@@ -20,7 +20,10 @@ import java.util.List;
  * 创建时间: 10:12 Administrator
  * 邮箱　　：496546144@qq.com
  * <p>
- * 功能介绍：带头部与底部的RecycleView，和可以设置最大高度
+ * 功能介绍：扩展的RecyclerView
+ * 1：带头部与底部的RecycleView
+ * 2：上下加载更多
+ * 3：和可以设置最大高度
  */
 
 public class RecyclerViewExtend extends RecyclerView {
@@ -28,9 +31,13 @@ public class RecyclerViewExtend extends RecyclerView {
     private static final String HEADERSIZE = "headerSize";
     private static final String FOOTERSIZE = "footerSize";
     private static final int TYPE_HEADER = -900004;
+    private static final int TYPE_REFRESH_HEADER = -900005;
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_REFRESH_FOOTER = -900003;
     private static final int TYPE_FOOTER = -900002;
+    /**
+     * 第一个加载的布局
+     */
     protected ArrayList<View> mHeaderViews = new ArrayList<>();
     /**
      * 最后一个为加载的布局
@@ -48,7 +55,7 @@ public class RecyclerViewExtend extends RecyclerView {
     private float maxRatio = 0;
 
     public boolean isHeader(ViewHolder viewHolder) {
-        return viewHolder.getItemViewType() == TYPE_HEADER;
+        return viewHolder.getItemViewType() == TYPE_REFRESH_HEADER || viewHolder.getItemViewType() == TYPE_HEADER;
     }
 
     public boolean isFooter(ViewHolder viewHolder) {
@@ -138,6 +145,18 @@ public class RecyclerViewExtend extends RecyclerView {
         setHeaderSize();
     }
 
+    public void addHeaderView(int index, View view) {
+        mHeaderViews.add(index, view);
+        setHeaderSize();
+    }
+
+    public View getHeaderView(int index) {
+        if (mHeaderViews.size() > index && index >= 0) {
+            return mHeaderViews.get(index);
+        }
+        return null;
+    }
+
     public void removeHeaderView(View view) {
         mHeaderViews.remove(view);
         setHeaderSize();
@@ -156,6 +175,13 @@ public class RecyclerViewExtend extends RecyclerView {
     public void addFootView(int index, final View view) {
         mFootViews.add(index, view);
         setFooterSize();
+    }
+
+    public View getFootView(int index) {
+        if (mFootViews.size() > index && index >= 0) {
+            return mFootViews.get(index);
+        }
+        return null;
     }
 
     protected void setFooterSize() {
@@ -327,12 +353,16 @@ public class RecyclerViewExtend extends RecyclerView {
             return position >= 0 && position < mHeaderViews.size();
         }
 
+        public boolean isHeaderLoad(int position) {
+            return mHeaderViews.size() > 0 && position == 0 && mHeaderViews.get(0) instanceof LoadView;
+        }
+
         public boolean isFooter(int position) {
             return position < getItemCount() && position >= getItemCount() - mFootViews.size();
         }
 
         public boolean isFooterLoad(int position) {
-            return mFootViews.size() > 0 && position == getItemCount() - 1 && mFootViews.get(mFootViews.size() - 1) instanceof FooterView;
+            return mFootViews.size() > 0 && position == getItemCount() - 1 && mFootViews.get(mFootViews.size() - 1) instanceof LoadView;
         }
 
         public int getHeadersCount() {
@@ -408,13 +438,15 @@ public class RecyclerViewExtend extends RecyclerView {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             if (viewType == TYPE_REFRESH_FOOTER) {
-                return new ViewHolder(mFootViews.get(mFootViews.size() - 1)) {
+                return new ViewHolder(getFootView(mFootViews.size() - 1)) {
+                };
+            } else if (viewType == TYPE_REFRESH_HEADER) {
+                return new ViewHolder(getHeaderView(0)) {
                 };
             } else if (viewType == TYPE_HEADER) {
                 if (headerPosition >= mHeaderViews.size()) {
                     headerPosition = 0;
                 }
-
                 return new ViewHolder(mHeaderViews.get(headerPosition++)) {
                 };
             } else if (viewType == TYPE_FOOTER) {
@@ -430,8 +462,7 @@ public class RecyclerViewExtend extends RecyclerView {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
             super.onBindViewHolder(holder, position, payloads);
-            if (isFooterLoad(position)) {
-
+            if (isFooterLoad(position) || isHeaderLoad(position)) {
                 return;
             }
             if (isHeader(position)) {
@@ -467,6 +498,9 @@ public class RecyclerViewExtend extends RecyclerView {
         public int getItemViewType(int position) {
             if (isFooterLoad(position)) {
                 return TYPE_REFRESH_FOOTER;
+            }
+            if (isHeaderLoad(position)) {
+                return TYPE_REFRESH_HEADER;
             }
             if (isHeader(position)) {
                 return TYPE_HEADER;

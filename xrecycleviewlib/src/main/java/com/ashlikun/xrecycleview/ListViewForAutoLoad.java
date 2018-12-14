@@ -16,7 +16,7 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
 
     public PageHelp pageHelp = null;
     private OnLoaddingListener onLoaddingListener;
-    private FooterView footerView;
+    private LoadView footerView;
     private ArrayList<OnScrollListener> scrollListeners = new ArrayList<>();
     private RefreshLayout refreshLayout;
     private OnItemClickListener itemClickListener;
@@ -31,7 +31,7 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
 
     public ListViewForAutoLoad(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        addFooterView(footerView = new FooterView(context), null, false);
+        addFooterView(footerView = new LoadView(context), null, false);
         init();
         super.setOnScrollListener(new ScrollListener());
         if (!isInEditMode()) {
