@@ -465,11 +465,7 @@ public class RecyclerViewExtend extends RecyclerView {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
             super.onBindViewHolder(holder, position, payloads);
-<<<<<<< HEAD
             if (isFooterLoad(position) || isHeaderLoad(position)) {
-=======
-            if (isFooterLoad(position)) {
->>>>>>> 98cbca8e377b1201733bc9fa0a6bfe3be2a6135d
                 return;
             }
             if (isHeader(position)) {
