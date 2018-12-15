@@ -1,7 +1,6 @@
 package com.ashlikun.xrecycleview;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -32,13 +31,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     private boolean isOneEnableRefresh = true;
 
-    /**
-     * 加载的位置
-     * 上面还是下面
-     * 1:上    2：下
-     */
-    private int loadLocation = 2;
-
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -55,9 +47,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        TypedArray a = context.obtainStyledAttributes(attrs,
-                R.styleable.RecyclerViewAutoLoadding);
-        loadLocation = a.getInt(R.styleable.RecyclerViewAutoLoadding_rv_load_location, 2);
         addLoadView();
 
     }
@@ -65,12 +54,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     private void addLoadView() {
         LoadView loadView = new LoadView(getContext());
         if (loadView.isLoadMoreEnabled()) {
-            if (loadLocation == 1) {
-                //加载第0个位置
-                addHeaderView(0, loadView);
-            } else {
-                addFootView(loadView);
-            }
+            addFootView(loadView);
             loadView.setVisibility(GONE);
             loadView.setStatus(LoadState.Init);
         }
@@ -112,45 +96,22 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
                 getState() != null && isLoadMoreEnabled() && getState() != LoadState.Loadding && getState() != LoadState.NoData;
         if (isCan) {
             LayoutManager layoutManager = getLayoutManager();
-            if (loadLocation == 1) {
-                //顶部加载
-                int firstVisibleItemPosition;
-                if (layoutManager instanceof GridLayoutManager) {
-                    firstVisibleItemPosition = ((GridLayoutManager) layoutManager).findFirstVisibleItemPosition();
-                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                    int[] into = ((StaggeredGridLayoutManager) layoutManager).findFirstVisibleItemPositions(null);
-                    firstVisibleItemPosition = findMin(into);
-                } else {
-                    firstVisibleItemPosition = ((LinearLayoutManager) layoutManager).findFirstVisibleItemPosition();
-                }
-                if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
-                        && firstVisibleItemPosition <= 0
-                        && layoutManager.getItemCount() >= layoutManager.getChildCount()
-                        && (pageHelp != null && pageHelp.isNext())) {
-                    setState(LoadState.Loadding);
-                    if (onLoaddingListener != null) {
-                        onLoaddingListener.onLoadding();
-                    }
-                }
+            int lastVisibleItemPosition;
+            if (layoutManager instanceof GridLayoutManager) {
+                lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
+            } else if (layoutManager instanceof StaggeredGridLayoutManager) {
+                int[] into = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
+                lastVisibleItemPosition = findMax(into);
             } else {
-                //底部加载
-                int lastVisibleItemPosition;
-                if (layoutManager instanceof GridLayoutManager) {
-                    lastVisibleItemPosition = ((GridLayoutManager) layoutManager).findLastVisibleItemPosition();
-                } else if (layoutManager instanceof StaggeredGridLayoutManager) {
-                    int[] into = ((StaggeredGridLayoutManager) layoutManager).findLastVisibleItemPositions(null);
-                    lastVisibleItemPosition = findMax(into);
-                } else {
-                    lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
-                }
-                if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
-                        && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
-                        && layoutManager.getItemCount() >= layoutManager.getChildCount()
-                        && (pageHelp != null && pageHelp.isNext())) {
-                    setState(LoadState.Loadding);
-                    if (onLoaddingListener != null) {
-                        onLoaddingListener.onLoadding();
-                    }
+                lastVisibleItemPosition = ((LinearLayoutManager) layoutManager).findLastVisibleItemPosition();
+            }
+            if (getItemCount(layoutManager) > 0 && layoutManager.getChildCount() > 0
+                    && lastVisibleItemPosition >= layoutManager.getItemCount() - 1
+                    && layoutManager.getItemCount() >= layoutManager.getChildCount()
+                    && (pageHelp != null && pageHelp.isNext())) {
+                setState(LoadState.Loadding);
+                if (onLoaddingListener != null) {
+                    onLoaddingListener.onLoadding();
                 }
             }
         }
@@ -202,12 +163,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      * 获取自动加载VIew
      */
     public LoadView getLoadView() {
-        View view = null;
-        if (loadLocation == 1) {
-            view = getHeaderView(0);
-        } else {
-            view = getHeaderView(mFootViews.size() - 1);
-        }
+        View view = getHeaderView(mFootViews.size() - 1);
         if (view != null && view instanceof LoadView) {
             return (LoadView) view;
         }
@@ -329,11 +285,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         if (loadView != null) {
             loadView.setLoadMoreEnabled(loadMoreEnabled);
             if (!loadMoreEnabled) {
-                if (loadLocation == 1) {
-                    removeHeaderView(loadView);
-                } else {
-                    removeFootView(loadView);
-                }
+                removeFootView(loadView);
             }
         } else if (loadMoreEnabled) {
             addLoadView();
