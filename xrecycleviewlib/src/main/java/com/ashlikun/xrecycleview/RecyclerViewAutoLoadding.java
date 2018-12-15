@@ -148,22 +148,11 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         return max;
     }
 
-    private int findMin(int[] lastPositions) {
-        int min = lastPositions[0];
-        for (int value : lastPositions) {
-            if (value < min) {
-                min = value;
-            }
-        }
-        return min;
-    }
-
-
     /**
      * 获取自动加载VIew
      */
     public LoadView getLoadView() {
-        View view = getHeaderView(mFootViews.size() - 1);
+        View view = getFootView(mFootViews.size() - 1);
         if (view != null && view instanceof LoadView) {
             return (LoadView) view;
         }
