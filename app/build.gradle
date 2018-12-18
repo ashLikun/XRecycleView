@@ -31,16 +31,16 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.designVersion
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.2'
     implementation 'com.github.ashLikun.CommonAdapter:adapter:1.4.2'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.ashLikun:CircleProgressView:1.0.1'
     compile ('com.alibaba.android:vlayout:1.2.13@aar') {
         transitive = true
     }
-    compile project(':xrecycleviewlib')
+    implementation project(':xrecycleviewlib')
     //自己写的刷新控件
     implementation 'com.github.ashLikun:RefreshLayout:1.2.4'
 }

@@ -6,7 +6,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
     }
 }
@@ -22,13 +22,14 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
-    superVersion = "27.0.2"
-    compileSdkVersion = 27
-    buildToolsVersion = "27.0.2"
-    designVersion = "com.android.support:design:" + superVersion
-    v4Version = "com.android.support:support-v4:" + superVersion
-    v7AppCompat = "com.android.support:appcompat-v7:" + superVersion
-    frameVersion = "2.0.6"
+    androidX = "1.0.0"
+    compileSdkVersion = 28
+    buildToolsVersion = "28.0.3"
+    designVersion = "com.google.android.material:material:" + androidX
+    v4Version = "androidx.legacy:legacy-support-v4:" + androidX
+    v7AppCompat = "androidx.appcompat:appcompat:" + androidX
+    annotation = "androidx.annotation:annotation:" + androidX
+    frameVersion = "2.5.7"
     targetSdkVersion = 24
     minSdkVersion = 16
     versionCode = 1
