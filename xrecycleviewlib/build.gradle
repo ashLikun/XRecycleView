@@ -32,7 +32,7 @@ android {
 dependencies {
     api fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly rootProject.ext.designVersion
-//    compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
+    compileOnly rootProject.ext.recyclerview
     compileOnly rootProject.ext.annotation
     //自己写的刷新控件
     compileOnly 'com.github.ashLikun:RefreshLayout:1.2.4'

@@ -28,6 +28,7 @@ ext {
     designVersion = "com.google.android.material:material:" + androidX
     v4Version = "androidx.legacy:legacy-support-v4:" + androidX
     v7AppCompat = "androidx.appcompat:appcompat:" + androidX
+    recyclerview = "androidx.recyclerview:recyclerview:" + androidX
     annotation = "androidx.annotation:annotation:" + androidX
     frameVersion = "2.5.7"
     targetSdkVersion = 24

@@ -2,7 +2,6 @@ package com.ashlikun.xrecycleview.simple;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +14,8 @@ import com.ashlikun.xrecycleview.listener.RecycleViewSwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * 作者　　: 李坤
