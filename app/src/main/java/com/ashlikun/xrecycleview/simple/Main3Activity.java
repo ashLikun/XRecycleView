@@ -78,12 +78,10 @@ public class Main3Activity extends AppCompatActivity implements RecycleViewSwipe
 
     private void loadData(boolean b) {
         for (int i = 0; i < 10; i++) {
-            list.add(0, list.size() + "");
+            list.add(list.size() + "");
         }
         adapter.notifyDataSetChanged();
         recycleView.getPageHelp().nextPage();
-        recycleView.scrollToPosition(10);
-        recycleView.scrollBy(0, recycleView.getHeight());
     }
 
     public void onClick(View view) {
