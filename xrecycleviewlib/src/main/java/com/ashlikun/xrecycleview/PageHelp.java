@@ -58,7 +58,9 @@ public class PageHelp {
      */
     public void setPageInfo(int currentPage, int recordPage) {
         this.currentPage = currentPage;
-        this.recordPage = recordPage;
+        if (recordPage >= 0) {
+            this.recordPage = recordPage;
+        }
         nextPage();
     }
 
@@ -68,7 +70,9 @@ public class PageHelp {
      */
     public void setPageInfoNoNext(int currentPage, int recordPage) {
         this.currentPage = currentPage;
-        this.recordPage = recordPage;
+        if (recordPage >= 0) {
+            this.recordPage = recordPage;
+        }
         if (!isNext()) {
             showNoData();
         } else {
