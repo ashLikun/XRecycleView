@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">XRecycleView</string>
     <string name="autoloadding_zhunbei">  准备加载</string>
     <string name="autoloadding_no_data">你已经看光了</string>
     <string name="autoloadding_failure">加载失败</string>

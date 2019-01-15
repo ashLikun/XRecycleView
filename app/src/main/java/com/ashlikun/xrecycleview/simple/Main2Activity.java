@@ -3,8 +3,8 @@ package com.ashlikun.xrecycleview.simple;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import com.ashlikun.adapter.ViewHolder;
@@ -31,6 +31,7 @@ public class Main2Activity extends AppCompatActivity implements RecycleViewSwipe
         @Override
         public void convert(ViewHolder holder, String s) {
             ScaleImageView imageView = holder.getView(R.id.image);
+            imageView.setRatio((float) (Math.random() * 10));
 //            if (holder.getPositionInside() >= getItemCount() - 1) {
 //                imageView.setRatio(1 / 10f);
 //            } else {
@@ -48,13 +49,11 @@ public class Main2Activity extends AppCompatActivity implements RecycleViewSwipe
         setContentView(R.layout.activity_main2);
         recycleView = findViewById(R.id.recycleView);
         recycleView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
-                .size(20)
-                .showFirstTopDivider()
-                .showFirstTopDivider(100)
+                .size(30)
                 .color(0xffff0000)
                 .build());
         recycleView.addItemDecoration(new VerticalDividerItemDecoration.Builder(this)
-                .size(20)
+                .size(30)
                 .color(0xffff0000)
                 .build());
 //        recycleView.addItemDecoration(new DividerGridItemDecoration.Builder(this)
@@ -62,7 +61,7 @@ public class Main2Activity extends AppCompatActivity implements RecycleViewSwipe
 //                .color(0xffff0000)
 //                .build());
 //        recycleView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        recycleView.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
 //        recycleView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         recycleView.setAdapter(adapter);
     }
