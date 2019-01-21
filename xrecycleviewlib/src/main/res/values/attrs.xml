@@ -8,6 +8,8 @@
     <declare-styleable name="SuperRecyclerView">
         <!--是否可以回到顶部-->
         <attr name="srv_isGoTop" format="boolean" />
+        <!--返回顶部的图标-->
+        <attr name="srv_goTopIcon" format="reference" />
         <!--第几个的时候打开AnimMenu-->
         <attr name="srv_goTopOnPosition" format="integer" />
     </declare-styleable>

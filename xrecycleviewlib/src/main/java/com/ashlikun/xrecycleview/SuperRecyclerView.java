@@ -2,6 +2,7 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,7 @@ public class SuperRecyclerView extends FrameLayout {
     //第几个的时候打开AnimMenu
     private int openAnimMenuPosition = DEFAULT_ANIM_MENU_POSITION;
     private boolean isGoTop;
+    private int goTopIcon;
     OnGoTopClickListener goTopClickListener;
     OnMenuItemClickListener menuItemClickListener;
 
@@ -64,6 +66,7 @@ public class SuperRecyclerView extends FrameLayout {
     private void initAtt(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView);
         isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
+        goTopIcon = a.getResourceId(R.styleable.SuperRecyclerView_srv_goTopIcon, R.drawable.icon_go_top);
         openAnimMenuPosition = a.getInteger(R.styleable.SuperRecyclerView_srv_goTopOnPosition, openAnimMenuPosition);
         a.recycle();
     }
@@ -86,7 +89,7 @@ public class SuperRecyclerView extends FrameLayout {
                 .tag(TAG_ANIMMENU_GO_TOP)
                 .strokeWidth(3)
                 .strokeColor(0xff313131)
-                .iconId(R.drawable.icon_go_top));
+                .iconId(goTopIcon));
 
     }
 
@@ -312,6 +315,14 @@ public class SuperRecyclerView extends FrameLayout {
             addGoTopView();
         } else {
             cleanGoTopView();
+        }
+    }
+
+    public void setGoTopIcon(@DrawableRes int icon) {
+        goTopIcon = icon;
+        cleanGoTopView();
+        if (isGoTop) {
+            addGoTopView();
         }
     }
 
