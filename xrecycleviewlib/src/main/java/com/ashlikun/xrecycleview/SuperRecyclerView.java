@@ -76,16 +76,9 @@ public class SuperRecyclerView extends FrameLayout {
 
     public void addGoTopView() {
         initAnimMenu();
-        for (int i = 0; i < animMenu.getChildCount(); i++) {
-            try {
-                AnimMenuItem item = (AnimMenuItem) animMenu.getChildAt(i);
-                //已经有了
-                if (item != null && TAG_ANIMMENU_GO_TOP.equals(item.getItemTag())) {
-                    return;
-                }
-            } catch (Exception e) {
-
-            }
+        if (getTopAnimMenuItem() != null) {
+            //已经有了
+            return;
         }
         animMenu.addView(animMenu
                 .getDefaultItem()
@@ -96,21 +89,31 @@ public class SuperRecyclerView extends FrameLayout {
 
     }
 
+    public AnimMenuItem getTopAnimMenuItem() {
+
+        for (int i = 0; i < animMenu.getChildCount(); i++) {
+            try {
+                AnimMenuItem item = (AnimMenuItem) animMenu.getChildAt(i);
+
+                if (item != null && TAG_ANIMMENU_GO_TOP.equals(item.getItemTag())) {
+                    return item;
+                }
+            } catch (Exception e) {
+
+            }
+        }
+        return null;
+    }
+
     /**
      * 清空返回顶部的view
      */
     public void cleanGoTopView() {
         if (animMenu != null) {
-            for (int i = 0; i < animMenu.getChildCount(); i++) {
-                try {
-                    AnimMenuItem item = (AnimMenuItem) animMenu.getChildAt(i);
-                    if (item != null && TAG_ANIMMENU_GO_TOP.equals(item.getItemTag())) {
-                        animMenu.removeView(item);
-                        return;
-                    }
-                } catch (Exception e) {
-
-                }
+            AnimMenuItem item = getTopAnimMenuItem();
+            if (item != null) {
+                //已经有了
+                animMenu.removeView(item);
             }
         }
     }
