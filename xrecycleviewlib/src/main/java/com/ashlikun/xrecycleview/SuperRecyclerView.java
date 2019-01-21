@@ -42,6 +42,8 @@ public class SuperRecyclerView extends FrameLayout {
     AnimMenu animMenu;
     //第几个的时候打开AnimMenu
     private int openAnimMenuPosition = DEFAULT_ANIM_MENU_POSITION;
+    private int goTopIconStrokeColor = 0xff313131;
+    private int goTopIconStrokeWidth = dip2px(1);
     private boolean isGoTop;
     private int goTopIcon;
     OnGoTopClickListener goTopClickListener;
@@ -68,6 +70,7 @@ public class SuperRecyclerView extends FrameLayout {
         isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
         goTopIcon = a.getResourceId(R.styleable.SuperRecyclerView_srv_goTopIcon, R.drawable.icon_go_top);
         openAnimMenuPosition = a.getInteger(R.styleable.SuperRecyclerView_srv_goTopOnPosition, openAnimMenuPosition);
+        goTopIconStrokeWidth = a.getDimensionPixelSize(R.styleable.SuperRecyclerView_srv_goTopIcon_strokeColor, goTopIconStrokeWidth);
         a.recycle();
     }
 
@@ -87,8 +90,8 @@ public class SuperRecyclerView extends FrameLayout {
         animMenu.addView(animMenu
                 .getDefaultItem()
                 .tag(TAG_ANIMMENU_GO_TOP)
-                .strokeWidth(3)
-                .strokeColor(0xff313131)
+                .strokeWidth(goTopIconStrokeWidth)
+                .strokeColor(goTopIconStrokeColor)
                 .iconId(goTopIcon));
 
     }
@@ -326,6 +329,22 @@ public class SuperRecyclerView extends FrameLayout {
         }
     }
 
+    public void setGoTopIconStrokeColor(int goTopIconStrokeColor) {
+        this.goTopIconStrokeColor = goTopIconStrokeColor;
+        cleanGoTopView();
+        if (isGoTop) {
+            addGoTopView();
+        }
+    }
+
+    public void setGoTopIconStrokeWidth(int goTopIconStrokeWidth) {
+        this.goTopIconStrokeWidth = goTopIconStrokeWidth;
+        cleanGoTopView();
+        if (isGoTop) {
+            addGoTopView();
+        }
+    }
+
     /**
      * 设置菜单点击事件
      *
@@ -380,4 +399,27 @@ public class SuperRecyclerView extends FrameLayout {
         }
     };
 
+    public boolean isGoTop() {
+        return isGoTop;
+    }
+
+    public int getGoTopIcon() {
+        return goTopIcon;
+    }
+
+    public int getGoTopIconStrokeColor() {
+        return goTopIconStrokeColor;
+    }
+
+    public int getGoTopIconStrokeWidth() {
+        return goTopIconStrokeWidth;
+    }
+
+    public OnGoTopClickListener getGoTopClickListener() {
+        return goTopClickListener;
+    }
+
+    public AnimMenu getAnimMenu() {
+        return animMenu;
+    }
 }
