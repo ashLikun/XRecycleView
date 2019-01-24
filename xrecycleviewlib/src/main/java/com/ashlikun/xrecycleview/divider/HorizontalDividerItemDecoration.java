@@ -41,7 +41,7 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
         //绘制第一个的顶部
         if (showFirstTopDivider) {
             Rect bounds = getDividerBound(position, parent, child, true);
-            onDraw(c, bounds, position, parent, mFirstTopDividerSize);
+            onDraw(c, bounds, -1, parent, mFirstTopDividerSize);
         }
         Rect bounds = getDividerBound(position, parent, child, false);
         onDraw(c, bounds, position, parent, getDividerSize(position, parent));

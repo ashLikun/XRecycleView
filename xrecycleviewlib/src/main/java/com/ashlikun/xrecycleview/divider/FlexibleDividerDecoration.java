@@ -264,7 +264,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         /**
          * Returns {@link Paint} for divider
          *
-         * @param position Divider position (or group index for GridLayoutManager)
+         * @param position 列表中的位置，-1代表顶部的
          * @param parent   RecyclerView
          * @return Paint instance
          */
@@ -279,7 +279,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         /**
          * Returns {@link android.graphics.Color} value of divider
          *
-         * @param position Divider position (or group index for GridLayoutManager)
+         * @param position 列表中的位置，-1代表顶部的
          * @param parent   RecyclerView
          * @return Color value
          */
@@ -294,7 +294,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
         /**
          * Returns drawable instance for divider
          *
-         * @param position Divider position (or group index for GridLayoutManager)
+         * @param position 列表中的位置，-1代表顶部的
          * @param parent   RecyclerView
          * @return Drawable instance
          */
