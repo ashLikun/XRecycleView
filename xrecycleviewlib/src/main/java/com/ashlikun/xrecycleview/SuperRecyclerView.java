@@ -206,7 +206,7 @@ public class SuperRecyclerView extends FrameLayout {
      */
     public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
         if (refreshLayout != null) {
-            refreshLayout.setOnRefreshListener(listener);
+            refreshLayout.setOnRefreshCallback(listener);
         }
     }
 

@@ -112,7 +112,7 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
 
 
     @Override
-    public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
+    public void setOnRefreshCallback(RefreshLayout.OnRefreshListener listener) {
         this.mListener = listener;
         super.setOnRefreshListener(this);
     }

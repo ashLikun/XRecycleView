@@ -85,7 +85,7 @@ public class SuperRefreshLayout extends SwipeRefreshLayout
     };
 
     @Override
-    public void setOnRefreshListener(RefreshLayout.OnRefreshListener listener) {
+    public void setOnRefreshCallback(RefreshLayout.OnRefreshListener listener) {
         this.mListener = listener;
         super.setOnRefreshListener(this);
     }

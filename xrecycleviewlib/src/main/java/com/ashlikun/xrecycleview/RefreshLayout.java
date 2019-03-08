@@ -37,7 +37,7 @@ public interface RefreshLayout {
      * 方法功能：设置下拉刷新的监听
      */
 
-    public void setOnRefreshListener(OnRefreshListener listener);
+    public void setOnRefreshCallback(OnRefreshListener listener);
 
     /**
      * 作者　　: 李坤
