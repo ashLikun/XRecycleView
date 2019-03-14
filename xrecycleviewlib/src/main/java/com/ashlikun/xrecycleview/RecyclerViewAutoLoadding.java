@@ -61,6 +61,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     public void addLoadView() {
         LoadView loadView = new LoadView(getContext());
         if (loadView.isLoadMoreEnabled()) {
+            //如果已经有了就删除
+            if (mFootViews.get(mFootViews.size() - 1) instanceof LoadView) {
+                mFootViews.remove(mFootViews.size() - 1);
+            }
             addFootView(loadView);
             loadView.setVisibility(GONE);
             loadView.setStatus(LoadState.Init);
