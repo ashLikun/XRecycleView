@@ -77,10 +77,9 @@ public class SuperRecyclerView extends FrameLayout {
         }
         refreshLayout = findViewById(R.id.swipe);
         recyclerView = findViewById(R.id.list_swipe_target);
-
         recyclerView.noDataIsShow = a.getBoolean(R.styleable.SuperRecyclerView_rv_noDatatIsShow, true);
         recyclerView.maxHeight = a.getDimension(R.styleable.SuperRecyclerView_rv_heightDimen, 0);
-
+        recyclerView.maxRatio = a.getFloat(R.styleable.SuperRecyclerView_rv_heightRatio, 0);
         if (isGoTop) {
             addGoTopView();
         }
