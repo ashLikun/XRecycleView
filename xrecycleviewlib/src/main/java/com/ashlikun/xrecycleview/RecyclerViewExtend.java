@@ -48,11 +48,11 @@ public class RecyclerViewExtend extends RecyclerView {
     /**
      * 最大高度
      */
-    private float maxHeight = 0;
+    protected float maxHeight = 0;
     /**
      * 最大比例,相对于宽度
      */
-    private float maxRatio = 0;
+    protected float maxRatio = 0;
 
     public boolean isHeader(ViewHolder viewHolder) {
         return viewHolder.getItemViewType() == TYPE_REFRESH_HEADER || viewHolder.getItemViewType() == TYPE_HEADER;
@@ -188,7 +188,8 @@ public class RecyclerViewExtend extends RecyclerView {
         if (mAdapter == null) {
             return;
         }
-        Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
+        //应为CommonAdapter为抽象类
+        Class cls = getCommonAdapterClass(mAdapter.getClass());
         if (cls == null) {
             return;
         }

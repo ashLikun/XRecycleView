@@ -130,7 +130,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
         } else {
             pageHelp.clear();
         }
-        pageHelp.setStatusChangListener(this);
+        pageHelp.addStatusChangListener(this);
     }
 
 

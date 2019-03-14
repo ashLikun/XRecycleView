@@ -4,7 +4,10 @@
     <attr name="SwipeRefreshLayout_Color2" format="color"></attr>
     <attr name="SwipeRefreshLayout_Color3" format="color"></attr>
     <attr name="SwipeRefreshLayout_Color4" format="color"></attr>
-
+    <!--没有数据的时候是否显示LoadView-->
+    <attr name="rv_noDatatIsShow" format="boolean" />
+    <attr name="rv_heightRatio" format="reference|float" />
+    <attr name="rv_heightDimen" format="reference|dimension" />
     <declare-styleable name="SuperRecyclerView">
         <!--是否可以回到顶部-->
         <attr name="srv_isGoTop" format="boolean" />
@@ -14,9 +17,16 @@
         <attr name="srv_goTopIcon_strokeWidth" format="dimension" />
         <!--第几个的时候打开AnimMenu-->
         <attr name="srv_goTopOnPosition" format="integer" />
+        <attr name="rv_heightRatio"></attr>
+        <attr name="rv_heightDimen"></attr>
+        <attr name="rv_noDatatIsShow"></attr>
+
     </declare-styleable>
     <declare-styleable name="RecyclerViewExtend">
-        <attr name="rv_heightRatio" format="reference|float" />
-        <attr name="rv_heightDimen" format="reference|dimension" />
+        <attr name="rv_heightRatio"></attr>
+        <attr name="rv_heightDimen"></attr>
+    </declare-styleable>
+    <declare-styleable name="RecyclerViewAutoLoadding">
+        <attr name="rv_noDatatIsShow"></attr>
     </declare-styleable>
 </resources>

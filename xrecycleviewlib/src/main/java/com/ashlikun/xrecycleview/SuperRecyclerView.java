@@ -59,18 +59,37 @@ public class SuperRecyclerView extends FrameLayout {
 
     public SuperRecyclerView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        initAtt(context, attrs);
         if (!isInEditMode()) {
-            initView();
+            initView(context, attrs);
         }
     }
 
-    private void initAtt(Context context, AttributeSet attrs) {
+    private void initView(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView);
         isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
         goTopIcon = a.getResourceId(R.styleable.SuperRecyclerView_srv_goTopIcon, R.drawable.icon_go_top);
         openAnimMenuPosition = a.getInteger(R.styleable.SuperRecyclerView_srv_goTopOnPosition, openAnimMenuPosition);
         goTopIconStrokeWidth = a.getDimensionPixelSize(R.styleable.SuperRecyclerView_srv_goTopIcon_strokeColor, goTopIconStrokeWidth);
+        if (!REFRESH_IS_CUSTOM) {
+            LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_recycle, this, true);
+        } else {
+            LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_custom_recycle, this, true);
+        }
+        refreshLayout = findViewById(R.id.swipe);
+        recyclerView = findViewById(R.id.list_swipe_target);
+
+        recyclerView.noDataIsShow = a.getBoolean(R.styleable.SuperRecyclerView_rv_noDatatIsShow, true);
+        recyclerView.maxHeight = a.getDimension(R.styleable.SuperRecyclerView_rv_heightDimen, 0);
+
+        if (isGoTop) {
+            addGoTopView();
+        }
+        /**
+         * 设置集合view的刷新view
+         */
+        recyclerView.setRefreshLayout(refreshLayout);
+        setColorSchemeResources(refreshLayout);
+        recyclerView.addOnScrollListener(myScroll);
         a.recycle();
     }
 
@@ -164,24 +183,6 @@ public class SuperRecyclerView extends FrameLayout {
         return (int) (dip * scale + 0.5f * (dip >= 0 ? 1 : -1));
     }
 
-    private void initView() {
-        if (!REFRESH_IS_CUSTOM) {
-            LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_recycle, this, true);
-        } else {
-            LayoutInflater.from(getContext()).inflate(R.layout.base_swipe_custom_recycle, this, true);
-        }
-        refreshLayout = findViewById(R.id.swipe);
-        recyclerView = findViewById(R.id.list_swipe_target);
-        if (isGoTop) {
-            addGoTopView();
-        }
-        /**
-         * 设置集合view的刷新view
-         */
-        recyclerView.setRefreshLayout(refreshLayout);
-        setColorSchemeResources(refreshLayout);
-        recyclerView.addOnScrollListener(myScroll);
-    }
 
     public void setColorSchemeResources(RefreshLayout refreshLayout) {
         TypedArray array = getContext().getTheme().obtainStyledAttributes(new int[]{R.attr.SwipeRefreshLayout_Color1, R.attr.SwipeRefreshLayout_Color2, R.attr.SwipeRefreshLayout_Color3, R.attr.SwipeRefreshLayout_Color4});
@@ -365,6 +366,13 @@ public class SuperRecyclerView extends FrameLayout {
     public void addAnimMenu(AnimMenuItem.Builder builder) {
         initAnimMenu();
         animMenu.addView(builder);
+    }
+
+    /**
+     * 没有数据的时候是否显示LoadView
+     */
+    public void setNoDataIsShow(boolean noDataIsShow) {
+        recyclerView.setNoDataIsShow(noDataIsShow);
     }
 
     RecyclerView.OnScrollListener myScroll = new RecyclerView.OnScrollListener() {

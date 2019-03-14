@@ -31,6 +31,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     private boolean isOneEnableRefresh = true;
 
+    /**
+     * 没有数据的时候是否显示LoadView
+     */
+    protected boolean noDataIsShow = true;
 
     public RecyclerViewAutoLoadding(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
@@ -51,7 +55,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     }
 
-    private void addLoadView() {
+    /**
+     * 添加加载控件
+     */
+    public void addLoadView() {
         LoadView loadView = new LoadView(getContext());
         if (loadView.isLoadMoreEnabled()) {
             addFootView(loadView);
@@ -60,6 +67,15 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         }
     }
 
+    /**
+     * 移除加载控件
+     */
+    public void removeLoadView() {
+        LoadView loadView = getLoadView();
+        if (loadView != null) {
+            removeFootView(loadView);
+        }
+    }
 
     @Override
     public void setOnLoaddingListener(OnLoaddingListener onLoaddingListener) {
@@ -69,7 +85,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         } else {
             pageHelp.clear();
         }
-        pageHelp.setStatusChangListener(this);
+        pageHelp.addStatusChangListener(this);
     }
 
     @Override
@@ -175,15 +191,21 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     @Override
     public void noData() {
         setState(LoadState.NoData);
+        if (!noDataIsShow) {
+            removeLoadView();
+        }
         //停止滚动
         stopScroll();
     }
 
-    @Override
     /**
      * 初始化状态
      */
+    @Override
     public void init() {
+        if (!noDataIsShow) {
+            addLoadView();
+        }
         setState(LoadState.Init);
     }
 
@@ -191,6 +213,12 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     public void failure() {
         if (getState() != null && getState() != LoadState.NoData) {
             setState(LoadState.Failure);
+        }
+    }
+
+    public void hint() {
+        if (getState() != null) {
+            setState(LoadState.Hint);
         }
     }
 
@@ -236,6 +264,13 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         if (f != null) {
             f.setRecycleAniming();
         }
+    }
+
+    /**
+     * 没有数据的时候是否显示LoadView
+     */
+    public void setNoDataIsShow(boolean noDataIsShow) {
+        this.noDataIsShow = noDataIsShow;
     }
 
     /**

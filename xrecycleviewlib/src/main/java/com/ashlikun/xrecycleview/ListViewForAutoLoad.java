@@ -138,7 +138,7 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
         } else {
             pageHelp.clear();
         }
-        pageHelp.setStatusChangListener(this);
+        pageHelp.addStatusChangListener(this);
     }
 
 

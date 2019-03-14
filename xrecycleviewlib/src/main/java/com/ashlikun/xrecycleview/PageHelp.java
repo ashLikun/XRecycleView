@@ -2,6 +2,9 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PageHelp {
     // 服务器数据的第几页
     private int currentPage = 1;
@@ -11,22 +14,36 @@ public class PageHelp {
     private Context context;
 
 
-    private StatusChangListener statusChangListener;
+    private List<StatusChangListener> statusChangListeners;
 
     public PageHelp(Context context) {
         this.context = context;
     }
 
-    public void setStatusChangListener(StatusChangListener statusChangListener) {
-        this.statusChangListener = statusChangListener;
+
+    public void addStatusChangListener(StatusChangListener statusChangListener) {
+        if (statusChangListeners == null) {
+            statusChangListeners = new ArrayList();
+        }
+        if (!statusChangListeners.contains(statusChangListener)) {
+            statusChangListeners.add(statusChangListener);
+        }
+    }
+
+    public void removeStatusChangListener(StatusChangListener statusChangListener) {
+        if (statusChangListeners != null) {
+            statusChangListeners.remove(statusChangListener);
+        }
     }
 
     /**
      * 显示没有数据
      */
     public void showNoData() {
-        if (statusChangListener != null) {
-            statusChangListener.noData();
+        if (statusChangListeners != null) {
+            for (StatusChangListener s : statusChangListeners) {
+                s.noData();
+            }
         }
     }
 
@@ -35,8 +52,10 @@ public class PageHelp {
      * 可以加载下一页
      */
     public void showComplete() {
-        if (statusChangListener != null) {
-            statusChangListener.complete();
+        if (statusChangListeners != null) {
+            for (StatusChangListener s : statusChangListeners) {
+                s.complete();
+            }
         }
     }
 
@@ -47,8 +66,10 @@ public class PageHelp {
         currentPage = 1;
         recordPage = 0;
         // 服务器数据的第几页
-        if (statusChangListener != null) {
-            statusChangListener.init();
+        if (statusChangListeners != null) {
+            for (StatusChangListener s : statusChangListeners) {
+                s.init();
+            }
         }
     }
 
