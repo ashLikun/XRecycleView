@@ -1,10 +1,6 @@
 package com.ashlikun.xrecycleview.simple;
 
 import android.content.Context;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
@@ -12,10 +8,12 @@ import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.animation.SlideInBottomAnimation;
-import com.ashlikun.adapter.recyclerview.multiltem.SimpleSingAdapter;
+import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 作者　　: 李坤
@@ -78,12 +76,6 @@ public class MyAdapter {
         }
 
         @Override
-        public void onItemClick(ViewGroup parent, View view, Neibu2Data data, int position) {
-            super.onItemClick(parent, view, data, position);
-            Log.e("aaa", "p");
-        }
-
-        @Override
         public int getLayoutId() {
             return R.layout.item_view1;
         }
@@ -122,11 +114,6 @@ public class MyAdapter {
         @Override
         public void convert(ViewHolder holder, Neibu3Data neibuData) {
             holder.setText(R.id.textView, neibuData.name);
-        }
-
-        @Override
-        public void onItemClick(ViewGroup parent, View view, Neibu3Data data, int position) {
-            super.onItemClick(parent, view, data, position);
         }
     }
 

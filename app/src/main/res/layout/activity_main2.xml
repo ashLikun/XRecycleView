@@ -11,11 +11,11 @@
         android:onClick="onClick"
         android:text="测试" />
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#00ff00"
-        app:rv_heightRatio="1"></android.support.v7.widget.RecyclerView>
+        app:rv_heightRatio="1"></androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

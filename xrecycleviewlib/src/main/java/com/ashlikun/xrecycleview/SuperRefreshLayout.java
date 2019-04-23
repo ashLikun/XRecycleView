@@ -2,7 +2,7 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.view.NestedScrollingChild;
+import androidx.core.view.NestedScrollingChild;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;

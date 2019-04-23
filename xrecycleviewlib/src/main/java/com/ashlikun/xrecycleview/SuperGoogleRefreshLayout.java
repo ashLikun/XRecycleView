@@ -2,8 +2,8 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.core.view.NestedScrollingChild;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
