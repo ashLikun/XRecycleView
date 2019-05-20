@@ -83,10 +83,8 @@ public class SuperRecyclerView extends FrameLayout {
         if (isGoTop) {
             addGoTopView();
         }
-        /**
-         * 设置集合view的刷新view
-         */
-        recyclerView.setRefreshLayout(refreshLayout);
+        //设置集合view的刷新view
+        setRefreshLayout(refreshLayout);
         setColorSchemeResources(refreshLayout);
         recyclerView.addOnScrollListener(myScroll);
         a.recycle();
@@ -249,9 +247,29 @@ public class SuperRecyclerView extends FrameLayout {
         recyclerView.getPageHelp().setPageInfoNoNext(currentPage, recordPage);
     }
 
-
+    /**
+     * 获取下拉刷新
+     *
+     * @return
+     */
     public RefreshLayout getRefreshLayout() {
         return refreshLayout;
+    }
+
+    /**
+     * 替换下拉刷新
+     */
+    public void setRefreshLayout(RefreshLayout refreshLayout) {
+        if (refreshLayout == null) {
+            return;
+        }
+        if (this.recyclerView != refreshLayout) {
+            if (this.refreshLayout != null) {
+                this.refreshLayout.setEnabled(false);
+            }
+            this.refreshLayout = refreshLayout;
+        }
+        recyclerView.setRefreshLayout(refreshLayout);
     }
 
     public ConfigChang getConfigChang() {
