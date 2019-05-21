@@ -263,7 +263,7 @@ public class SuperRecyclerView extends FrameLayout {
         if (refreshLayout == null) {
             return;
         }
-        if (this.recyclerView != refreshLayout) {
+        if (this.refreshLayout != refreshLayout) {
             if (this.refreshLayout != null) {
                 this.refreshLayout.setEnabled(false);
             }
