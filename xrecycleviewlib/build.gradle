@@ -30,8 +30,11 @@ android {
 }
 
 dependencies {
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    api fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly rootProject.ext.designVersion
+    compileOnly rootProject.ext.recyclerview
+    compileOnly rootProject.ext.annotation
     //自己写的刷新控件
     compileOnly 'com.github.ashLikun:RefreshLayout:2.0.0'
     implementation 'com.github.ashLikun:AnimationMenu:2.0.0'
