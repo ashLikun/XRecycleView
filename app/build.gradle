@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.github.ashLikun:CommonAdapter:3.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.ashLikun:AnimationMenu:2.0.0'
-    implementation 'com.github.ashLikun:CircleProgressView:2.0.2'
+    implementation 'com.github.ashLikun:CircleProgressView:2.0.1'
     implementation('com.alibaba.android:vlayout:1.2.13@aar') {
         transitive = true
     }
