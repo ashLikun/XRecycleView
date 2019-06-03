@@ -1,6 +1,7 @@
 package com.ashlikun.xrecycleview;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -52,15 +53,34 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     }
 
     private void initView(Context context, AttributeSet attrs) {
-        addLoadView();
-
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.RecyclerViewAutoLoadding);
+        int footLayouId = a.getInt(R.styleable.RecyclerViewAutoLoadding_rv_footLoadLayoutId, -1);
+        noDataIsShow = a.getBoolean(R.styleable.RecyclerViewAutoLoadding_rv_noDataIsShow, noDataIsShow);
+        boolean isFootLoadColor = false;
+        int footLoadColor = 0;
+        if (a.hasValue(R.styleable.RecyclerViewAutoLoadding_rv_footLoadColor)) {
+            isFootLoadColor = true;
+            footLoadColor = a.getColor(R.styleable.RecyclerViewAutoLoadding_rv_footLoadColor, 0);
+        }
+        a.recycle();
+        addLoadView(footLayouId);
+        if (isFootLoadColor) {
+            setLoadFootColor(footLoadColor);
+        }
     }
 
     /**
      * 添加加载控件
      */
     public void addLoadView() {
-        LoadView loadView = new LoadView(getContext());
+        addLoadView(-1);
+    }
+
+    /**
+     * 添加加载控件
+     */
+    public void addLoadView(int loadFootlayoutId) {
+        LoadView loadView = new LoadView(getContext(), loadFootlayoutId);
         if (loadView.isLoadMoreEnabled()) {
             //如果已经有了就删除
             if (mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof LoadView) {
@@ -321,6 +341,26 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         }
     }
 
+
+    /**
+     * 底部加载布局
+     *
+     * @param loadFootlayoutId
+     */
+    public void setLoadFootlayoutId(int loadFootlayoutId) {
+        removeLoadView();
+        addLoadView(loadFootlayoutId);
+    }
+
+    /**
+     * 底部加载主颜色
+     */
+    public void setLoadFootColor(int color) {
+        LoadView view = getLoadView();
+        if (view != null) {
+            view.setColor(color);
+        }
+    }
 
     @Override
     public StatusChangListener getStatusChangListener() {
