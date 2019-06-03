@@ -36,7 +36,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.github.ashLikun.CommonAdapter:adapter:1.4.2'
     implementation 'com.google.code.gson:gson:2.8.2'
-    implementation 'com.github.ashLikun:CircleProgressView:1.0.1'
+    implementation 'com.github.ashLikun:CircleProgressView:1.0.2'
     compile ('com.alibaba.android:vlayout:1.2.13@aar') {
         transitive = true
     }
