@@ -37,7 +37,7 @@ dependencies {
     //自己写的刷新控件
     compileOnly 'com.github.ashLikun:RefreshLayout:1.2.4'
     implementation 'com.github.ashLikun:AnimationMenu:1.1.1'
-    implementation 'com.github.ashLikun:CircleProgressView:1.0.1'
+    implementation 'com.github.ashLikun:CircleProgressView:1.0.2'
 }
 
 apply from: '../maven.gradle'

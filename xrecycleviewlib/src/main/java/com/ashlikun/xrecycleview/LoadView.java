@@ -33,9 +33,15 @@ public class LoadView extends LinearLayout {
     private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
     private boolean loadMoreEnabled = true;
     MyHandler textViewHandler;
+    //加载更多的布局,控件Id一定要是指定的2个
+    private int loadFootlayoutId = R.layout.base_autoloadding_footer;
 
     public LoadView(Context context) {
         this(context, null);
+    }
+
+    public LoadView(Context context, int layouId) {
+        this(context, null, 0, layouId);
     }
 
     public LoadView(Context context, AttributeSet attrs) {
@@ -43,9 +49,16 @@ public class LoadView extends LinearLayout {
     }
 
     public LoadView(Context context, AttributeSet attrs, int defStyleAttr) {
+        this(context, attrs, defStyleAttr, -1);
+    }
+
+    public LoadView(Context context, AttributeSet attrs, int defStyleAttr, int layouId) {
         super(context, attrs, defStyleAttr);
         this.context = context;
-        LayoutInflater.from(context).inflate(R.layout.base_autoloadding_footer, this);
+        if (layouId != -1 && layouId != 0) {
+            loadFootlayoutId = layouId;
+        }
+        LayoutInflater.from(context).inflate(loadFootlayoutId, this);
         setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, dip2px(50)));
         setOrientation(HORIZONTAL);
         setGravity(Gravity.CENTER);
@@ -160,6 +173,19 @@ public class LoadView extends LinearLayout {
 
     public void setRecycleAniming() {
         setTextViewText(textView.getText().toString(), true);
+    }
+
+    public CircleProgressView getProgressBar() {
+        return progressBar;
+    }
+
+    public TextView getTextView() {
+        return textView;
+    }
+
+    public void setColor(int color) {
+        textView.setTextColor(color);
+        progressBar.setColor(color);
     }
 
     public class MyHandler extends Handler {

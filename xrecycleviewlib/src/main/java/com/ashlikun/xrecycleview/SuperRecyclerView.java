@@ -77,9 +77,14 @@ public class SuperRecyclerView extends FrameLayout {
         }
         refreshLayout = findViewById(R.id.swipe);
         recyclerView = findViewById(R.id.list_swipe_target);
-        recyclerView.noDataIsShow = a.getBoolean(R.styleable.SuperRecyclerView_rv_noDatatIsShow, true);
+        recyclerView.noDataIsShow = a.getBoolean(R.styleable.SuperRecyclerView_rv_noDataIsShow, true);
         recyclerView.maxHeight = a.getDimension(R.styleable.SuperRecyclerView_rv_heightDimen, 0);
         recyclerView.maxRatio = a.getFloat(R.styleable.SuperRecyclerView_rv_heightRatio, 0);
+        setLoadFootlayoutId(a.getInt(R.styleable.SuperRecyclerView_rv_footLoadLayoutId, -1));
+        if (a.hasValue(R.styleable.SuperRecyclerView_rv_footLoadColor)) {
+            recyclerView.setLoadFootColor(a.getColor(R.styleable.SuperRecyclerView_rv_footLoadColor, 0));
+        }
+
         if (isGoTop) {
             addGoTopView();
         }
@@ -390,6 +395,15 @@ public class SuperRecyclerView extends FrameLayout {
      */
     public void setNoDataIsShow(boolean noDataIsShow) {
         recyclerView.setNoDataIsShow(noDataIsShow);
+    }
+
+    /**
+     * 底部加载布局
+     *
+     * @param loadFootlayoutId
+     */
+    public void setLoadFootlayoutId(int loadFootlayoutId) {
+        recyclerView.setLoadFootlayoutId(loadFootlayoutId);
     }
 
     RecyclerView.OnScrollListener myScroll = new RecyclerView.OnScrollListener() {
