@@ -3,11 +3,11 @@ package com.ashlikun.xrecycleview;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -55,21 +55,41 @@ public class LoadView extends LinearLayout {
     public LoadView(Context context, AttributeSet attrs, int defStyleAttr, int layouId) {
         super(context, attrs, defStyleAttr);
         this.context = context;
+        baseLayout();
+        loaddingLayout(layouId);
+    }
+
+    protected void baseLayout() {
+        setLayoutParams(new RecyclerView.LayoutParams(LayoutParams.MATCH_PARENT, dip2px(50)));
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER);
+    }
+
+    /**
+     * 加载一个布局
+     *
+     * @param layouId
+     */
+    protected void loaddingLayout(int layouId) {
+        removeAllViews();
         if (layouId != -1 && layouId != 0) {
             loadFootlayoutId = layouId;
         }
         LayoutInflater.from(context).inflate(loadFootlayoutId, this);
-        setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, dip2px(50)));
-        setOrientation(HORIZONTAL);
-        setGravity(Gravity.CENTER);
         textView = (TextView) findViewById(R.id.tvLoadMore);
         textViewHandler = new MyHandler(textView);
         progressBar = (CircleProgressView) findViewById(R.id.progressbar);
+        setStatus(state);
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        if (state == LoadState.Hint) {
+            //状态隐藏
+            super.onMeasure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY), MeasureSpec.makeMeasureSpec(0, MeasureSpec.EXACTLY));
+        } else {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
     }
 
     @Override

@@ -11,7 +11,6 @@ import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
 import com.alibaba.android.vlayout.layout.LinearLayoutHelper;
 import com.ashlikun.adapter.ViewHolder;
-import com.ashlikun.adapter.animation.SlideInBottomAnimation;
 import com.ashlikun.adapter.recyclerview.multiltem.SimpleSingAdapter;
 
 import java.util.ArrayList;
@@ -105,7 +104,7 @@ public class MyAdapter {
         public AdapterItem3(Context context, List<Neibu3Data> datas) {
             super(context);
             setDatas(datas);
-            setCustomAnimation(new SlideInBottomAnimation());
+//            setCustomAnimation(new SlideInBottomAnimation());
         }
 
         @Override
@@ -139,7 +138,7 @@ public class MyAdapter {
             ArrayList a = new ArrayList();
             a.add("我啊");
             setDatas(a);
-            setCustomAnimation(new SlideInBottomAnimation());
+//            setCustomAnimation(new SlideInBottomAnimation());
         }
 
         @Override

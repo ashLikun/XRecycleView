@@ -22,6 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:rv_footLoadColor="#ff0000"
+        app:rv_noDataIsShow="true"
         app:srv_isGoTop="true"></com.ashlikun.xrecycleview.SuperRecyclerView>
 
 </LinearLayout>

@@ -48,13 +48,14 @@ public class MainActivity extends AppCompatActivity implements RecycleViewSwipeL
             public void run() {
                 loadData(true);
             }
-        }, 3000);
+        }, 2000);
     }
 
     public void loadData(boolean isStart) {
         if (isStart) {
             adapter.clear();
-            recycleView.getPageHelp().setPageInfo(1, 5);
+            recycleView.getPageHelp().clear();
+            recycleView.getPageHelp().setPageInfo(1, 2);
             recycleView.setRefreshing(false);
             neibuData.clear();
             for (int i = 0; i < 10; i++) {
@@ -75,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewSwipeL
                 neibu3Data.add(new Neibu3Data("我是第三种" + i));
             }
             adapter.addAdapter(new MyAdapter.AdapterItem3(this, neibu3Data).setViewType("end"));
-//        adapter.addAdapter(new MyAdapter.AdapterItemSing(this));
         } else {
             recycleView.getPageHelp().nextPage();
             SingAdapter a = adapter.findAdapterByViewType("end");
@@ -97,5 +97,6 @@ public class MainActivity extends AppCompatActivity implements RecycleViewSwipeL
     public void onClick2(View view) {
         Intent intent = new Intent(this, Main3Activity.class);
         startActivity(intent);
+//        recycleView.getRecyclerView().addLoadView(0);
     }
 }

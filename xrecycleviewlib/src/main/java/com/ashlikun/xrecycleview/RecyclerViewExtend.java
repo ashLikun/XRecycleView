@@ -43,8 +43,8 @@ public class RecyclerViewExtend extends RecyclerView {
      * 最后一个为加载的布局
      */
     protected ArrayList<View> mFootViews = new ArrayList<>();
-    private Adapter mAdapter;
-    private WrapAdapter mWrapAdapter;
+    protected Adapter mAdapter;
+    protected WrapAdapter mWrapAdapter;
     /**
      * 最大高度
      */
@@ -127,13 +127,18 @@ public class RecyclerViewExtend extends RecyclerView {
 
     @Override
     public void setAdapter(Adapter adapter) {
+        try {
+            if (mAdapter != null) {
+                mAdapter.unregisterAdapterDataObserver(mDataObserver);
+            }
+        } catch (IllegalStateException e) {
+        }
         mAdapter = adapter;
         mWrapAdapter = new WrapAdapter();
         super.setAdapter(mWrapAdapter);
         try {
             mAdapter.registerAdapterDataObserver(mDataObserver);
         } catch (IllegalStateException e) {
-
         }
         mWrapAdapter.notifyDataSetChanged();
         setHeaderSize();
@@ -160,11 +165,17 @@ public class RecyclerViewExtend extends RecyclerView {
     public void removeHeaderView(View view) {
         mHeaderViews.remove(view);
         setHeaderSize();
+        if(mWrapAdapter != null) {
+            mWrapAdapter.notifyDataSetChanged();
+        }
     }
 
     public void removeFootView(View view) {
         mFootViews.remove(view);
         setFooterSize();
+        if(mWrapAdapter != null) {
+            mWrapAdapter.notifyDataSetChanged();
+        }
     }
 
     public void addFootView(final View view) {
@@ -204,6 +215,7 @@ public class RecyclerViewExtend extends RecyclerView {
         } catch (NoSuchFieldException e) {
             Log.w("setFooterSize", "adapter没有" + FOOTERSIZE + "字段");
         }
+        //刷新adapter
 
     }
 
@@ -211,7 +223,8 @@ public class RecyclerViewExtend extends RecyclerView {
         if (mAdapter == null) {
             return;
         }
-        Class cls = getCommonAdapterClass(mAdapter.getClass());//应为CommonAdapter为抽象类
+        //应为CommonAdapter为抽象类
+        Class cls = getCommonAdapterClass(mAdapter.getClass());
         if (cls == null) {
             return;
         }
@@ -342,7 +355,7 @@ public class RecyclerViewExtend extends RecyclerView {
     };
 
 
-    private class WrapAdapter extends RecyclerView.Adapter<ViewHolder> {
+    protected class WrapAdapter extends RecyclerView.Adapter<ViewHolder> {
         private int headerPosition = 0;
         private int footerPosition = 0;
 

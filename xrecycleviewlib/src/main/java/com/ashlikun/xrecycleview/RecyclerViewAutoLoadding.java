@@ -79,15 +79,16 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      * 添加加载控件
      */
     public void addLoadView(int loadFootlayoutId) {
-        LoadView loadView = new LoadView(getContext(), loadFootlayoutId);
-        if (loadView.isLoadMoreEnabled()) {
-            //如果已经有了就删除
-            if (mFootViews.size() > 0 && mFootViews.get(mFootViews.size() - 1) instanceof LoadView) {
-                mFootViews.remove(mFootViews.size() - 1);
-            }
+        LoadView loadView = getLoadView();
+        if (loadView == null) {
+            //没有，就新增
+            loadView = new LoadView(getContext(), loadFootlayoutId);
             addFootView(loadView);
             loadView.setVisibility(GONE);
             loadView.setStatus(LoadState.Init);
+        } else {
+            //如果已经有加载布局了，就更新
+            loadView.loaddingLayout(loadFootlayoutId);
         }
     }
 
@@ -214,9 +215,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     @Override
     public void noData() {
-        setState(LoadState.NoData);
         if (!noDataIsShow) {
-            removeLoadView();
+            setState(LoadState.Hint);
+        } else {
+            setState(LoadState.NoData);
         }
         //停止滚动
         stopScroll();
@@ -227,9 +229,6 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     @Override
     public void init() {
-        if (!noDataIsShow) {
-            addLoadView();
-        }
         setState(LoadState.Init);
     }
 
