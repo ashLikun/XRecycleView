@@ -67,7 +67,7 @@ public class SuperRecyclerView extends FrameLayout {
 
     private void initView(Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.SuperRecyclerView);
-        isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, true);
+        isGoTop = a.getBoolean(R.styleable.SuperRecyclerView_srv_isGoTop, false);
         goTopIcon = a.getResourceId(R.styleable.SuperRecyclerView_srv_goTopIcon, R.drawable.icon_go_top);
         openAnimMenuPosition = a.getInteger(R.styleable.SuperRecyclerView_srv_goTopOnPosition, openAnimMenuPosition);
         goTopIconStrokeWidth = a.getDimensionPixelSize(R.styleable.SuperRecyclerView_srv_goTopIcon_strokeColor, goTopIconStrokeWidth);
