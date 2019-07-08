@@ -85,7 +85,9 @@ public class SuperRecyclerView extends FrameLayout {
         if (a.hasValue(R.styleable.SuperRecyclerView_rv_footLoadColor)) {
             recyclerView.setLoadFootColor(a.getColor(R.styleable.SuperRecyclerView_rv_footLoadColor, 0));
         }
-
+        if (a.hasValue(R.styleable.SuperRecyclerView_rv_neibuBackground)) {
+            recyclerView.setBackgroundResource(a.getResourceId(R.styleable.SuperRecyclerView_rv_neibuBackground, 0));
+        }
         if (isGoTop) {
             addGoTopView();
         }

@@ -26,6 +26,8 @@
         <attr name="rv_noDataIsShow"></attr>
         <attr name="rv_footLoadLayoutId"></attr>
         <attr name="rv_footLoadColor"></attr>
+        <!--内部RecyclerView的背景-->
+        <attr name="rv_neibuBackground"></attr>
 
     </declare-styleable>
     <declare-styleable name="RecyclerViewExtend">
