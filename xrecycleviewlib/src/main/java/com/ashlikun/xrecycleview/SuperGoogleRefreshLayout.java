@@ -2,11 +2,12 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import androidx.core.view.NestedScrollingChild;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.core.view.NestedScrollingChild;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 
 /**
@@ -22,6 +23,7 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
 
     RefreshLayout.OnRefreshListener mListener;
     boolean isMOVE = false;
+    boolean isLayoutOk = false;
 
     public SuperGoogleRefreshLayout(Context context) {
         this(context, null);
@@ -34,6 +36,11 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
         array.recycle();
     }
 
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+        isLayoutOk = true;
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -87,15 +94,22 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
 
     @Override
     public void setRefreshing(final boolean refreshing) {
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                SuperGoogleRefreshLayout.super.setRefreshing(refreshing);
-                if (refreshing) {
-                    mListener.onRefresh();
-                }
+        if (isLayoutOk) {
+            SuperGoogleRefreshLayout.super.setRefreshing(refreshing);
+            if (refreshing) {
+                mListener.onRefresh();
             }
-        }, 400);
+        } else {
+            postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SuperGoogleRefreshLayout.super.setRefreshing(refreshing);
+                    if (refreshing) {
+                        mListener.onRefresh();
+                    }
+                }
+            }, 400);
+        }
 
     }
 
