@@ -2,14 +2,16 @@ package com.ashlikun.xrecycleview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
-import android.view.ViewGroup;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class RecyclerViewExtend extends RecyclerView {
      * 最大比例,相对于宽度
      */
     protected float maxRatio = 0;
+    //是否可以触摸
+    protected boolean noTouch = false;
 
     public boolean isHeader(ViewHolder viewHolder) {
         return viewHolder.getItemViewType() == TYPE_REFRESH_HEADER || viewHolder.getItemViewType() == TYPE_HEADER;
@@ -81,6 +85,7 @@ public class RecyclerViewExtend extends RecyclerView {
                 R.styleable.RecyclerViewExtend);
         maxRatio = a.getFloat(R.styleable.RecyclerViewExtend_rv_heightRatio, 0);
         maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_heightDimen, 0);
+        noTouch = a.getBoolean(R.styleable.RecyclerViewExtend_rv_noTouch, false);
         a.recycle();
     }
 
@@ -126,6 +131,11 @@ public class RecyclerViewExtend extends RecyclerView {
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        return !noTouch && super.onTouchEvent(e);
+    }
+
+    @Override
     public void setAdapter(Adapter adapter) {
         try {
             if (mAdapter != null) {
@@ -155,6 +165,7 @@ public class RecyclerViewExtend extends RecyclerView {
         setHeaderSize();
     }
 
+
     public View getHeaderView(int index) {
         if (mHeaderViews.size() > index && index >= 0) {
             return mHeaderViews.get(index);
@@ -165,7 +176,7 @@ public class RecyclerViewExtend extends RecyclerView {
     public void removeHeaderView(View view) {
         mHeaderViews.remove(view);
         setHeaderSize();
-        if(mWrapAdapter != null) {
+        if (mWrapAdapter != null) {
             mWrapAdapter.notifyDataSetChanged();
         }
     }
@@ -173,7 +184,7 @@ public class RecyclerViewExtend extends RecyclerView {
     public void removeFootView(View view) {
         mFootViews.remove(view);
         setFooterSize();
-        if(mWrapAdapter != null) {
+        if (mWrapAdapter != null) {
             mWrapAdapter.notifyDataSetChanged();
         }
     }
@@ -302,6 +313,14 @@ public class RecyclerViewExtend extends RecyclerView {
             }
         }
         return max;
+    }
+
+    public void setNoTouch(boolean isNoTouch) {
+        noTouch = isNoTouch;
+    }
+
+    public boolean isNoTouch() {
+        return noTouch;
     }
 
     /**

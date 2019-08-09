@@ -8,6 +8,8 @@
     <attr name="rv_noDataIsShow" format="boolean" />
     <attr name="rv_heightRatio" format="reference|float" />
     <attr name="rv_heightDimen" format="reference|dimension" />
+    <!--不可触摸-->
+    <attr name="rv_noTouch" format="boolean" />
     <!--底部页脚布局-->
     <attr name="rv_footLoadLayoutId" format="reference" />
     <!--底部页脚主颜色-->
@@ -28,15 +30,19 @@
         <attr name="rv_footLoadColor"></attr>
         <!--内部RecyclerView的背景-->
         <attr name="rv_neibuBackground"></attr>
-
+        <attr name="rv_noTouch"></attr>
     </declare-styleable>
     <declare-styleable name="RecyclerViewExtend">
         <attr name="rv_heightRatio"></attr>
         <attr name="rv_heightDimen"></attr>
+        <attr name="rv_noTouch"></attr>
     </declare-styleable>
     <declare-styleable name="RecyclerViewAutoLoadding">
         <attr name="rv_noDataIsShow"></attr>
         <attr name="rv_footLoadLayoutId"></attr>
         <attr name="rv_footLoadColor"></attr>
+        <attr name="rv_heightRatio"></attr>
+        <attr name="rv_heightDimen"></attr>
+        <attr name="rv_noTouch"></attr>
     </declare-styleable>
 </resources>
