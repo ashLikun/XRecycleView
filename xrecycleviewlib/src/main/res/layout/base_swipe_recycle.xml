@@ -10,7 +10,6 @@
         android:id="@+id/list_swipe_target"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:overScrollMode="never"
         android:footerDividersEnabled="false"
         android:scrollbarStyle="outsideOverlay"></com.ashlikun.xrecycleview.RecyclerViewAutoLoadding>
 </com.ashlikun.xrecycleview.SuperGoogleRefreshLayout>

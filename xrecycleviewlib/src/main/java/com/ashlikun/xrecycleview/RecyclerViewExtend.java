@@ -87,6 +87,7 @@ public class RecyclerViewExtend extends RecyclerView {
         maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_heightDimen, 0);
         noTouch = a.getBoolean(R.styleable.RecyclerViewExtend_rv_noTouch, false);
         a.recycle();
+        setOverScrollMode(View.OVER_SCROLL_NEVER);
     }
 
     public int getDataSize() {
