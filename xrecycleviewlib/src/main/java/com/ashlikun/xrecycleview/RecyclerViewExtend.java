@@ -84,7 +84,7 @@ public class RecyclerViewExtend extends RecyclerView {
         TypedArray a = context.obtainStyledAttributes(attrs,
                 R.styleable.RecyclerViewExtend);
         maxRatio = a.getFloat(R.styleable.RecyclerViewExtend_rv_heightRatio, 0);
-        maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_heightDimen, 0);
+        maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_maxHeight, 0);
         noTouch = a.getBoolean(R.styleable.RecyclerViewExtend_rv_noTouch, false);
         a.recycle();
         setOverScrollMode(View.OVER_SCROLL_NEVER);
@@ -103,7 +103,7 @@ public class RecyclerViewExtend extends RecyclerView {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         if (maxHeight <= 0) {
             maxHeight = maxRatio * widthSize;
-        } else {
+        } else if (maxRatio > 0) {
             maxHeight = Math.min(maxHeight, maxRatio * widthSize);
         }
         if (maxHeight <= 0) {

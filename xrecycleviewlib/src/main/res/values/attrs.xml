@@ -7,7 +7,7 @@
     <!--没有数据的时候是否显示LoadView-->
     <attr name="rv_noDataIsShow" format="boolean" />
     <attr name="rv_heightRatio" format="reference|float" />
-    <attr name="rv_heightDimen" format="reference|dimension" />
+    <attr name="rv_maxHeight" format="reference|dimension" />
     <!--不可触摸-->
     <attr name="rv_noTouch" format="boolean" />
     <!--底部页脚布局-->
@@ -24,7 +24,7 @@
         <!--第几个的时候打开AnimMenu-->
         <attr name="srv_goTopOnPosition" format="integer" />
         <attr name="rv_heightRatio"></attr>
-        <attr name="rv_heightDimen"></attr>
+        <attr name="rv_maxHeight"></attr>
         <attr name="rv_noDataIsShow"></attr>
         <attr name="rv_footLoadLayoutId"></attr>
         <attr name="rv_footLoadColor"></attr>
@@ -34,7 +34,7 @@
     </declare-styleable>
     <declare-styleable name="RecyclerViewExtend">
         <attr name="rv_heightRatio"></attr>
-        <attr name="rv_heightDimen"></attr>
+        <attr name="rv_maxHeight"></attr>
         <attr name="rv_noTouch"></attr>
     </declare-styleable>
     <declare-styleable name="RecyclerViewAutoLoadding">
@@ -42,7 +42,7 @@
         <attr name="rv_footLoadLayoutId"></attr>
         <attr name="rv_footLoadColor"></attr>
         <attr name="rv_heightRatio"></attr>
-        <attr name="rv_heightDimen"></attr>
+        <attr name="rv_maxHeight"></attr>
         <attr name="rv_noTouch"></attr>
     </declare-styleable>
 </resources>
