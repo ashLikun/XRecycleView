@@ -33,7 +33,10 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation rootProject.ext.designVersion
+    implementation rootProject.ext.recyclerview
+    implementation rootProject.ext.annotation
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:+'
     implementation 'com.github.ashLikun:CommonAdapter:3.0.0'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.ashLikun:AnimationMenu:2.0.0'

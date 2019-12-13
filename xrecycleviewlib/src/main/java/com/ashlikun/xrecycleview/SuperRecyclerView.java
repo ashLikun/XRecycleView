@@ -82,6 +82,7 @@ public class SuperRecyclerView extends FrameLayout {
         recyclerView.maxHeight = a.getDimension(R.styleable.SuperRecyclerView_rv_maxHeight, 0);
         recyclerView.maxRatio = a.getFloat(R.styleable.SuperRecyclerView_rv_heightRatio, 0);
         recyclerView.noTouch = a.getBoolean(R.styleable.SuperRecyclerView_rv_noTouch, false);
+        recyclerView.setNestedOpen(a.getBoolean(R.styleable.SuperRecyclerView_rv_nested_open, false));
         setLoadFootlayoutId(a.getInt(R.styleable.SuperRecyclerView_rv_footLoadLayoutId, -1));
         if (a.hasValue(R.styleable.SuperRecyclerView_rv_footLoadColor)) {
             recyclerView.setLoadFootColor(a.getColor(R.styleable.SuperRecyclerView_rv_footLoadColor, 0));

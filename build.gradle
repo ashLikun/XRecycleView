@@ -22,7 +22,7 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 ext {
-    androidX = "1.0.0"
+    androidX = "1.+"
     compileSdkVersion = 28
     buildToolsVersion = "28.0.3"
     designVersion = "com.google.android.material:material:" + androidX

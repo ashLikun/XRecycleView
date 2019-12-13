@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.ashlikun.xrecycleview.nested.NestedOnChildTouch;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +59,10 @@ public class RecyclerViewExtend extends RecyclerView {
     protected float maxRatio = 0;
     //是否可以触摸
     protected boolean noTouch = false;
+    //是否需要开启和外部的RecyclerView 嵌套滚动
+    protected boolean nestedOpen = false;
+    //开启和外部的RecyclerView 嵌套滚动 的处理
+    protected NestedOnChildTouch childTouch;
 
     public boolean isHeader(ViewHolder viewHolder) {
         return viewHolder.getItemViewType() == TYPE_REFRESH_HEADER || viewHolder.getItemViewType() == TYPE_HEADER;
@@ -86,7 +92,11 @@ public class RecyclerViewExtend extends RecyclerView {
         maxRatio = a.getFloat(R.styleable.RecyclerViewExtend_rv_heightRatio, 0);
         maxHeight = a.getDimension(R.styleable.RecyclerViewExtend_rv_maxHeight, 0);
         noTouch = a.getBoolean(R.styleable.RecyclerViewExtend_rv_noTouch, false);
+        nestedOpen = a.getBoolean(R.styleable.RecyclerViewExtend_rv_nested_open, false);
         a.recycle();
+        if (nestedOpen) {
+            childTouch = new NestedOnChildTouch(this);
+        }
         setOverScrollMode(View.OVER_SCROLL_NEVER);
     }
 
@@ -133,7 +143,13 @@ public class RecyclerViewExtend extends RecyclerView {
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        return !noTouch && super.onTouchEvent(e);
+        if (isNoTouch()) {
+            return false;
+        }
+        if (isNestedOpen() && childTouch.onTouchEvent(e)) {
+            return false;
+        }
+        return super.onTouchEvent(e);
     }
 
     @Override
@@ -316,12 +332,45 @@ public class RecyclerViewExtend extends RecyclerView {
         return max;
     }
 
+    /**
+     * 是否可以触摸
+     *
+     * @param isNoTouch
+     */
     public void setNoTouch(boolean isNoTouch) {
         noTouch = isNoTouch;
     }
 
+    /**
+     * 是否可以触摸
+     *
+     * @return
+     */
     public boolean isNoTouch() {
         return noTouch;
+    }
+
+    /**
+     * 是否需要开启和外部的RecyclerView
+     *
+     * @return
+     */
+    public boolean isNestedOpen() {
+        return nestedOpen;
+    }
+
+    /**
+     * 是否需要开启和外部的RecyclerView
+     *
+     * @param nestedOpen
+     */
+    public void setNestedOpen(boolean nestedOpen) {
+        this.nestedOpen = nestedOpen;
+        if (nestedOpen) {
+            childTouch = new NestedOnChildTouch(this);
+        } else {
+            childTouch = null;
+        }
     }
 
     /**
