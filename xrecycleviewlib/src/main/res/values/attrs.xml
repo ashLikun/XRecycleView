@@ -16,6 +16,8 @@
     <attr name="rv_footLoadLayoutId" format="reference" />
     <!--底部页脚主颜色-->
     <attr name="rv_footLoadColor" format="reference|color" />
+    <!-- 内部RecyclerView的背景   -->
+    <attr name="rv_neibuBackground" format="reference|color" />
     <declare-styleable name="SuperRecyclerView">
         <!--是否可以回到顶部-->
         <attr name="srv_isGoTop" format="boolean" />
