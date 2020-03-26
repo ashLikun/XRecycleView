@@ -198,12 +198,20 @@ public class RecyclerViewExtend extends RecyclerView {
         }
     }
 
+    public Boolean containsHeaderView(View view) {
+        return mHeaderViews.contains(view);
+    }
+
     public void removeFootView(View view) {
         mFootViews.remove(view);
         setFooterSize();
         if (mWrapAdapter != null) {
             mWrapAdapter.notifyDataSetChanged();
         }
+    }
+
+    public Boolean containsFootView(View view) {
+        return mFootViews.contains(view);
     }
 
     public void addFootView(final View view) {
@@ -614,29 +622,6 @@ public class RecyclerViewExtend extends RecyclerView {
                 }
             }
             return -1;
-        }
-
-        @Override
-        public void unregisterAdapterDataObserver(AdapterDataObserver observer) {
-
-            if (mAdapter != null) {
-                try {
-                    mAdapter.unregisterAdapterDataObserver(observer);
-                } catch (IllegalStateException e) {
-
-                }
-            }
-        }
-
-        @Override
-        public void registerAdapterDataObserver(AdapterDataObserver observer) {
-            if (mAdapter != null) {
-                try {
-                    mAdapter.registerAdapterDataObserver(observer);
-                } catch (IllegalStateException e) {
-
-                }
-            }
         }
     }
 
