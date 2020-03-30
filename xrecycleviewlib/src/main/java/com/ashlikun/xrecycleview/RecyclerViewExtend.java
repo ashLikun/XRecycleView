@@ -182,6 +182,17 @@ public class RecyclerViewExtend extends RecyclerView {
         setHeaderSize();
     }
 
+    public void putHeaderView(View view) {
+        if (!containsHeaderView(view)) {
+            addHeaderView(view);
+        }
+    }
+
+    public void putHeaderView(int index, View view) {
+        if (!containsHeaderView(view)) {
+            addHeaderView(index, view);
+        }
+    }
 
     public View getHeaderView(int index) {
         if (mHeaderViews.size() > index && index >= 0) {
@@ -222,6 +233,18 @@ public class RecyclerViewExtend extends RecyclerView {
     public void addFootView(int index, final View view) {
         mFootViews.add(index, view);
         setFooterSize();
+    }
+
+    public void putFootView(final View view) {
+        if (!containsFootView(view)) {
+            addFootView(view);
+        }
+    }
+
+    public void putFootView(int index, final View view) {
+        if (!containsFootView(view)) {
+            addFootView(index, view);
+        }
     }
 
     public View getFootView(int index) {
