@@ -164,6 +164,13 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
             setState(LoadState.Failure);
         }
     }
+    @Override
+    public int getItemCount() {
+        if(getOriginalAdapter() != null){
+            return getOriginalAdapter().getCount();
+        }
+        return 0;
+    }
 
     @Override
     public void setNoDataFooterText(String autoloaddingNoData) {

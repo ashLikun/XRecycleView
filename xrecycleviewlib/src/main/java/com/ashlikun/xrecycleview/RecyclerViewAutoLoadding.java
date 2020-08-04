@@ -242,7 +242,7 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     @Override
     public int getItemCount() {
-        return 0;
+        return getDataSize();
     }
 
     public void hint() {

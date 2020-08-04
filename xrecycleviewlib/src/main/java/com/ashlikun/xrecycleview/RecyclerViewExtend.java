@@ -101,6 +101,9 @@ public class RecyclerViewExtend extends RecyclerView {
     }
 
     public int getDataSize() {
+        if (mAdapter == null) {
+            return 0;
+        }
         return mAdapter.getItemCount();
     }
 

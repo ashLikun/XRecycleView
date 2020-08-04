@@ -173,6 +173,14 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
     }
 
     @Override
+    public int getItemCount() {
+        if (getAdapter() != null) {
+            return getAdapter().getCount();
+        }
+        return 0;
+    }
+
+    @Override
     public void setNoDataFooterText(String autoloaddingNoData) {
         if (footerView != null) {
             footerView.setNoDataFooterText(autoloaddingNoData);
