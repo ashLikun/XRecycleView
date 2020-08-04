@@ -24,4 +24,9 @@ public interface StatusChangListener {
      * 加载失败
      */
     void failure();
+
+    /**
+     * 获取内容个数
+     */
+    int getItemCount();
 }

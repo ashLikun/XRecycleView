@@ -240,6 +240,11 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         }
     }
 
+    @Override
+    public int getItemCount() {
+        return 0;
+    }
+
     public void hint() {
         if (getState() != null) {
             setState(LoadState.Hint);
