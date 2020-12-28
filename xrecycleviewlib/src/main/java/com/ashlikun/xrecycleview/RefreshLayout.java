@@ -1,7 +1,8 @@
 package com.ashlikun.xrecycleview;
 
-import androidx.annotation.ColorInt;
 import android.view.View;
+
+import androidx.annotation.ColorInt;
 
 /**
  * 作者　　: 李坤
@@ -47,6 +48,7 @@ public interface RefreshLayout {
      */
 
     public void setRefreshing(boolean refreshing);
+    public void setRefreshing(final boolean refreshing, final boolean notify);
 
 
     /**

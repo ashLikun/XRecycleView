@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/XRecycleView.iml" filepath="$PROJECT_DIR$/XRecycleView.iml" group="XRecycleView" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="XRecycleView/app" />
-      <module fileurl="file://$PROJECT_DIR$/xrecycleviewlib/xrecycleviewlib.iml" filepath="$PROJECT_DIR$/xrecycleviewlib/xrecycleviewlib.iml" group="XRecycleView/xrecycleviewlib" />
+      <module fileurl="file://$PROJECT_DIR$/XRecycleView.iml" filepath="$PROJECT_DIR$/XRecycleView.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/XRecycleView.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/XRecycleView.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/xrecycleviewlib/XRecycleView.xrecycleviewlib.iml" filepath="$PROJECT_DIR$/.idea/modules/xrecycleviewlib/XRecycleView.xrecycleviewlib.iml" />
     </modules>
   </component>
 </project>
