@@ -91,12 +91,16 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
         }
     };
 
-
     @Override
     public void setRefreshing(final boolean refreshing) {
+        setRefreshing(refreshing, true);
+    }
+
+    @Override
+    public void setRefreshing(final boolean refreshing, final boolean notify) {
         if (isLayoutOk) {
-            SuperGoogleRefreshLayout.super.setRefreshing(refreshing);
-            if (refreshing) {
+            super.setRefreshing(refreshing);
+            if (notify && refreshing) {
                 mListener.onRefresh();
             }
         } else {
@@ -104,13 +108,12 @@ public class SuperGoogleRefreshLayout extends SwipeRefreshLayout implements Refr
                 @Override
                 public void run() {
                     SuperGoogleRefreshLayout.super.setRefreshing(refreshing);
-                    if (refreshing) {
+                    if (notify && refreshing) {
                         mListener.onRefresh();
                     }
                 }
             }, 400);
         }
-
     }
 
     @Override
