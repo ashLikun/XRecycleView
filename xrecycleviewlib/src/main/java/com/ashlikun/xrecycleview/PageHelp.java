@@ -20,7 +20,6 @@ public class PageHelp {
         this.context = context;
     }
 
-
     public void addStatusChangListener(PageHelpListener statusChangListener) {
         if (pageHelpListeners == null) {
             pageHelpListeners = new ArrayList();
