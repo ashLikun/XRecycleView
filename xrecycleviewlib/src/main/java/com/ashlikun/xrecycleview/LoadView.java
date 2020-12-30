@@ -109,21 +109,22 @@ public class LoadView extends LinearLayout {
      * @param status
      */
     public void setStatus(LoadState status) {
-        String message = null;
-        if (status == LoadState.NoData) {
-            message = noDataFooterText;
-        }
-        if (status == LoadState.Loadding) {
-            message = loaddingFooterText;
-        }
-        if (status == LoadState.Failure) {
-            message = loaddingFailureText;
-        }
-        setStatus(status, message);
+        setStatus(status, null);
     }
 
     public void setStatus(LoadState status, String message) {
         this.state = status;
+        if (message == null) {
+            if (status == LoadState.NoData) {
+                message = noDataFooterText;
+            }
+            if (status == LoadState.Loadding) {
+                message = loaddingFooterText;
+            }
+            if (status == LoadState.Failure) {
+                message = loaddingFailureText;
+            }
+        }
         if (message != null) {
             setTextViewText(message, false);
         }
