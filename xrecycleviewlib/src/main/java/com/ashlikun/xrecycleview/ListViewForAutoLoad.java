@@ -12,7 +12,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/3/14.
  */
-public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface, StatusChangListener, ConfigChang {
+public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface, PageHelpListener, ConfigChang {
 
     public PageHelp pageHelp = null;
     private OnLoaddingListener onLoaddingListener;
@@ -123,6 +123,10 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
     }
 
     public void setState(LoadState state) {
+        setState(state, null);
+    }
+
+    public void setState(LoadState state, String message) {
         footerView.setStatus(state);
     }
 
@@ -144,8 +148,13 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
 
     @Override
     public void complete() {
-        if (footerView.getStates() != LoadState.NoData) {
-            setState(LoadState.Complete);
+        complete(null);
+    }
+
+    @Override
+    public void complete(String message) {
+        if (getState() != null && getState() != LoadState.NoData) {
+            setState(LoadState.Complete, message);
         }
     }
 
@@ -154,7 +163,12 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
      */
     @Override
     public void noData() {
-        setState(LoadState.NoData);
+        noData(null);
+    }
+
+    @Override
+    public void noData(String message) {
+        setState(LoadState.NoData, message);
     }
 
     /**
@@ -162,13 +176,23 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
      */
     @Override
     public void init() {
-        setState(LoadState.Init);
+        init(null);
+    }
+
+    @Override
+    public void init(String message) {
+        setState(LoadState.Init, message);
     }
 
     @Override
     public void failure() {
-        if (footerView.getStates() != LoadState.NoData) {
-            setState(LoadState.Failure);
+        failure(null);
+    }
+
+    @Override
+    public void failure(String message) {
+        if (getState() != null && getState() != LoadState.NoData) {
+            setState(LoadState.Failure, message);
         }
     }
 
@@ -205,12 +229,7 @@ public class ListViewForAutoLoad extends ListView implements BaseSwipeInterface,
     }
 
     @Override
-    public StatusChangListener getStatusChangListener() {
+    public PageHelpListener getPageHelpListener() {
         return this;
     }
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//
-//        return true;
-//    }
 }

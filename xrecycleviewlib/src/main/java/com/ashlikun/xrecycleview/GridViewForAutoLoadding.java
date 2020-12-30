@@ -11,7 +11,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/3/14.
  */
-public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter implements BaseSwipeInterface, StatusChangListener, ConfigChang {
+public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter implements BaseSwipeInterface, PageHelpListener, ConfigChang {
     public PageHelp pageHelp = null;
     private OnLoaddingListener onLoaddingListener;
     private LoadView footerView;
@@ -115,6 +115,10 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
     }
 
     public void setState(LoadState state) {
+        setState(state, null);
+    }
+
+    public void setState(LoadState state, String message) {
         footerView.setStatus(state);
     }
 
@@ -133,11 +137,15 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
         pageHelp.addStatusChangListener(this);
     }
 
-
     @Override
     public void complete() {
-        if (footerView.getStates() != LoadState.NoData) {
-            setState(LoadState.Complete);
+        complete(null);
+    }
+
+    @Override
+    public void complete(String message) {
+        if (getState() != null && getState() != LoadState.NoData) {
+            setState(LoadState.Complete, message);
         }
     }
 
@@ -146,27 +154,42 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
      */
     @Override
     public void noData() {
-        setState(LoadState.NoData);
+        noData(null);
     }
 
-
     @Override
+    public void noData(String message) {
+        setState(LoadState.NoData, message);
+    }
+
     /**
      * 初始化状态
      */
+    @Override
     public void init() {
-        setState(LoadState.Init);
+        init(null);
+    }
+
+    @Override
+    public void init(String message) {
+        setState(LoadState.Init, message);
     }
 
     @Override
     public void failure() {
-        if (footerView.getStates() != LoadState.NoData) {
-            setState(LoadState.Failure);
+        failure(null);
+    }
+
+    @Override
+    public void failure(String message) {
+        if (getState() != null && getState() != LoadState.NoData) {
+            setState(LoadState.Failure, message);
         }
     }
+
     @Override
     public int getItemCount() {
-        if(getOriginalAdapter() != null){
+        if (getOriginalAdapter() != null) {
             return getOriginalAdapter().getCount();
         }
         return 0;
@@ -197,7 +220,7 @@ public class GridViewForAutoLoadding extends GridViewWithHeaderAndFooter impleme
     }
 
     @Override
-    public StatusChangListener getStatusChangListener() {
+    public PageHelpListener getPageHelpListener() {
         return this;
     }
 }

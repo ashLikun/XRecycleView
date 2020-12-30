@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
  */
 
 public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements BaseSwipeInterface,
-        StatusChangListener, ConfigChang {
+        PageHelpListener, ConfigChang {
 
     public PageHelp pageHelp;
     private RefreshLayout refreshLayout;
@@ -204,8 +204,13 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
 
     @Override
     public void complete() {
+        complete(null);
+    }
+
+    @Override
+    public void complete(String message) {
         if (getState() != null && getState() != LoadState.NoData) {
-            setState(LoadState.Complete);
+            setState(LoadState.Complete, message);
             //停止滚动
             stopScroll();
         }
@@ -216,10 +221,15 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     @Override
     public void noData() {
+        noData(null);
+    }
+
+    @Override
+    public void noData(String message) {
         if (!noDataIsShow) {
-            setState(LoadState.Hint);
+            setState(LoadState.Hint, message);
         } else {
-            setState(LoadState.NoData);
+            setState(LoadState.NoData, message);
         }
         //停止滚动
         stopScroll();
@@ -230,13 +240,23 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
      */
     @Override
     public void init() {
-        setState(LoadState.Init);
+        init(null);
+    }
+
+    @Override
+    public void init(String message) {
+        setState(LoadState.Init, message);
     }
 
     @Override
     public void failure() {
+        failure(null);
+    }
+
+    @Override
+    public void failure(String message) {
         if (getState() != null && getState() != LoadState.NoData) {
-            setState(LoadState.Failure);
+            setState(LoadState.Failure, message);
         }
     }
 
@@ -251,10 +271,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
         }
     }
 
-    public void setState(LoadState state) {
+    public void setState(LoadState state, String message) {
         LoadView f = getLoadView();
         if (f != null) {
-            f.setStatus(state);
+            f.setStatus(state, message);
             //如果正在加载更多，就禁用下拉刷新
             if (refreshLayout != null) {
                 //这里要注意如果默认时候就不可以刷新那不能把他设置成可以刷新
@@ -274,6 +294,10 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
                 }
             }
         }
+    }
+
+    public void setState(LoadState state) {
+        setState(state, null);
     }
 
 
@@ -367,10 +391,8 @@ public class RecyclerViewAutoLoadding extends RecyclerViewExtend implements Base
     }
 
     @Override
-    public StatusChangListener getStatusChangListener() {
+    public PageHelpListener getPageHelpListener() {
         return this;
     }
-
-
 }
 

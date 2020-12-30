@@ -14,25 +14,25 @@ public class PageHelp {
     private Context context;
 
 
-    private List<StatusChangListener> statusChangListeners;
+    private List<PageHelpListener> pageHelpListeners;
 
     public PageHelp(Context context) {
         this.context = context;
     }
 
 
-    public void addStatusChangListener(StatusChangListener statusChangListener) {
-        if (statusChangListeners == null) {
-            statusChangListeners = new ArrayList();
+    public void addStatusChangListener(PageHelpListener statusChangListener) {
+        if (pageHelpListeners == null) {
+            pageHelpListeners = new ArrayList();
         }
-        if (!statusChangListeners.contains(statusChangListener)) {
-            statusChangListeners.add(statusChangListener);
+        if (!pageHelpListeners.contains(statusChangListener)) {
+            pageHelpListeners.add(statusChangListener);
         }
     }
 
-    public void removeStatusChangListener(StatusChangListener statusChangListener) {
-        if (statusChangListeners != null) {
-            statusChangListeners.remove(statusChangListener);
+    public void removeStatusChangListener(PageHelpListener statusChangListener) {
+        if (pageHelpListeners != null) {
+            pageHelpListeners.remove(statusChangListener);
         }
     }
 
@@ -40,8 +40,8 @@ public class PageHelp {
      * 显示没有数据
      */
     public void showNoData() {
-        if (statusChangListeners != null) {
-            for (StatusChangListener s : statusChangListeners) {
+        if (pageHelpListeners != null) {
+            for (PageHelpListener s : pageHelpListeners) {
                 s.noData();
             }
         }
@@ -52,8 +52,8 @@ public class PageHelp {
      * 可以加载下一页
      */
     public void showComplete() {
-        if (statusChangListeners != null) {
-            for (StatusChangListener s : statusChangListeners) {
+        if (pageHelpListeners != null) {
+            for (PageHelpListener s : pageHelpListeners) {
                 s.complete();
             }
         }
@@ -66,8 +66,8 @@ public class PageHelp {
         currentPage = 1;
         recordPage = 0;
         // 服务器数据的第几页
-        if (statusChangListeners != null) {
-            for (StatusChangListener s : statusChangListeners) {
+        if (pageHelpListeners != null) {
+            for (PageHelpListener s : pageHelpListeners) {
                 s.init();
             }
         }

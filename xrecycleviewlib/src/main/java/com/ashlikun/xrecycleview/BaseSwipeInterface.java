@@ -13,5 +13,6 @@ public interface BaseSwipeInterface {
 
     PageHelp getPageHelp();
 
-    StatusChangListener getStatusChangListener();
+
+    PageHelpListener getPageHelpListener();
 }

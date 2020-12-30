@@ -31,6 +31,7 @@ public class LoadView extends LinearLayout {
     private LoadState state = LoadState.Init;
     private String noDataFooterText = getResources().getString(R.string.autoloadding_no_data);
     private String loaddingFooterText = getResources().getString(R.string.autoloadding_loadding);
+    private String loaddingFailureText = getResources().getString(R.string.autoloadding_failure);
     private boolean loadMoreEnabled = true;
     MyHandler textViewHandler;
     //加载更多的布局,控件Id一定要是指定的2个
@@ -108,21 +109,35 @@ public class LoadView extends LinearLayout {
      * @param status
      */
     public void setStatus(LoadState status) {
+        String message = null;
+        if (status == LoadState.NoData) {
+            message = noDataFooterText;
+        }
+        if (status == LoadState.Loadding) {
+            message = loaddingFooterText;
+        }
+        if (status == LoadState.Failure) {
+            message = loaddingFailureText;
+        }
+        setStatus(status, message);
+    }
+
+    public void setStatus(LoadState status, String message) {
         this.state = status;
+        if (message != null) {
+            setTextViewText(message, false);
+        }
         if (status == LoadState.NoData) {
             progressBar.setVisibility(GONE);
-            setTextViewText(noDataFooterText, false);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Loadding) {
             progressBar.setVisibility(VISIBLE);
-            setTextViewText(loaddingFooterText, false);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Init) {
             setVisibility(GONE);
         } else if (status == LoadState.Hint) {
             setVisibility(GONE);
         } else if (status == LoadState.Failure) {
-            setTextViewText(context.getString(R.string.autoloadding_failure), false);
             progressBar.setVisibility(GONE);
             setVisibility(VISIBLE);
         } else if (status == LoadState.Complete) {
@@ -130,6 +145,10 @@ public class LoadView extends LinearLayout {
         }
     }
 
+    /**
+     * @param text
+     * @param isTextNeedDelayed 是否需要延迟赋值，动画的时候
+     */
     public void setTextViewText(final String text, boolean isTextNeedDelayed) {
         if (!isTextNeedDelayed) {
             textView.setText(text);

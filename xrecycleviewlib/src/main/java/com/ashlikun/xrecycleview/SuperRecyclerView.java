@@ -305,8 +305,8 @@ public class SuperRecyclerView extends FrameLayout {
     }
 
 
-    public StatusChangListener getStatusChangListener() {
-        return recyclerView.getStatusChangListener();
+    public PageHelpListener getPageHelpListener() {
+        return recyclerView.getPageHelpListener();
     }
 
     public void addItemDecoration(RecyclerView.ItemDecoration decor) {
