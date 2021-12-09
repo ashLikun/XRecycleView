@@ -1,22 +1,17 @@
 package com.ashlikun.xrecycleview
 
-import kotlin.jvm.JvmOverloads
 import android.content.Context
 import android.os.Handler
 import android.os.Message
 import android.util.AttributeSet
-import android.widget.LinearLayout
-import com.ashlikun.circleprogress.CircleProgressView
-import android.widget.TextView
-import com.ashlikun.xrecycleview.LoadState
-import com.ashlikun.xrecycleview.R
-import com.ashlikun.xrecycleview.LoadView.MyHandler
-import androidx.recyclerview.widget.RecyclerView
 import android.view.Gravity
 import android.view.LayoutInflater
-import android.view.View
-import android.view.View.MeasureSpec
 import android.view.MotionEvent
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.ashlikun.circleprogress.CircleProgressView
 import java.lang.ref.WeakReference
 
 /**

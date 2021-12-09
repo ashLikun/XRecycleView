@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.alibaba.android.vlayout.VirtualLayoutManager;
 import com.ashlikun.adapter.recyclerview.vlayout.MultipleAdapter;
 import com.ashlikun.adapter.recyclerview.vlayout.SingAdapter;
@@ -11,8 +13,6 @@ import com.ashlikun.xrecycleview.SuperRecyclerView;
 import com.ashlikun.xrecycleview.listener.RecycleViewSwipeListener;
 
 import java.util.ArrayList;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements RecycleViewSwipeListener {
     MultipleAdapter adapter;

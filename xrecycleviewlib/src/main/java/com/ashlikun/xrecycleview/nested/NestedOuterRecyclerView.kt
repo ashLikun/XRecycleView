@@ -1,58 +1,39 @@
 package com.ashlikun.xrecycleview.nested
 
-import com.ashlikun.xrecycleview.RecyclerViewExtend
-import androidx.core.view.NestedScrollingParent3
-import androidx.core.view.NestedScrollingParentHelper
-import android.view.View
-import com.ashlikun.xrecycleview.nested.NestedOuterRecyclerView.ToTopListener
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import androidx.core.view.NestedScrollingParent3
+import androidx.core.view.NestedScrollingParentHelper
+import com.ashlikun.xrecycleview.RecyclerViewExtend
 
 /**
- * 作者　　: 李坤
- * 创建时间: 2019/12/13　10:31
+ * @author　　: 李坤
+ * 创建时间: 2021/12/9 22:26
  * 邮箱　　：496546144@qq.com
- *
  *
  * 功能介绍：RecyclerView里面嵌套ViewPager的时候的外部RecyclerView
  */
-class NestedOuterRecyclerView : RecyclerViewExtend, NestedScrollingParent3 {
+
+class NestedOuterRecyclerView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : RecyclerViewExtend(context, attrs, defStyle), NestedScrollingParent3 {
     protected var parentHelper = NestedScrollingParentHelper(this)
     protected var mNestedScrollingTarget: View? = null
     protected var mNestedScrollingChildView: View? = null
 
-    /**
-     * 子view是否展开的监听
-     */
-    private var topListener: ToTopListener? = null
+    //子view是否 到达顶部
+    var topListener: ToTopListener? = null
 
-    constructor(context: Context?) : super(context!!) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {}
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
-        context!!,
-        attrs,
-        defStyle
-    ) {
-    }
-
-    /**
-     * 设置是否到达顶部的监听
-     *
-     * @param topListener
-     */
-    fun setTopListener(topListener: ToTopListener?) {
-        this.topListener = topListener
-    }
 
     //recyclerView是否到达底部,false:到底部了
     val isTop: Boolean
-        get() = if (topListener != null) {
-            !topListener!!.isTop
-        } else canScrollVertically(1)
-    //recyclerView是否到达底部,false:到底部了
+        get() = !(topListener?.isTop ?: !canScrollVertically(1))
+
     /**
      * 是否接受嵌套滚动
-     *
      * @return true:接受
      */
     override fun onStartNestedScroll(child: View, target: View, axes: Int, type: Int): Boolean {
@@ -96,18 +77,10 @@ class NestedOuterRecyclerView : RecyclerViewExtend, NestedScrollingParent3 {
             }
         } else {
             //ViewPager当前所处位置没有在顶端，交由父类去滑动
-            if (isTop) {
-                if (!target.canScrollVertically(-1)) {
-                    consumed[0] = 0
-                    consumed[1] = dy
-                    scrollBy(0, dy)
-                }
-            } else {
-                if (!target.canScrollVertically(-1)) {
-                    consumed[0] = 0
-                    consumed[1] = dy
-                    scrollBy(0, dy)
-                }
+            if (!target.canScrollVertically(-1)) {
+                consumed[0] = 0
+                consumed[1] = dy
+                scrollBy(0, dy)
             }
         }
     }

@@ -1,11 +1,9 @@
 package com.ashlikun.xrecycleview.nested
 
-import com.ashlikun.xrecycleview.RecyclerViewExtend.onTouchEvent
-import com.ashlikun.xrecycleview.RecyclerViewExtend
-import com.ashlikun.xrecycleview.nested.NestedOnChildTouch
 import android.content.Context
 import android.util.AttributeSet
 import android.view.MotionEvent
+import com.ashlikun.xrecycleview.RecyclerViewExtend
 
 /**
  * 作者　　: 李坤
@@ -15,21 +13,14 @@ import android.view.MotionEvent
  *
  * 功能介绍：RecyclerView里面嵌套ViewPager的时候的内部RecyclerView
  */
-class NestedInnerRecyclerView : RecyclerViewExtend {
+open class NestedInnerRecyclerView @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyle: Int = 0
+) : RecyclerViewExtend(context, attrs, defStyle) {
     override var childTouch = NestedOnChildTouch(this)
 
-    constructor(context: Context?) : super(context!!) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context!!, attrs) {}
-    constructor(context: Context?, attrs: AttributeSet?, defStyle: Int) : super(
-        context!!,
-        attrs,
-        defStyle
-    ) {
-    }
-
     override fun onTouchEvent(e: MotionEvent): Boolean {
-        return if (childTouch.onTouchEvent(e)) {
-            false
-        } else super.onTouchEvent(e)
+        return if (childTouch.onTouchEvent(e)) false else super.onTouchEvent(e)
     }
 }

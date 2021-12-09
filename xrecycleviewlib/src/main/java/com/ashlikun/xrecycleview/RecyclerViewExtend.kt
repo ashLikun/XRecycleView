@@ -68,13 +68,13 @@ open class RecyclerViewExtend @JvmOverloads constructor(
     var nestedOpen = false
         set(value) {
             field = value
-            childTouch = if (nestedOpen) NestedOnChildTouch(this) else null
+            if (field) childTouch = NestedOnChildTouch(this)
         }
     open val dataSize: Int
         get() = mAdapter?.itemCount ?: 0
 
     //开启和外部的RecyclerView 嵌套滚动 的处理
-    protected var childTouch: NestedOnChildTouch? = null
+    protected open lateinit var childTouch: NestedOnChildTouch
 
     open val headerViewSize: Int
         get() = headerViews.size
@@ -104,9 +104,6 @@ open class RecyclerViewExtend @JvmOverloads constructor(
         isNoTouch = a.getBoolean(R.styleable.RecyclerViewExtend_rv_noTouch, false)
         nestedOpen = a.getBoolean(R.styleable.RecyclerViewExtend_rv_nested_open, false)
         a.recycle()
-        if (nestedOpen) {
-            childTouch = NestedOnChildTouch(this)
-        }
         overScrollMode = OVER_SCROLL_NEVER
     }
 
@@ -156,7 +153,9 @@ open class RecyclerViewExtend @JvmOverloads constructor(
         if (isNoTouch) {
             return false
         }
-        return if (nestedOpen && childTouch!!.onTouchEvent(e)) false else super.onTouchEvent(e)
+        return if (nestedOpen && childTouch.onTouchEvent(e)) false else super.onTouchEvent(
+            e
+        )
     }
 
     override fun setAdapter(adapter: Adapter<ViewHolder>?) {

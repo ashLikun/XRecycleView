@@ -1,20 +1,19 @@
 package com.ashlikun.xrecycleview.nested
 
-import android.view.View
-import com.ashlikun.xrecycleview.nested.NestedOnChildTouch
-import android.view.MotionEvent
 import android.util.Log
+import android.view.MotionEvent
+import android.view.View
 import android.view.ViewConfiguration
 
 /**
- * 作者　　: 李坤
- * 创建时间: 2019/12/13　11:30
+ * @author　　: 李坤
+ * 创建时间: 2021/12/9 22:21
  * 邮箱　　：496546144@qq.com
- *
  *
  * 功能介绍：内部滑动控件的处理工具类
  */
-class NestedOnChildTouch(var view: View) {
+
+open class NestedOnChildTouch(var view: View) {
     //滚动的手指触摸id
     var mScrollPointerId = INVALID_POINTER
     var mInitialTouchX = 0f

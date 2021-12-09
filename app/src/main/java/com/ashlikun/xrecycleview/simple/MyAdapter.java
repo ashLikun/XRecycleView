@@ -2,6 +2,8 @@ package com.ashlikun.xrecycleview.simple;
 
 import android.content.Context;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.alibaba.android.vlayout.LayoutHelper;
 import com.alibaba.android.vlayout.layout.FloatLayoutHelper;
 import com.alibaba.android.vlayout.layout.GridLayoutHelper;
@@ -12,8 +14,6 @@ import com.ashlikun.adapter.recyclerview.vlayout.SimpleSingAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * 作者　　: 李坤
