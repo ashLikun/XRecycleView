@@ -3,12 +3,13 @@ package com.ashlikun.xrecycleview.divider;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.View;
+
 import androidx.annotation.DimenRes;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.view.View;
 
 
 /**
@@ -19,11 +20,11 @@ import android.view.View;
  * 功能介绍：垂直的分割线
  */
 
-public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
+public class VerticalDivider extends FlexibleDivider {
 
     private MarginProvider mMarginProvider;
 
-    protected VerticalDividerItemDecoration(Builder builder) {
+    protected VerticalDivider(Builder builder) {
         super(builder);
 
         mMarginProvider = builder.mMarginProvider;
@@ -145,7 +146,7 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
         int dividerBottomMargin(int position, RecyclerView parent);
     }
 
-    public static class Builder extends FlexibleDividerDecoration.Builder<Builder> {
+    public static class Builder extends FlexibleDivider.Builder<Builder> {
 
         private MarginProvider mMarginProvider = new MarginProvider() {
             @Override
@@ -197,9 +198,9 @@ public class VerticalDividerItemDecoration extends FlexibleDividerDecoration {
             return this;
         }
 
-        public VerticalDividerItemDecoration build() {
+        public VerticalDivider build() {
             checkBuilderParams();
-            return new VerticalDividerItemDecoration(this);
+            return new VerticalDivider(this);
         }
     }
 

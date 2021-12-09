@@ -1,22 +1,21 @@
 package com.ashlikun.xrecycleview.simple;
 
 import android.os.Bundle;
+import android.view.View;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
-import android.view.View;
 
 import com.ashlikun.adapter.ViewHolder;
 import com.ashlikun.adapter.recyclerview.CommonAdapter;
-import com.ashlikun.xrecycleview.divider.HorizontalDividerItemDecoration;
-import com.ashlikun.xrecycleview.divider.VerticalDividerItemDecoration;
+import com.ashlikun.xrecycleview.divider.HorizontalDivider;
+import com.ashlikun.xrecycleview.divider.VerticalDivider;
 import com.ashlikun.xrecycleview.listener.RecycleViewSwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 /**
  * 作者　　: 李坤
@@ -50,11 +49,11 @@ public class Main2Activity extends AppCompatActivity implements RecycleViewSwipe
         }
         setContentView(R.layout.activity_main2);
         recycleView = findViewById(R.id.recycleView);
-        recycleView.addItemDecoration(new HorizontalDividerItemDecoration.Builder(this)
+        recycleView.addItemDecoration(new HorizontalDivider.Builder(this)
                 .size(30)
                 .color(0xffff0000)
                 .build());
-        recycleView.addItemDecoration(new VerticalDividerItemDecoration.Builder(this)
+        recycleView.addItemDecoration(new VerticalDivider.Builder(this)
                 .size(30)
                 .color(0xffff0000)
                 .build());

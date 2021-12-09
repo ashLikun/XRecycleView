@@ -3,9 +3,10 @@ package com.ashlikun.xrecycleview.divider;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.view.View;
+
 import androidx.annotation.DimenRes;
 import androidx.recyclerview.widget.RecyclerView;
-import android.view.View;
 
 
 /**
@@ -16,7 +17,7 @@ import android.view.View;
  * 功能介绍：水平分割线
  */
 
-public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
+public class HorizontalDivider extends FlexibleDivider {
     /**
      * 是否显示第一个顶部分割线
      */
@@ -27,7 +28,7 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
     private int mFirstTopDividerSize = 0;
     private MarginProvider mMarginProvider;
 
-    protected HorizontalDividerItemDecoration(Builder builder) {
+    protected HorizontalDivider(Builder builder) {
         super(builder);
         mMarginProvider = builder.mMarginProvider;
         mShowFirstTopDivider = builder.mShowFirstTopDivider;
@@ -138,7 +139,7 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
         int dividerRightMargin(int position, RecyclerView parent);
     }
 
-    public static class Builder extends FlexibleDividerDecoration.Builder<Builder> {
+    public static class Builder extends FlexibleDivider.Builder<Builder> {
         /**
          * 是否显示第一个顶部分割线
          */
@@ -216,9 +217,9 @@ public class HorizontalDividerItemDecoration extends FlexibleDividerDecoration {
             return this;
         }
 
-        public HorizontalDividerItemDecoration build() {
+        public HorizontalDivider build() {
             checkBuilderParams();
-            return new HorizontalDividerItemDecoration(this);
+            return new HorizontalDivider(this);
         }
     }
 }

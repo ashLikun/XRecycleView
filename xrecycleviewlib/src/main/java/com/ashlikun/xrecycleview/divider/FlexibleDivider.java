@@ -20,7 +20,7 @@ import android.view.View;
 /**
  * Created by yqritc on 2015/01/08.
  */
-public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecoration {
+public abstract class FlexibleDivider extends RecyclerView.ItemDecoration {
 
     private static final int DEFAULT_SIZE = 2;
     private static final int[] ATTRS = new int[]{
@@ -43,7 +43,7 @@ public abstract class FlexibleDividerDecoration extends RecyclerView.ItemDecorat
     protected boolean mPositionInsideItem;
     private Paint mPaint;
 
-    protected FlexibleDividerDecoration(Builder builder) {
+    protected FlexibleDivider(Builder builder) {
         if (builder.mPaintProvider != null) {
             mDividerType = DividerType.PAINT;
             mPaintProvider = builder.mPaintProvider;

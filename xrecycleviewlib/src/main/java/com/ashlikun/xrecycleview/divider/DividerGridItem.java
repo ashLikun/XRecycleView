@@ -23,11 +23,11 @@ import android.view.View;
  * 功能介绍：网格布局用的
  */
 
-public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
+public class DividerGridItem extends RecyclerView.ItemDecoration {
     private Drawable mDivider;
 
 
-    private DividerGridItemDecoration(Context context, Drawable drawable) {
+    private DividerGridItem(Context context, Drawable drawable) {
         mDivider = drawable;
     }
 
@@ -69,14 +69,14 @@ public class DividerGridItemDecoration extends RecyclerView.ItemDecoration {
             this.drawable = context.getResources().getDrawable(drawableRes);
         }
 
-        public DividerGridItemDecoration build() {
+        public DividerGridItem build() {
             if (drawable == null) {
                 GradientDrawable drawable = new GradientDrawable();
                 drawable.setSize(size, size);
                 drawable.setColor(color);
                 this.drawable = drawable;
             }
-            return new DividerGridItemDecoration(context, drawable);
+            return new DividerGridItem(context, drawable);
         }
 
     }
