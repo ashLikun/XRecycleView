@@ -1,5 +1,4 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -11,6 +10,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        multiDexEnabled = true
+    }
+    buildFeatures {
+        viewBinding = true
     }
     buildTypes {
         release {
@@ -18,16 +21,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-    /**
-     * aar文件的编译
-     */
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-        maven {
-            url "https://jitpack.io"
-        }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
@@ -38,7 +37,7 @@ dependencies {
     implementation rootProject.ext.annotation
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:+'
-    implementation 'com.github.ashLikun:CommonAdapter:3.0.0'
+    implementation 'com.github.ashLikun:CommonAdapter:4.1.2'
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.github.ashLikun:AnimationMenu:2.0.0'
     implementation 'com.github.ashLikun:CircleProgressView:2.0.1'

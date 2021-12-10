@@ -81,9 +81,9 @@ abstract class FlexibleDivider(
             this.drawableConvert = { position, parent -> drawable }
         }
 
-        if (paintConvert != null) {
+        if (this.paintConvert != null) {
             dividerType = DividerType.PAINT
-        } else if (colorConvert != null) {
+        } else if (this.colorConvert != null) {
             dividerType = DividerType.COLOR
             mPaint = Paint()
         } else {
@@ -91,8 +91,8 @@ abstract class FlexibleDivider(
             val a = context.obtainStyledAttributes(ATTRS)
             val divider = a.getDrawable(0)
             a.recycle()
-            if (this.drawableConvert == null) {
-                this.drawableConvert = { position, parent -> divider }
+            if (this.drawableConvert == null && divider != null) {
+                this.drawableConvert = { position, parent -> divider!! }
             }
         }
     }
@@ -147,25 +147,27 @@ abstract class FlexibleDivider(
             }
             DividerType.PAINT -> {
                 mPaint = paintConvert?.invoke(childPosition, parent)
-                c.drawLine(
-                    bounds.left.toFloat(),
-                    bounds.top.toFloat(),
-                    bounds.right.toFloat(),
-                    bounds.bottom.toFloat(),
-                    mPaint
-                )
+                if (mPaint != null)
+                    c.drawLine(
+                        bounds.left.toFloat(),
+                        bounds.top.toFloat(),
+                        bounds.right.toFloat(),
+                        bounds.bottom.toFloat(),
+                        mPaint!!
+                    )
             }
             DividerType.COLOR -> {
                 mPaint?.color = colorConvert?.invoke(childPosition, parent)
                     ?: throw RuntimeException("请提供colorProvider")
                 mPaint?.strokeWidth = dividerSize.toFloat()
-                c.drawLine(
-                    bounds.left.toFloat(),
-                    bounds.top.toFloat(),
-                    bounds.right.toFloat(),
-                    bounds.bottom.toFloat(),
-                    mPaint
-                )
+                if (mPaint != null)
+                    c.drawLine(
+                        bounds.left.toFloat(),
+                        bounds.top.toFloat(),
+                        bounds.right.toFloat(),
+                        bounds.bottom.toFloat(),
+                        mPaint!!
+                    )
             }
         }
     }
@@ -179,15 +181,16 @@ abstract class FlexibleDivider(
         val position = parent.getChildAdapterPosition(v)
         val itemCount = parent.adapter!!.itemCount
         val lastDividerOffset = getLastDividerOffset(parent)
-        if (!showLastDivider && position >= itemCount - lastDividerOffset) {
+        if (visibilityConvert?.invoke(position, parent) == false) {
             return
         }
         if (!showFirstDivider && position == 0) {
             return
         }
-        if (visibilityConvert?.invoke(position, parent) == false) {
+        if (!showLastDivider && position >= itemCount - lastDividerOffset) {
             return
         }
+
         setItemOffsets(rect, v, position, itemCount, parent)
     }
 
@@ -235,26 +238,7 @@ abstract class FlexibleDivider(
         return position
     }
 
-    /**
-     * 一共多少列
-     */
-    protected fun getSpanCount(parent: RecyclerView, position: Int): Int {
-        // 列数
-        var spanCount = 1
-        val layoutManager = parent.layoutManager
-        if (layoutManager is GridLayoutManager) {
-            spanCount = layoutManager.spanCount + 1
-            spanCount = Math.abs(spanCount - layoutManager.spanSizeLookup.getSpanSize(position))
-        } else if (layoutManager is LinearLayoutManager) {
-            //水平布局
-            if (layoutManager.orientation == RecyclerView.HORIZONTAL) {
-                return parent.adapter?.itemCount ?: 0
-            }
-        } else if (layoutManager is StaggeredGridLayoutManager) {
-            spanCount = layoutManager.spanCount
-        }
-        return spanCount
-    }
+
 
     protected abstract fun setItemOffsets(
         outRect: Rect,

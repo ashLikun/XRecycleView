@@ -10,6 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ashlikun.xrecycleview.getRecyclerViewIndexColum
+import com.ashlikun.xrecycleview.getRecyclerViewLastDividerOffset
+import com.ashlikun.xrecycleview.getRecyclerViewSpanCount
 
 /**
  * @author　　: 李坤
@@ -19,7 +22,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  * 功能介绍：网格布局用的
  */
 
-class DividerGridItem(
+class GridDivider(
     var size: Int = 2,
     var color: Int = 0,
     var drawable: Drawable? = null
@@ -43,7 +46,7 @@ class DividerGridItem(
         drawHorizontal(c, parent)
     }
 
-    fun drawHorizontal(c: Canvas?, parent: RecyclerView) {
+    fun drawHorizontal(c: Canvas, parent: RecyclerView) {
         val childCount = parent.childCount
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
@@ -59,7 +62,7 @@ class DividerGridItem(
         }
     }
 
-    fun drawVertical(c: Canvas?, parent: RecyclerView) {
+    fun drawVertical(c: Canvas, parent: RecyclerView) {
         val childCount = parent.childCount
         for (i in 0 until childCount) {
             val child = parent.getChildAt(i)
@@ -80,99 +83,39 @@ class DividerGridItem(
     ) {
         val position = parent.getChildAdapterPosition(view)
         val itemCount = parent.adapter!!.itemCount
-        if (position >= itemCount - getLastDividerOffset(parent)) {
+        if (position >= itemCount - getRecyclerViewLastDividerOffset(parent)) {
             // 如果是最后一行，则不需要绘制底部
             outRect[0, 0, 0] = 0
         } else {
             outRect.bottom = drawable!!.intrinsicHeight
         }
-        val spanCount = getSpanCount(parent, position)
+        val spanCount = getRecyclerViewSpanCount(parent, position)
         if (spanCount > 1) {
             //当前第几列
-            val spanIndex = getIndexColum(parent, view, position, spanCount)
+            val spanIndex = getRecyclerViewIndexColum(parent, view, position, spanCount)
             val dividerSize = drawable!!.intrinsicHeight
             //每列大小
             val eachWidth = (spanCount - 1) * dividerSize / spanCount
             val left = spanIndex * (dividerSize - eachWidth)
             val right = eachWidth - left
-            if (spanIndex == spanCount - 1) {
-                // 如果是最后一列，则不需要绘制右边
-                outRect.right = 0
-                outRect.left = left
-            } else if (spanIndex == 0) {
-                //第一列不绘制左边
-                outRect.right = right
-                outRect.left = 0
-            } else { //中间的左右都绘制
-                outRect.left = left
-                outRect.right = right
-            }
-        }
-    }
-
-    /**
-     * 当前是第几列
-     *
-     * @param parent
-     * @param pos
-     * @param spanCount
-     * @return
-     */
-    protected fun getIndexColum(parent: RecyclerView, view: View, pos: Int, spanCount: Int): Int {
-        val layoutManager = parent.layoutManager
-        if (layoutManager is GridLayoutManager) {
-            return layoutManager.spanSizeLookup.getSpanIndex(pos, spanCount)
-        } else if (layoutManager is LinearLayoutManager) {
-            //水平布局
-            if (layoutManager.orientation == RecyclerView.HORIZONTAL) {
-                return pos % spanCount
-            }
-        } else if (layoutManager is StaggeredGridLayoutManager) {
-            //瀑布流专属
-            val params = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
-            return params.spanIndex
-        }
-        return spanCount
-    }
-
-    /**
-     * 一共多少列
-     *
-     * @param parent
-     * @param position
-     * @return
-     */
-    protected fun getSpanCount(parent: RecyclerView, position: Int): Int {
-        // 列数
-        var spanCount = 1
-        val layoutManager = parent.layoutManager
-        if (layoutManager is GridLayoutManager) {
-            spanCount = layoutManager.spanCount + 1
-            spanCount = Math.abs(spanCount - layoutManager.spanSizeLookup.getSpanSize(position))
-        } else if (layoutManager is LinearLayoutManager) {
-            //水平布局
-            if (layoutManager.orientation == RecyclerView.HORIZONTAL) {
-                return parent.adapter!!.itemCount
-            }
-        } else if (layoutManager is StaggeredGridLayoutManager) {
-            spanCount = layoutManager
-                .spanCount
-        }
-        return spanCount
-    }
-
-    private fun getLastDividerOffset(parent: RecyclerView): Int {
-        if (parent.layoutManager is GridLayoutManager) {
-            val layoutManager = parent.layoutManager as GridLayoutManager?
-            val spanSizeLookup = layoutManager!!.spanSizeLookup
-            val spanCount = layoutManager.spanCount
-            val itemCount = parent.adapter!!.itemCount
-            for (i in itemCount - 1 downTo 0) {
-                if (spanSizeLookup.getSpanIndex(i, spanCount) == 0) {
-                    return itemCount - i
+            when (spanIndex) {
+                spanCount - 1 -> {
+                    // 如果是最后一列，则不需要绘制右边
+                    outRect.right = 0
+                    outRect.left = left
+                }
+                0 -> {
+                    //第一列不绘制左边
+                    outRect.right = right
+                    outRect.left = 0
+                }
+                else -> { //中间的左右都绘制
+                    outRect.left = left
+                    outRect.right = right
                 }
             }
         }
-        return 1
     }
+
+
 }

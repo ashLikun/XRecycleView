@@ -8,14 +8,12 @@ class PageHelp(val context: Context) {
     var currentPage = 1
         set(value) {
             field = max(0, value)
-            nextPage()
         }
 
     // 一共多少页
     var recordPage = 0
         set(value) {
             field = max(0, value)
-            nextPage()
         }
 
     /**
@@ -71,11 +69,12 @@ class PageHelp(val context: Context) {
     /**
      * 设置页数信息
      * 会自动下一页+1
+     *  @param isAddNext 是否+1
      */
-    fun setPageInfo(currentPage: Int, recordPage: Int) {
+    fun setPageInfo(currentPage: Int, recordPage: Int, isAddNext: Boolean = true) {
         this.currentPage = currentPage
         this.recordPage = recordPage
-        nextPage()
+        nextPage(isAddNext)
     }
 
     /**
@@ -85,20 +84,18 @@ class PageHelp(val context: Context) {
     fun setPageInfoNoNext(currentPage: Int, recordPage: Int) {
         this.currentPage = currentPage
         this.recordPage = recordPage
-        if (!isNext) {
-            showNoData()
-        } else {
-            showComplete()
-        }
     }
 
     /**
      * 设置分页数据为下一页
      * 为下次加载做准备
      * 会自动向+1
+     * 加载状态会改变
+     * @param isAddNext 是否+1
      */
-    fun nextPage() {
-        currentPage++
+    fun nextPage(isAddNext: Boolean = true) {
+        if (isAddNext)
+            currentPage++
         if (!isNext) {
             showNoData()
         } else {

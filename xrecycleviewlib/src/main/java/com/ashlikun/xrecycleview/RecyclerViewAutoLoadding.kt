@@ -173,7 +173,6 @@ open class RecyclerViewAutoLoadding @JvmOverloads constructor(
     /**
      * 没有更多数据加载
      */
-
     override fun noData(message: String) {
         if (!noDataIsShow) {
             setState(LoadState.Hint, message)

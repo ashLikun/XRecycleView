@@ -220,9 +220,7 @@ class SuperRecyclerView @JvmOverloads constructor(
             setItemClickListener { index, tag ->
                 if (TAG_ANIMMENU_GO_TOP == tag) {
                     recyclerView.scrollToPosition(0)
-                    if (goTopClickListener != null) {
-                        goTopClickListener!!.onGoTopListener()
-                    }
+                    goTopClickListener?.onGoTopListener()
                 }
                 menuItemClickListener?.onItemClick(index, tag)
             }
@@ -236,7 +234,7 @@ class SuperRecyclerView @JvmOverloads constructor(
             params.gravity = Gravity.RIGHT or Gravity.BOTTOM
             params.bottomMargin = dip2px(20)
             params.rightMargin = dip2px(3)
-            addView(this, params)
+            this@SuperRecyclerView.addView(this, params)
             visibility = GONE
         }
 

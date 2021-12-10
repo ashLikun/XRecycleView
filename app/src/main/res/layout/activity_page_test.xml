@@ -11,7 +11,7 @@
         android:text="测试" />
 
     <com.ashlikun.xrecycleview.RecyclerViewAutoLoadding
-        android:id="@+id/recycleView"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"></com.ashlikun.xrecycleview.RecyclerViewAutoLoadding>
 

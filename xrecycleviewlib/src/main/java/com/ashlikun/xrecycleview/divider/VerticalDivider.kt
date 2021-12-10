@@ -5,11 +5,14 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.util.Log
 import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.ashlikun.xrecycleview.getRecyclerViewIndexColum
+import com.ashlikun.xrecycleview.getRecyclerViewSpanCount
 
 /**
  * @author　　: 李坤
@@ -34,8 +37,6 @@ class VerticalDivider(
     var marginTopConvert: Convert<Int>? = null,
     var marginBottomConvert: Convert<Int>? = null,
 
-    //是否显示最后的分割线
-    override var showLastDivider: Boolean = false,
     //是否显示第一个分割线
     override var showFirstDivider: Boolean = true,
     //分割线是否插入View里面
@@ -50,7 +51,9 @@ class VerticalDivider(
     size = size,
     color = color,
     paint = paint,
-    drawable = drawable
+    drawable = drawable,
+    //垂直的线必须绘制最后一条
+    showLastDivider = true,
 ) {
     override fun onDrawDivider(
         c: Canvas,
@@ -84,9 +87,7 @@ class VerticalDivider(
                 parent
             ) ?: 0
         var dividerSize = getDividerSize(position, parent)
-        if (isLeft) {
-            dividerSize = dividerSize / 2
-        }
+        if (isLeft) dividerSize /= 2
         val isReverseLayout = isReverseLayout(parent)
         if (dividerType === DividerType.DRAWABLE) {
             if (isReverseLayout or isLeft) {
@@ -98,7 +99,7 @@ class VerticalDivider(
             }
         } else {
             val halfSize = dividerSize / 2
-            if (isReverseLayout or isLeft) {
+            if (isReverseLayout || isLeft) {
                 bounds.left = child.left - params.leftMargin - halfSize + transitionX
             } else {
                 bounds.left = child.right + params.rightMargin + halfSize + transitionX
@@ -129,13 +130,13 @@ class VerticalDivider(
             return
         }
         //多少列
-        val spanCount = getSpanCount(parent, position)
+        val spanCount = getRecyclerViewSpanCount(parent, position)
         if (spanCount <= 1) {
             outRect[0, 0, 0] = 0
             return
         }
         //当前第几列 0开始
-        val spanIndex = getIndexColum(parent, v, position, spanCount)
+        val spanIndex = getRecyclerViewIndexColum(parent, v, position, spanCount)
         val dividerSize = getDividerSize(position, parent)
         var dividerSizeAll = 0
         //总大小
@@ -149,36 +150,21 @@ class VerticalDivider(
         val eachWidth = dividerSizeAll / spanCount
         val left = spanIndex * (dividerSize - eachWidth)
         val right = eachWidth - left
-        if (spanIndex == spanCount - 1) {
-            // 如果是最后一列，则不需要绘制右边
-            outRect[left, 0, 0] = 0
-        } else if (spanIndex == 0) {
-            //第一列不绘制左边
-            outRect[0, 0, right] = 0
-        } else {
-            //中间的左右都绘制
-            outRect[left, 0, right] = 0
+        when (spanIndex) {
+            spanCount - 1 -> {
+                // 如果是最后一列，则不需要绘制右边
+                outRect[left, 0, 0] = 0
+            }
+            0 -> {
+                //第一列不绘制左边
+                outRect[0, 0, right] = 0
+            }
+            else -> {
+                //中间的左右都绘制
+                outRect[left, 0, right] = 0
+            }
         }
     }
 
-    /**
-     * 当前是第几列
-     */
-    protected fun getIndexColum(parent: RecyclerView, view: View, pos: Int, spanCount: Int): Int {
-        val layoutManager = parent.layoutManager
-        if (layoutManager is GridLayoutManager) {
-            return layoutManager.spanSizeLookup.getSpanIndex(pos, spanCount)
-        } else if (layoutManager is LinearLayoutManager) {
-            //水平布局
-            if (layoutManager.orientation == RecyclerView.HORIZONTAL) {
-                return pos % spanCount
-            }
-        } else if (layoutManager is StaggeredGridLayoutManager) {
-            //瀑布流专属
-            val params = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
-            return params.spanIndex
-        }
-        return spanCount
-    }
 
 }

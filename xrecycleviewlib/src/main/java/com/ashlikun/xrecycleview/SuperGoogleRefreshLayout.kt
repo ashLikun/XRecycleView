@@ -79,7 +79,7 @@ class SuperGoogleRefreshLayout @JvmOverloads constructor(
             }
         } else {
             postDelayed({
-                super@SuperGoogleRefreshLayout.setRefreshing(refreshing)
+                super.setRefreshing(refreshing)
                 if (notify && refreshing) {
                     mListener!!.onRefresh()
                 }

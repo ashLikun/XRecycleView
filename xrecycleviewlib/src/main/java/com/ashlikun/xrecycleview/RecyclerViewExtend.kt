@@ -249,14 +249,14 @@ open class RecyclerViewExtend @JvmOverloads constructor(
         }
     }
 
-    open fun getFootView(index: Int) = footViews.get(index)
+    open fun getFootView(index: Int) = footViews.getOrNull(index)
 
     protected open fun setFooterSize() {
-        mAdapter ?: setHeaderFooterSize(mAdapter!!, FOOTERSIZE, footViewSize)
+        if (mAdapter != null) setHeaderFooterSize(mAdapter!!, FOOTERSIZE, footViewSize)
     }
 
     protected open fun setHeaderSize() {
-        mAdapter ?: setHeaderFooterSize(mAdapter!!, HEADERSIZE, headerViewSize)
+        if (mAdapter != null) setHeaderFooterSize(mAdapter!!, HEADERSIZE, headerViewSize)
     }
 
 

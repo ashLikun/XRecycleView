@@ -77,12 +77,7 @@ open class HorizontalDivider(
     ): Rect {
         val bounds = Rect(0, 0, 0, 0)
         val transitionY = child.translationY.toInt()
-        val dividerSize: Int
-        dividerSize = if (isTop) {
-            firstTopDividerSize
-        } else {
-            getDividerSize(position, parent)
-        }
+        val dividerSize: Int = if (isTop) firstTopDividerSize else getDividerSize(position, parent)
         val params = child.layoutParams as RecyclerView.LayoutParams
         bounds.left =
             child.left - params.leftMargin + if (isTop) 0 else marginLeftConvert?.invoke(

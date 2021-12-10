@@ -7,10 +7,9 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.0'
+        classpath 'com.android.tools.build:gradle:4.1.0'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "org.jetbrains.kotlin:kotlin-android-extensions:$kotlin_version"
     }
 }
 
@@ -27,8 +26,8 @@ task clean(type: Delete) {
 }
 ext {
     superVersion = "1.1.+"
-    compileSdkVersion = 28
-    buildToolsVersion = "28.0.3"
+    compileSdkVersion = 29
+    buildToolsVersion = "29.0.2"
     designVersion = "com.google.android.material:material:" + superVersion
     recyclerview = "androidx.recyclerview:recyclerview:" + superVersion
     annotation = "androidx.annotation:annotation:" + superVersion

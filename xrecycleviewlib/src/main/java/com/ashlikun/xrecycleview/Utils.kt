@@ -3,8 +3,11 @@ package com.ashlikun.xrecycleview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
 /**
  * 作者　　: 李坤
@@ -22,7 +25,7 @@ fun getCommonAdapterClass(cls: Class<*>): Class<*>? {
             cls.getDeclaredField(RecyclerViewExtend.FOOTERSIZE)
             cls
         } catch (e: NoSuchFieldException) {
-            getCommonAdapterClass(cls.superclass)
+            getCommonAdapterClass(cls.superclass!!)
         }
     }
 }
@@ -96,4 +99,62 @@ fun setColorSchemeResources(context: Context, refreshLayout: RefreshLayout) {
         array.getColor(3, -0x10000)
     )
     array.recycle()
+}
+
+/**
+ * 当前是第几列
+ * @return
+ */
+fun getRecyclerViewIndexColum(parent: RecyclerView, view: View, pos: Int, spanCount: Int): Int {
+    val layoutManager = parent.layoutManager
+    if (layoutManager is GridLayoutManager) {
+        return layoutManager.spanSizeLookup.getSpanIndex(pos, spanCount)
+    } else if (layoutManager is LinearLayoutManager) {
+        //水平布局
+        if (layoutManager.orientation == RecyclerView.HORIZONTAL) {
+            return pos % spanCount
+        }
+    } else if (layoutManager is StaggeredGridLayoutManager) {
+        //瀑布流专属
+        val params = view.layoutParams as StaggeredGridLayoutManager.LayoutParams
+        return params.spanIndex
+    }
+    return spanCount
+}
+
+/**
+ * 一共多少列
+ */
+fun getRecyclerViewSpanCount(parent: RecyclerView, position: Int): Int {
+    // 列数
+    var spanCount = 1
+    val layoutManager = parent.layoutManager
+    if (layoutManager is GridLayoutManager) {
+        spanCount = layoutManager.spanCount + 1
+        spanCount = Math.abs(spanCount - layoutManager.spanSizeLookup.getSpanSize(position))
+    } else if (layoutManager is LinearLayoutManager) {
+        //水平布局
+        if (layoutManager.orientation == RecyclerView.HORIZONTAL) {
+            return parent.adapter!!.itemCount
+        }
+    } else if (layoutManager is StaggeredGridLayoutManager) {
+        spanCount = layoutManager
+            .spanCount
+    }
+    return spanCount
+}
+
+fun getRecyclerViewLastDividerOffset(parent: RecyclerView): Int {
+    if (parent.layoutManager is GridLayoutManager) {
+        val layoutManager = parent.layoutManager as GridLayoutManager?
+        val spanSizeLookup = layoutManager!!.spanSizeLookup
+        val spanCount = layoutManager.spanCount
+        val itemCount = parent.adapter!!.itemCount
+        for (i in itemCount - 1 downTo 0) {
+            if (spanSizeLookup.getSpanIndex(i, spanCount) == 0) {
+                return itemCount - i
+            }
+        }
+    }
+    return 1
 }
