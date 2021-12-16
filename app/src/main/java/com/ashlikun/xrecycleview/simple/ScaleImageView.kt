@@ -1,12 +1,8 @@
 package com.ashlikun.xrecycleview.simple
 
-import kotlin.jvm.JvmOverloads
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatImageView
-import android.view.View.MeasureSpec
-import android.content.res.TypedArray
-import com.ashlikun.xrecycleview.simple.R
 
 /**
  * @author　　: 李坤

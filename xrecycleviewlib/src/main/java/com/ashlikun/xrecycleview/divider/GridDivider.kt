@@ -5,11 +5,8 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.view.View
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.ashlikun.xrecycleview.getRecyclerViewIndexColum
 import com.ashlikun.xrecycleview.getRecyclerViewLastDividerOffset
 import com.ashlikun.xrecycleview.getRecyclerViewSpanCount
