@@ -158,12 +158,12 @@ open class RecyclerViewExtend @JvmOverloads constructor(
         )
     }
 
-    override fun setAdapter(adapter: Adapter<ViewHolder>?) {
+    override fun setAdapter(adapter: Adapter<out ViewHolder>?) {
         try {
             mAdapter?.unregisterAdapterDataObserver(mDataObserver)
         } catch (e: IllegalStateException) {
         }
-        mAdapter = adapter
+        mAdapter = adapter as Adapter<ViewHolder>?
         mWrapAdapter = WrapAdapter()
         super.setAdapter(mWrapAdapter)
         try {
@@ -173,6 +173,10 @@ open class RecyclerViewExtend @JvmOverloads constructor(
         mWrapAdapter?.notifyDataSetChanged()
         setHeaderSize()
         setFooterSize()
+    }
+
+    override fun getAdapter(): Adapter<out ViewHolder>? {
+        return mAdapter
     }
 
     open fun addHeaderView(view: View) {

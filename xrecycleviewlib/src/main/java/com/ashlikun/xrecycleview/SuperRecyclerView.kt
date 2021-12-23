@@ -244,23 +244,32 @@ class SuperRecyclerView @JvmOverloads constructor(
     /**
      * 设置加载更多的回调
      */
-    fun setOnLoaddingListener(onLoaddingListener: OnLoaddingListener) {
-        recyclerView.onLoaddingListener = onLoaddingListener
+    fun setOnLoaddingListener(
+        onLoaddingListener: OnLoaddingListener? = null,
+        onLoadding: OnLoadding? = null
+    ) {
+        recyclerView.onLoadding = onLoadding ?: {
+            onLoaddingListener?.onLoadding()
+        }
     }
 
     /**
      * 设置下拉刷新的回调
      */
-    fun setOnRefreshListener(listener: RefreshLayout.OnRefreshListener) {
-        refreshLayout?.setOnRefreshCallback(listener)
+    fun setOnRefreshListener(
+        listener: RefreshLayout.OnRefreshListener? = null,
+        onRefresh: OnRefresh? = null
+    ) {
+        refreshLayout?.setOnRefreshCallback(listener, onRefresh)
     }
+
 
     /**
      * 设置适配器
      */
-    fun setAdapter(adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>?) {
-        recyclerView.setAdapter(adapter)
-    }
+    var adapter: RecyclerView.Adapter<out RecyclerView.ViewHolder>?
+        get() = recyclerView.adapter
+        set(value) = recyclerView.setAdapter(value)
 
 
     /**

@@ -19,17 +19,28 @@ open class RecyclerViewAutoLoadding @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0
-) : RecyclerViewExtend(context, attrs, defStyle), BaseSwipeInterface, PageHelpListener,
+) : RecyclerViewExtend(context, attrs, defStyle), PageHelpListener,
     ConfigChang {
 
+    //下拉刷新控件
+    var refreshLayout: RefreshLayout? = null
 
-    override var refreshLayout: RefreshLayout? = null
-    override val pageHelpListener: PageHelpListener = this
-    override var onLoaddingListener: OnLoaddingListener? = null
+    //分页监听
+    val pageHelpListener: PageHelpListener = this
+
+    //加载更多回调
+    var onLoadding: OnLoadding? = null
         set(value) {
             field = value
             pageHelp.clear()
             pageHelp.addStatusChangListener(this)
+        }
+    var onLoaddingListener: OnLoaddingListener? = null
+        set(value) {
+            field = value
+            onLoadding = {
+                value?.onLoadding()
+            }
         }
 
     /**
@@ -150,7 +161,7 @@ open class RecyclerViewAutoLoadding @JvmOverloads constructor(
                     && lastVisibleItemPosition >= itemCount - 1 && itemCount >= childCount && pageHelp.isNext
                 ) {
                     state = LoadState.Loadding
-                    onLoaddingListener?.onLoadding()
+                    onLoadding?.invoke()
                 }
             }
 

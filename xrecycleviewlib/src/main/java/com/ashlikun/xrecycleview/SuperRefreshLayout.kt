@@ -23,7 +23,7 @@ open class SuperRefreshLayout @JvmOverloads constructor(
 ) :
     SwipeRefreshLayout(context, attrs), RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
 
-    var onRefresh: RefreshLayout.OnRefreshListener? = null
+    var onRefresh: OnRefresh? = null
     var isMOVE = false
     override fun onInterceptTouchEvent(ev: MotionEvent) =
         if (isMOVE) false else super.onInterceptTouchEvent(ev)
@@ -60,10 +60,16 @@ open class SuperRefreshLayout @JvmOverloads constructor(
     }
 
 
-    override fun setOnRefreshCallback(listener: RefreshLayout.OnRefreshListener) {
-        this.onRefresh = listener
+    override fun setOnRefreshCallback(
+        listener: RefreshLayout.OnRefreshListener?,
+        onRefresh: OnRefresh?
+    ) {
+        this.onRefresh = onRefresh ?: {
+            listener?.onRefresh()
+        }
         super.setOnRefreshListener(this)
     }
+
 
     /**
      * ：调用上面的之定义监听
@@ -74,7 +80,7 @@ open class SuperRefreshLayout @JvmOverloads constructor(
     }
 
     override fun onRefresh() {
-        onRefresh?.onRefresh()
+        onRefresh?.invoke()
     }
 
 

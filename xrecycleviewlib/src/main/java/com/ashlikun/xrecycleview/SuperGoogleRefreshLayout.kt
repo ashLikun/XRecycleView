@@ -21,7 +21,7 @@ class SuperGoogleRefreshLayout @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
 ) : SwipeRefreshLayout(context, attrs), RefreshLayout, SwipeRefreshLayout.OnRefreshListener {
-    var mListener: RefreshLayout.OnRefreshListener? = null
+    var onRefresh: OnRefresh? = null
     var isMOVE = false
     var isLayoutOk = false
 
@@ -75,13 +75,13 @@ class SuperGoogleRefreshLayout @JvmOverloads constructor(
         if (isLayoutOk) {
             super.setRefreshing(refreshing)
             if (notify && refreshing) {
-                mListener!!.onRefresh()
+                onRefresh?.invoke()
             }
         } else {
             postDelayed({
                 super.setRefreshing(refreshing)
                 if (notify && refreshing) {
-                    mListener!!.onRefresh()
+                    onRefresh?.invoke()
                 }
             }, 400)
         }
@@ -97,8 +97,13 @@ class SuperGoogleRefreshLayout @JvmOverloads constructor(
         return null
     }
 
-    override fun setOnRefreshCallback(listener: RefreshLayout.OnRefreshListener) {
-        this.mListener = listener
+    override fun setOnRefreshCallback(
+        listener: RefreshLayout.OnRefreshListener?,
+        onRefresh: OnRefresh?
+    ) {
+        this.onRefresh = onRefresh ?: {
+            listener?.onRefresh()
+        }
         super.setOnRefreshListener(this)
     }
 
@@ -115,9 +120,7 @@ class SuperGoogleRefreshLayout @JvmOverloads constructor(
     }
 
     override fun onRefresh() {
-        if (mListener != null) {
-            mListener!!.onRefresh()
-        }
+        onRefresh?.invoke()
     }
 
 

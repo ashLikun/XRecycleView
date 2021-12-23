@@ -11,6 +11,8 @@ import androidx.annotation.ColorInt
  *
  * 功能介绍：为了适应不同的下拉刷新布局 ，这里抽离出公共的属性与方法，其他的刷新View必须实现这个接口
  */
+typealias OnRefresh = () -> Unit
+
 interface RefreshLayout {
     /**
      *
@@ -33,7 +35,10 @@ interface RefreshLayout {
     /**
      * 设置下拉刷新的监听
      */
-    fun setOnRefreshCallback(listener: OnRefreshListener)
+    fun setOnRefreshCallback(
+        listener: RefreshLayout.OnRefreshListener? = null,
+        onRefresh: OnRefresh? = null
+    )
 
     fun setRefreshing(refreshing: Boolean)
     fun setRefreshing(refreshing: Boolean, notify: Boolean)
