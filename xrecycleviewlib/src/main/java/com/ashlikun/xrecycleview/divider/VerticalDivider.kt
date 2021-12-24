@@ -30,6 +30,9 @@ class VerticalDivider(
     drawableConvert: Convert<Drawable>? = null,
     paintConvert: Convert<Paint>? = null,
     visibilityConvert: Convert<Boolean>? = null,
+
+    var margin: Int? = null,
+    var marginConvert: Convert<Int>? = null,
     var marginTopConvert: Convert<Int>? = null,
     var marginBottomConvert: Convert<Int>? = null,
 
@@ -75,13 +78,11 @@ class VerticalDivider(
         bounds.top =
             child.top - params.topMargin + if (isLeft) 0 else marginTopConvert?.invoke(
                 position,
-                parent
-            ) ?: 0
+            ) ?: marginConvert?.invoke(position) ?: margin ?: 0
         bounds.bottom =
             child.bottom + params.bottomMargin - if (isLeft) 0 else marginBottomConvert?.invoke(
                 position,
-                parent
-            ) ?: 0
+            ) ?: marginConvert?.invoke(position) ?: margin ?: 0
         var dividerSize = getDividerSize(position, parent)
         if (isLeft) dividerSize /= 2
         val isReverseLayout = isReverseLayout(parent)

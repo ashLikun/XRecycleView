@@ -18,7 +18,7 @@ enum class DividerType {
 /**
  * 数据转换
  */
-typealias Convert<T> = (position: Int, parent: RecyclerView) -> T
+typealias Convert<T> = (position: Int) -> T
 
 /**
  * @author　　: 李坤
@@ -68,16 +68,16 @@ abstract class FlexibleDivider(
         this.sizeConvert = sizeConvert
 
         if (this.sizeConvert == null) {
-            this.sizeConvert = { position, parent -> size }
+            this.sizeConvert = { position -> size }
         }
         if (this.colorConvert == null && color != null) {
-            this.colorConvert = { position, parent -> color }
+            this.colorConvert = { position -> color }
         }
         if (this.paintConvert == null && paint != null) {
-            this.paintConvert = { position, parent -> paint }
+            this.paintConvert = { position -> paint }
         }
         if (this.drawableConvert == null && drawable != null) {
-            this.drawableConvert = { position, parent -> drawable }
+            this.drawableConvert = { position -> drawable }
         }
 
         if (this.paintConvert != null) {
@@ -91,7 +91,7 @@ abstract class FlexibleDivider(
             val divider = a.getDrawable(0)
             a.recycle()
             if (this.drawableConvert == null && divider != null) {
-                this.drawableConvert = { position, parent -> divider!! }
+                this.drawableConvert = { position -> divider!! }
             }
         }
     }
@@ -140,12 +140,12 @@ abstract class FlexibleDivider(
     ) {
         when (dividerType) {
             DividerType.DRAWABLE -> {
-                val drawable = drawableConvert?.invoke(childPosition, parent)
+                val drawable = drawableConvert?.invoke(childPosition)
                 drawable?.bounds = bounds
                 drawable?.draw(c)
             }
             DividerType.PAINT -> {
-                mPaint = paintConvert?.invoke(childPosition, parent)
+                mPaint = paintConvert?.invoke(childPosition)
                 if (mPaint != null)
                     c.drawLine(
                         bounds.left.toFloat(),
@@ -156,7 +156,7 @@ abstract class FlexibleDivider(
                     )
             }
             DividerType.COLOR -> {
-                mPaint?.color = colorConvert?.invoke(childPosition, parent)
+                mPaint?.color = colorConvert?.invoke(childPosition)
                     ?: throw RuntimeException("请提供colorProvider")
                 mPaint?.strokeWidth = dividerSize.toFloat()
                 if (mPaint != null)
@@ -180,7 +180,7 @@ abstract class FlexibleDivider(
         val position = parent.getChildAdapterPosition(v)
         val itemCount = parent.adapter!!.itemCount
         val lastDividerOffset = getLastDividerOffset(parent)
-        if (visibilityConvert?.invoke(position, parent) == false) {
+        if (visibilityConvert?.invoke(position) == false) {
             return
         }
         if (!showFirstDivider && position == 0) {
@@ -238,7 +238,6 @@ abstract class FlexibleDivider(
     }
 
 
-
     protected abstract fun setItemOffsets(
         outRect: Rect,
         v: View,
@@ -248,14 +247,10 @@ abstract class FlexibleDivider(
     )
 
 
-    protected fun getDividerSize(position: Int, parent: RecyclerView): Int {
-        if (paintConvert != null) {
-            return paintConvert!!.invoke(position, parent).strokeWidth.toInt()
-        } else if (sizeConvert != null) {
-            return sizeConvert!!.invoke(position, parent)
-        } else if (drawableConvert != null) {
-            return drawableConvert!!.invoke(position, parent).intrinsicWidth
-        }
-        throw RuntimeException("failed to get size")
-    }
+    protected fun getDividerSize(position: Int, parent: RecyclerView) =
+        paintConvert?.invoke(position)?.strokeWidth?.toInt()
+            ?: sizeConvert?.invoke(position)
+            ?: drawableConvert?.invoke(position)?.intrinsicWidth
+            ?: throw RuntimeException("failed to get size")
+
 }

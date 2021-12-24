@@ -27,6 +27,8 @@ open class HorizontalDivider(
     drawableConvert: Convert<Drawable>? = null,
     paintConvert: Convert<Paint>? = null,
     visibilityConvert: Convert<Boolean>? = null,
+    var margin: Int? = null,
+    var marginConvert: Convert<Int>? = null,
     var marginLeftConvert: Convert<Int>? = null,
     var marginRightConvert: Convert<Int>? = null,
     //顶部线的大小,>0 显示第一个顶部分割线
@@ -81,14 +83,12 @@ open class HorizontalDivider(
         val params = child.layoutParams as RecyclerView.LayoutParams
         bounds.left =
             child.left - params.leftMargin + if (isTop) 0 else marginLeftConvert?.invoke(
-                position,
-                parent
-            ) ?: 0
+                position
+            ) ?: marginConvert?.invoke(position) ?: margin ?: 0
         bounds.right =
             child.right + params.rightMargin + dividerSize - if (isTop) 0 else marginRightConvert?.invoke(
-                position,
-                parent
-            ) ?: 0
+                position
+            ) ?: marginConvert?.invoke(position) ?: margin ?: 0
         val isReverseLayout = isReverseLayout(parent)
         if (dividerType === DividerType.DRAWABLE) {
             if (isReverseLayout || isTop) {
