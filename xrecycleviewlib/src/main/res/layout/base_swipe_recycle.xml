@@ -9,7 +9,7 @@
     <com.ashlikun.xrecycleview.RecyclerViewAutoLoadding
         android:id="@+id/list_swipe_target"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:footerDividersEnabled="false"
         android:scrollbarStyle="outsideOverlay"></com.ashlikun.xrecycleview.RecyclerViewAutoLoadding>
 </com.ashlikun.xrecycleview.SuperGoogleRefreshLayout>

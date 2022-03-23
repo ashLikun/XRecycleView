@@ -1,14 +1,21 @@
 apply plugin: 'com.android.library'
-
+// 使用Kotlin插件
+apply plugin: 'kotlin-android'
+apply plugin: 'com.github.dcendents.android-maven'
+// GitHub账户名
+group = 'com.github.ashLikun'
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
-
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+        multiDexEnabled = true
+    }
+    buildFeatures {
+        buildConfig = false
     }
     buildTypes {
         release {
@@ -16,30 +23,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-/**
- * aar文件的编译
- */
-    repositories {
-        flatDir {
-            dirs 'libs'
-        }
-        maven {
-            url "https://jitpack.io"
-        }
+    //java8
+    compileOptions {
+        //定义生成的META-INF/library_release文件名 More than one file was found with OS independent path 'META-INF/library_release.kotlin_module'
+        kotlinOptions.freeCompilerArgs += ['-module-name', 'com.ashlikun.xrecycleview']
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    api fileTree(include: ['*.jar'], dir: 'libs')
     compileOnly rootProject.ext.designVersion
-//    compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
-    compileOnly 'com.android.support:support-annotations:' + rootProject.ext.superVersion
+    compileOnly rootProject.ext.recyclerview
+    compileOnly rootProject.ext.annotation
+    compileOnly 'androidx.swiperefreshlayout:swiperefreshlayout:+'
     //自己写的刷新控件
+<<<<<<< HEAD
     compileOnly 'com.github.ashLikun:RefreshLayout:1.2.4'
     implementation 'com.github.ashLikun:AnimationMenu:1.1.1'
     implementation 'com.github.ashLikun:CircleProgressView:1.0.2'
+=======
+    compileOnly 'com.github.ashLikun:RefreshLayout:2.0.0'
+    implementation 'com.github.ashLikun:AnimationMenu:2.0.0'
+    implementation 'com.github.ashLikun:CircleProgressView:2.0.1'
+    compileOnly 'androidx.databinding:viewbinding:+'
+>>>>>>> AndroidX
 }
-
 apply from: '../maven.gradle'
 
 

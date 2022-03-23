@@ -31,3 +31,11 @@ artifacts {
     archives sourcesJar
     archives javadocJar
 }
+task makeJar(type: Jar) {
+    //过滤不需要的class
+    exclude('android/', 'BuildConfig.class')
+//    exclude('android/',  'BuildConfig.class', 'R.class')
+
+    //指定打包的class
+    //include "com/test/**/*.class"
+}

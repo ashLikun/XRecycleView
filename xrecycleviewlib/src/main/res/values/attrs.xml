@@ -7,11 +7,24 @@
     <!--没有数据的时候是否显示LoadView-->
     <attr name="rv_noDataIsShow" format="boolean" />
     <attr name="rv_heightRatio" format="reference|float" />
+<<<<<<< HEAD
     <attr name="rv_heightDimen" format="reference|dimension" />
+=======
+    <attr name="rv_maxHeight" format="reference|dimension" />
+    <!--不可触摸-->
+    <attr name="rv_noTouch" format="boolean" />
+    <!--开启和外部的RecyclerView 嵌套滚动 的处理-->
+    <attr name="rv_nested_open" format="boolean" />
+>>>>>>> AndroidX
     <!--底部页脚布局-->
     <attr name="rv_footLoadLayoutId" format="reference" />
     <!--底部页脚主颜色-->
     <attr name="rv_footLoadColor" format="reference|color" />
+<<<<<<< HEAD
+=======
+    <!-- 内部RecyclerView的背景   -->
+    <attr name="rv_neibuBackground" format="reference|color" />
+>>>>>>> AndroidX
     <declare-styleable name="SuperRecyclerView">
         <!--是否可以回到顶部-->
         <attr name="srv_isGoTop" format="boolean" />
@@ -22,19 +35,39 @@
         <!--第几个的时候打开AnimMenu-->
         <attr name="srv_goTopOnPosition" format="integer" />
         <attr name="rv_heightRatio"></attr>
+<<<<<<< HEAD
         <attr name="rv_heightDimen"></attr>
         <attr name="rv_noDataIsShow"></attr>
         <attr name="rv_footLoadLayoutId"></attr>
         <attr name="rv_footLoadColor"></attr>
 
+=======
+        <attr name="rv_maxHeight"></attr>
+        <attr name="rv_noDataIsShow"></attr>
+        <attr name="rv_footLoadLayoutId"></attr>
+        <attr name="rv_footLoadColor"></attr>
+        <!--内部RecyclerView的背景-->
+        <attr name="rv_neibuBackground"></attr>
+        <attr name="rv_noTouch"></attr>
+        <attr name="rv_nested_open"></attr>
+>>>>>>> AndroidX
     </declare-styleable>
     <declare-styleable name="RecyclerViewExtend">
         <attr name="rv_heightRatio"></attr>
-        <attr name="rv_heightDimen"></attr>
+        <attr name="rv_maxHeight"></attr>
+        <attr name="rv_noTouch"></attr>
+        <attr name="rv_nested_open"></attr>
     </declare-styleable>
     <declare-styleable name="RecyclerViewAutoLoadding">
         <attr name="rv_noDataIsShow"></attr>
         <attr name="rv_footLoadLayoutId"></attr>
         <attr name="rv_footLoadColor"></attr>
+<<<<<<< HEAD
+=======
+        <attr name="rv_heightRatio"></attr>
+        <attr name="rv_maxHeight"></attr>
+        <attr name="rv_noTouch"></attr>
+        <attr name="rv_nested_open"></attr>
+>>>>>>> AndroidX
     </declare-styleable>
 </resources>
