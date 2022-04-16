@@ -55,15 +55,11 @@ class VerticalDivider(
     showLastDivider = true,
 ) {
     override fun onDrawDivider(
-        c: Canvas,
-        parent: RecyclerView,
-        child: View,
-        position: Int,
-        state: RecyclerView.State
+        c: Canvas, parent: RecyclerView, child: View, childPosition: Int,count: Int, state: RecyclerView.State
     ) {
-        val divSize = getDividerSize(position, parent)
-        val bounds = getDividerBound(position, parent, child, false)
-        onDraw(c, bounds, position, parent, divSize)
+        val divSize = getDividerSize(childPosition, parent)
+        val bounds = getDividerBound(childPosition, parent, child, false)
+        onDraw(c, bounds, childPosition, parent, divSize)
     }
 
     protected fun getDividerBound(

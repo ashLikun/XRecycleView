@@ -110,22 +110,18 @@ abstract class FlexibleDivider(
                 continue
             }
             lastChildPosition = childPosition
-            if (!showLastDivider && childPosition >= itemCount - lastDividerOffset) {
+            if (!showLastDivider && childPosition > 0 && childPosition >= itemCount - lastDividerOffset) {
                 continue
             }
             if (!showFirstDivider && childPosition == 0) {
                 continue
             }
-            onDrawDivider(c, parent, child, childPosition, state)
+            onDrawDivider(c, parent, child, childPosition, itemCount, state)
         }
     }
 
     protected abstract fun onDrawDivider(
-        c: Canvas,
-        parent: RecyclerView,
-        child: View,
-        childPosition: Int,
-        state: RecyclerView.State
+        c: Canvas, parent: RecyclerView, child: View, childPosition: Int, count: Int, state: RecyclerView.State
     )
 
     /**
@@ -172,10 +168,7 @@ abstract class FlexibleDivider(
     }
 
     override fun getItemOffsets(
-        rect: Rect,
-        v: View,
-        parent: RecyclerView,
-        state: RecyclerView.State
+        rect: Rect, v: View, parent: RecyclerView, state: RecyclerView.State
     ) {
         val position = parent.getChildAdapterPosition(v)
         val itemCount = parent.adapter!!.itemCount
@@ -186,7 +179,7 @@ abstract class FlexibleDivider(
         if (!showFirstDivider && position == 0) {
             return
         }
-        if (!showLastDivider && position >= itemCount - lastDividerOffset) {
+        if (!showLastDivider && position > 0 && position >= itemCount - lastDividerOffset) {
             return
         }
 

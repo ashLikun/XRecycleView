@@ -51,35 +51,37 @@ open class HorizontalDivider(
     paint = paint,
     drawable = drawable
 ) {
+    init {
+        if (firstTopDividerSize > 0) {
+            showFirstDivider = true
+        }
+    }
 
     override fun onDrawDivider(
-        c: Canvas,
-        parent: RecyclerView,
-        child: View,
-        position: Int,
-        state: RecyclerView.State
+        c: Canvas, parent: RecyclerView, child: View, childPosition: Int, count: Int, state: RecyclerView.State
     ) {
-        val groupIndex = getGroupIndex(position, parent)
+        val groupIndex = getGroupIndex(childPosition, parent)
         val showFirstTopDivider =
             groupIndex == 0 && firstTopDividerSize > 0
         //绘制第一个的顶部
         if (showFirstTopDivider) {
-            val bounds = getDividerBound(position, parent, child, true)
+            val bounds = getDividerBound(childPosition, count, parent, child, true)
             onDraw(c, bounds, -1, parent, firstTopDividerSize)
         }
-        val bounds = getDividerBound(position, parent, child, false)
-        onDraw(c, bounds, position, parent, getDividerSize(position, parent))
+        val bounds = getDividerBound(childPosition, count, parent, child, false)
+        onDraw(c, bounds, childPosition, parent, getDividerSize(childPosition, parent))
     }
 
     protected fun getDividerBound(
-        position: Int,
-        parent: RecyclerView,
-        child: View,
-        isTop: Boolean
+        position: Int, count: Int, parent: RecyclerView, child: View, isTop: Boolean
     ): Rect {
         val bounds = Rect(0, 0, 0, 0)
         val transitionY = child.translationY.toInt()
-        val dividerSize: Int = if (isTop) firstTopDividerSize else getDividerSize(position, parent)
+        val dividerSize: Int =
+            if (isTop) firstTopDividerSize else if (count == 1 && position == 0 && !showLastDivider) 0 else getDividerSize(position, parent)
+        if (dividerSize <= 0) {
+            return bounds
+        }
         val params = child.layoutParams as RecyclerView.LayoutParams
         bounds.left =
             child.left - params.leftMargin + if (isTop) 0 else marginLeftConvert?.invoke(
@@ -132,15 +134,9 @@ open class HorizontalDivider(
         }
         if (isReverseLayout(parent)) {
             outRect[0, 0, getDividerSize(position, parent)] = 0
-        } else if (showFirstDivider && firstTopDividerSize > 0 && getGroupIndex(
-                position,
-                parent
-            ) == 0
-        ) {
-            outRect[0, if (firstTopDividerSize > 0) firstTopDividerSize else getDividerSize(
-                position,
-                parent
-            ), 0] = getDividerSize(position, parent)
+        } else if (firstTopDividerSize > 0 && getGroupIndex(position, parent) == 0) {
+            outRect[0, if (firstTopDividerSize > 0) firstTopDividerSize else getDividerSize(position, parent), 0] =
+                if (showFirstDivider && (childCount != 1 || showLastDivider)) getDividerSize(position, parent) else 0
         } else {
             outRect[0, 0, 0] = getDividerSize(position, parent)
         }
